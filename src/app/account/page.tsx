@@ -84,37 +84,31 @@ export default function AccountPage() {
             ))}
           </div>
         )}
-        <div className="mt-8 overflow-hidden rounded-2xl bg-white ring-1 ring-line">
+        <div className="mt-8 rounded-2xl bg-white ring-1 ring-line">
           <div className="border-b border-line px-5 py-3 font-semibold">Recent orders</div>
           {loading ? (
             <p className="px-5 py-8 text-sm text-muted">Loading orders…</p>
           ) : ordersResult && ordersResult.items.length ? (
-            <table className="w-full text-sm">
-              <thead className="text-left text-muted">
-                <tr>
-                  <th className="px-5 py-3">Order</th>
-                  <th className="px-5 py-3">Date</th>
-                  <th className="px-5 py-3">Status</th>
-                  <th className="px-5 py-3">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ordersResult.items.map((order) => (
-                  <tr key={order.id} className="border-t border-line">
-                    <td className="px-5 py-3 font-medium">{order.orderNumber}</td>
-                    <td className="px-5 py-3">
+            <div className="divide-y divide-line">
+              {ordersResult.items.map((order) => (
+                <div key={order.id} className="flex items-center justify-between gap-3 px-5 py-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{order.orderNumber}</p>
+                    <p className="text-xs text-muted">
                       {new Date(order.placedAt).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
                       })}
-                    </td>
-                    <td className="px-5 py-3 capitalize">{order.status}</td>
-                    <td className="px-5 py-3">{formatMoney(order.total)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">{formatMoney(order.total)}</p>
+                    <p className="text-xs capitalize text-muted">{order.status}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <p className="px-5 py-8 text-sm text-muted">
               No orders yet.{" "}

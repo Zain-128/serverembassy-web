@@ -29,59 +29,51 @@ export default function CartPage() {
         </div>
       ) : (
         <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_340px]">
-          <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-line">
-            <table className="w-full text-sm">
-              <thead className="bg-page text-left text-muted">
-                <tr>
-                  <th className="p-4">Product</th>
-                  <th className="p-4">Price</th>
-                  <th className="p-4">Qty</th>
-                  <th className="p-4">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lines.map(({ product, qty }) => (
-                  <tr key={product.id} className="border-t border-line">
-                    <td className="p-4">
-                      <div className="flex gap-3">
-                        <div className="h-16 w-16 overflow-hidden rounded-lg">
-                          <ProductVisual
-                            product={product}
-                            icon={product.category?.slug?.includes("drive") ? "hdd" : "network"}
-                            className="h-16"
-                          />
-                        </div>
-                        <div>
-                          <Link href={`/product/${product.slug}`} className="font-medium hover:text-brand">
-                            {product.title}
-                          </Link>
-                          <button
-                            type="button"
-                            className="mt-1 block text-xs text-sale"
-                            onClick={() => remove(product.id)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-4">{formatMoney(product.price)}</td>
-                    <td className="p-4">
-                      <div className="inline-flex items-center rounded-lg border border-line">
-                        <button type="button" className="px-3 py-1" onClick={() => setQty(product.id, qty - 1)}>
-                          −
-                        </button>
-                        <span className="w-8 text-center">{qty}</span>
-                        <button type="button" className="px-3 py-1" onClick={() => setQty(product.id, qty + 1)}>
-                          +
-                        </button>
-                      </div>
-                    </td>
-                    <td className="p-4 font-semibold">{formatMoney(product.price * qty)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="rounded-2xl bg-white ring-1 ring-line">
+            <div className="divide-y divide-line">
+              {lines.map(({ product, qty }) => (
+                <div key={product.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
+                      <ProductVisual
+                        product={product}
+                        icon={product.category?.slug?.includes("drive") ? "hdd" : "network"}
+                        className="h-16"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/product/${product.slug}`}
+                        className="line-clamp-2 font-medium hover:text-brand"
+                      >
+                        {product.title}
+                      </Link>
+                      <p className="text-xs text-muted">SKU {product.sku}</p>
+                      <button
+                        type="button"
+                        className="mt-1 block text-xs font-medium text-sale"
+                        onClick={() => remove(product.id)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="w-16 text-sm text-muted">{formatMoney(product.price)}</span>
+                    <div className="inline-flex items-center rounded-full border border-line">
+                      <button type="button" className="px-3 py-1.5" onClick={() => setQty(product.id, qty - 1)}>
+                        −
+                      </button>
+                      <span className="w-8 text-center text-sm">{qty}</span>
+                      <button type="button" className="px-3 py-1.5" onClick={() => setQty(product.id, qty + 1)}>
+                        +
+                      </button>
+                    </div>
+                    <span className="w-24 text-right font-semibold">{formatMoney(product.price * qty)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
           <aside className="h-fit space-y-4 rounded-2xl bg-white p-5 ring-1 ring-line">
             <FreeShippingBar />

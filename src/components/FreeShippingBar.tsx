@@ -13,7 +13,7 @@ export default function FreeShippingBar({ compact = false }: { compact?: boolean
 
   return (
     <div className={compact ? "border border-line bg-white p-3" : "border border-line bg-brand-soft p-4"}>
-      <div className="mb-2 flex items-center justify-between gap-3 text-sm">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-sm">
         {freeShippingUnlocked ? (
           <p className="font-semibold text-brand-dark">You unlocked free shipping</p>
         ) : (

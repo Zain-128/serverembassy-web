@@ -111,10 +111,10 @@ export default function HeroCarousel({
             }}
           >
             <div
-              className="container-se relative z-10 grid h-full items-end gap-12 pb-14 pt-20 lg:grid-cols-[1.1fr_0.9fr]"
+              className="container-se relative z-10 grid h-full items-end gap-12 pb-16 pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:pb-14"
               aria-hidden={!active}
             >
-              <div className={active ? "anim-fade" : ""}>
+              <div className={`min-w-0 ${active ? "anim-fade" : ""}`}>
                 <p className="rise inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/80 backdrop-blur">
                   <Sparkles size={13} className="text-white/70" />
                   {s.eyebrow ?? "Enterprise IT hardware"}

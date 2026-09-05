@@ -92,8 +92,8 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="container-se grid grid-cols-[auto_1fr_auto] items-center gap-4 py-3 lg:grid-cols-[220px_1fr_auto]">
-        <Link href="/" aria-label="Server Embassy home">
+      <div className="container-se grid grid-cols-[auto_1fr_auto] items-center gap-2 py-3 sm:gap-4 lg:grid-cols-[220px_1fr_auto]">
+        <Link href="/" aria-label="Server Embassy home" className="min-w-0 shrink-0">
           <Logo />
         </Link>
 
@@ -109,7 +109,7 @@ export default function Header() {
           </button>
         </form>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {settings.phone ? (
             <div className="hidden items-center gap-2 pr-2 text-sm xl:flex">
               <Headphones className="text-brand" size={16} />
