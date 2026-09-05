@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
+import Pagination from "@/components/Pagination";
+import { ProductGridSkeleton } from "@/components/Skeleton";
 import { useGetBrandsQuery, useGetCategoryTreeQuery, useGetProductsQuery } from "@/store/storeApi";
 import type { Category } from "@/types/store";
 
@@ -37,6 +39,14 @@ export default function ShopCatalog({
   const [maxPrice, setMaxPrice] = useState(900);
   const [inStock, setInStock] = useState(false);
   const [sort, setSort] = useState<SortKey>("featured");
+  const [page, setPage] = useState(1);
+
+  const filterKey = `${q}::${categorySlug}::${brandSlug}::${maxPrice}::${inStock}::${sort}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (prevFilterKey !== filterKey) {
+    setPrevFilterKey(filterKey);
+    setPage(1);
+  }
 
   const { data: brands = [] } = useGetBrandsQuery();
   const { data: categories = [] } = useGetCategoryTreeQuery();
@@ -47,9 +57,16 @@ export default function ShopCatalog({
     maxPrice,
     inStock: inStock || undefined,
     sort: sortMap[sort],
-    limit: 100,
+    page,
+    limit: 24,
   });
   const items = productRes?.items ?? [];
+  const totalPages = productRes?.totalPages ?? 1;
+
+  const goToPage = (next: number) => {
+    setPage(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const flatCategories = useMemo(() => {
     const out: Category[] = [];
@@ -139,7 +156,11 @@ export default function ShopCatalog({
 
         <div>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-muted">{isFetching ? "Loading…" : `${items.length} products`}</p>
+            <p className="text-sm text-muted">
+              {isFetching && items.length === 0
+                ? "Loading…"
+                : `${productRes?.total ?? items.length} products`}
+            </p>
             <select
               className="rounded-full border border-line bg-white px-4 py-2 text-sm shadow-card transition focus:border-brand"
               value={sort}
@@ -151,7 +172,9 @@ export default function ShopCatalog({
               <option value="latest">Sort by SKU</option>
             </select>
           </div>
-          {!isFetching && items.length === 0 ? (
+          {isFetching && items.length === 0 ? (
+            <ProductGridSkeleton count={6} />
+          ) : items.length === 0 ? (
             <p className="rounded-2xl bg-white p-10 text-center text-muted ring-1 ring-line">
               No products match these filters.
             </p>
@@ -162,6 +185,7 @@ export default function ShopCatalog({
               ))}
             </div>
           )}
+          <Pagination page={page} totalPages={totalPages} onChange={goToPage} />
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import PromoBanners from "@/components/PromoBanners";
 import QuoteForm from "@/components/QuoteForm";
 import Reveal from "@/components/Reveal";
 import HeroCarousel from "@/components/HeroCarousel";
+import { BannerGridSkeleton, MarqueeSkeleton, SectionSkeleton } from "@/components/Skeleton";
 import {
   useGetBannersQuery,
   useGetBrandsQuery,
@@ -24,12 +25,23 @@ const trusts = [
 ];
 
 export default function HomePage() {
-  const { data: brands = [] } = useGetBrandsQuery();
-  const { data: homepageCats = [] } = useGetHomepageCategoriesQuery();
+  const { data: brands = [], isLoading: brandLoading } = useGetBrandsQuery();
+  const { data: homepageCats = [], isLoading: catsLoading } = useGetHomepageCategoriesQuery();
   const { data: banners = [] } = useGetBannersQuery();
-  const { data: featuredRes } = useGetProductsQuery({ featured: true, limit: 8 });
-  const { data: topRes } = useGetProductsQuery({ sort: "newest", inStock: true, limit: 12 });
-  const { data: ratedRes } = useGetProductsQuery({ sort: "rating", inStock: true, limit: 8 });
+  const { data: featuredRes, isLoading: featuredLoading } = useGetProductsQuery({
+    featured: true,
+    limit: 8,
+  });
+  const { data: topRes, isLoading: topLoading } = useGetProductsQuery({
+    sort: "newest",
+    inStock: true,
+    limit: 12,
+  });
+  const { data: ratedRes, isLoading: ratedLoading } = useGetProductsQuery({
+    sort: "rating",
+    inStock: true,
+    limit: 8,
+  });
 
   const featured = featuredRes?.items ?? [];
   const featuredIds = new Set(featured.map((p) => p.id));
@@ -94,38 +106,54 @@ export default function HomePage() {
         </Reveal>
       </section>
 
-      <CategoryBannerGrid categories={homepageCats} />
+      {catsLoading ? (
+        <BannerGridSkeleton />
+      ) : (
+        <CategoryBannerGrid categories={homepageCats} />
+      )}
 
-      <div className="bg-white/60">
+      {featuredLoading ? (
+        <SectionSkeleton id="featured" />
+      ) : (
+        <div className="bg-white/60">
+          <ProductSection
+            id="featured"
+            eyebrow="Featured"
+            title="Featured products"
+            description="Hand-picked SKUs for common rack refreshes and replacements."
+            href="/shop"
+            products={featured}
+          />
+        </div>
+      )}
+
+      {ratedLoading ? (
+        <SectionSkeleton id="top-rated" />
+      ) : (
         <ProductSection
-          id="featured"
-          eyebrow="Featured"
-          title="Featured products"
-          description="Hand-picked SKUs for common rack refreshes and replacements."
+          id="top-rated"
+          eyebrow="Top rated"
+          title="Customer favorites"
+          description="Highest-rated hardware our customers reorder most."
           href="/shop"
-          products={featured}
+          products={topRated}
         />
-      </div>
+      )}
 
-      <ProductSection
-        id="top-rated"
-        eyebrow="Top rated"
-        title="Customer favorites"
-        description="Highest-rated hardware our customers reorder most."
-        href="/shop"
-        products={topRated}
-      />
+      {topLoading ? (
+        <SectionSkeleton id="new-arrivals" />
+      ) : (
+        <ProductSection
+          id="new-arrivals"
+          eyebrow="New arrivals"
+          title="Fresh in stock"
+          description="Recently added enterprise SKUs, tested and ready to ship."
+          href="/shop"
+          products={topFallback}
+        />
+      )}
 
-      <ProductSection
-        id="new-arrivals"
-        eyebrow="New arrivals"
-        title="Fresh in stock"
-        description="Recently added enterprise SKUs, tested and ready to ship."
-        href="/shop"
-        products={topFallback}
-      />
-
-      <BrandShowcase brands={brands} />
+      {brandLoading ? <MarqueeSkeleton /> : <BrandShowcase brands={brands} />}
 
       <section id="quote" className="container-se py-16">
         <Reveal>

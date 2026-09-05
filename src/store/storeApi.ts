@@ -124,9 +124,9 @@ export const storeApi = createApi({
     }),
     getMyOrders: builder.query<
       { items: CustomerOrder[]; total: number; page: number; limit: number; totalPages: number },
-      void
+      { page?: number; limit?: number } | void
     >({
-      query: () => "/store/me/orders",
+      query: (params) => `/store/me/orders${toQuery({ page: params?.page, limit: params?.limit })}`,
       transformResponse: (res: {
         items: CustomerOrder[];
         total: number;

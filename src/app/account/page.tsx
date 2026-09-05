@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatMoney } from "@/lib/format";
+import { Skeleton } from "@/components/Skeleton";
+import Pagination from "@/components/Pagination";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { logout } from "@/store/authSlice";
 import { useGetMeQuery, useLogoutMutation } from "@/store/authApi";
@@ -14,10 +16,12 @@ export default function AccountPage() {
   const dispatch = useAppDispatch();
   const token = useAppSelector((s) => s.auth.token);
   const [doLogout] = useLogoutMutation();
+  const [page, setPage] = useState(1);
   const { data: customer, isLoading: loadingCustomer } = useGetMeQuery(undefined, { skip: !token });
-  const { data: ordersResult, isLoading: loadingOrders } = useGetMyOrdersQuery(undefined, {
-    skip: !token,
-  });
+  const { data: ordersResult, isLoading: loadingOrders } = useGetMyOrdersQuery(
+    { page },
+    { skip: !token },
+  );
 
   useEffect(() => {
     if (token && !loadingCustomer && !customer) {
@@ -87,28 +91,43 @@ export default function AccountPage() {
         <div className="mt-8 rounded-2xl bg-white ring-1 ring-line">
           <div className="border-b border-line px-5 py-3 font-semibold">Recent orders</div>
           {loading ? (
-            <p className="px-5 py-8 text-sm text-muted">Loading orders…</p>
-          ) : ordersResult && ordersResult.items.length ? (
             <div className="divide-y divide-line">
-              {ordersResult.items.map((order) => (
-                <div key={order.id} className="flex items-center justify-between gap-3 px-5 py-3">
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">{order.orderNumber}</p>
-                    <p className="text-xs text-muted">
-                      {new Date(order.placedAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">{formatMoney(order.total)}</p>
-                    <p className="text-xs capitalize text-muted">{order.status}</p>
-                  </div>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="px-5 py-3">
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="mt-2 h-3 w-20" />
                 </div>
               ))}
             </div>
+          ) : ordersResult && ordersResult.items.length ? (
+            <>
+              <div className="divide-y divide-line">
+                {ordersResult.items.map((order) => (
+                  <div key={order.id} className="flex items-center justify-between gap-3 px-5 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{order.orderNumber}</p>
+                      <p className="text-xs text-muted">
+                        {new Date(order.placedAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatMoney(order.total)}</p>
+                      <p className="text-xs capitalize text-muted">{order.status}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Pagination
+                page={page}
+                totalPages={ordersResult.totalPages}
+                onChange={(p) => setPage(p)}
+                className="px-5"
+              />
+            </>
           ) : (
             <p className="px-5 py-8 text-sm text-muted">
               No orders yet.{" "}

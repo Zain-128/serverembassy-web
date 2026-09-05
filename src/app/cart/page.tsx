@@ -7,11 +7,12 @@ import { formatMoney } from "@/lib/format";
 import { useGetProductsQuery } from "@/store/storeApi";
 import { useCart } from "@/lib/cart";
 import ProductCard from "@/components/ProductCard";
+import { ProductGridSkeleton } from "@/components/Skeleton";
 
 export default function CartPage() {
   const { lines, setQty, remove, subtotal, shipping, tax, total, remainingForFreeShipping } =
     useCart();
-  const { data: suggestionRes } = useGetProductsQuery(
+  const { data: suggestionRes, isLoading: suggestionsLoading } = useGetProductsQuery(
     { limit: 4, maxPrice: remainingForFreeShipping + 20, inStock: true },
     { skip: remainingForFreeShipping <= 0 },
   );
@@ -105,14 +106,18 @@ export default function CartPage() {
         </div>
       )}
 
-      {lines.length > 0 && remainingForFreeShipping > 0 && suggestions.length ? (
+      {lines.length > 0 && remainingForFreeShipping > 0 ? (
         <section className="mt-10">
           <h2 className="mb-4 text-xl font-bold text-navy">Add these to unlock free shipping</h2>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {suggestions.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
+          {suggestionsLoading ? (
+            <ProductGridSkeleton count={4} />
+          ) : suggestions.length ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {suggestions.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          ) : null}
         </section>
       ) : null}
     </div>
