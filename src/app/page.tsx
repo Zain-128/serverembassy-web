@@ -46,7 +46,7 @@ export default function HomePage() {
           {trusts.map((item, i) => (
             <Reveal key={item.title} delay={i * 90}>
               <div className="group flex items-start gap-3 transition-transform duration-300 hover:-translate-y-1">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand transition-all duration-300 group-hover:bg-brand group-hover:text-white group-hover:shadow-[0_8px_20px_rgba(63,111,122,0.35)]">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand transition-all duration-300 group-hover:bg-brand group-hover:text-white group-hover:shadow-[0_8px_20px_rgba(37,99,235,0.35)]">
                   <item.icon size={19} />
                 </span>
                 <div>

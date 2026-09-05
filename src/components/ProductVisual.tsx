@@ -1,14 +1,14 @@
 import type { Product } from "@/types/store";
 
 const palettes: Record<string, [string, string]> = {
-  switch: ["#2a3c4c", "#3f6f7a"],
-  hdd: ["#1c2a38", "#4a7a86"],
-  ssd: ["#243544", "#5c7d88"],
-  memory: ["#1c2a38", "#3f6f7a"],
-  psu: ["#243544", "#6a7c72"],
-  cpu: ["#1c2a38", "#4d6e7a"],
-  router: ["#2a3c4c", "#3f6f7a"],
-  network: ["#243544", "#3f6f7a"],
+  switch: ["#16325c", "#2563eb"],
+  hdd: ["#0e2447", "#3b82f6"],
+  ssd: ["#16325c", "#4778d1"],
+  memory: ["#0e2447", "#2563eb"],
+  psu: ["#122b52", "#3d6fb0"],
+  cpu: ["#0e2447", "#245fd0"],
+  router: ["#16325c", "#2563eb"],
+  network: ["#122b52", "#2563eb"],
 };
 
 function DriveBays() {

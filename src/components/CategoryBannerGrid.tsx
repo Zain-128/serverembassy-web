@@ -6,14 +6,14 @@ import type { Category } from "@/types/store";
 import Reveal from "@/components/Reveal";
 
 const palettes: Record<string, [string, string]> = {
-  switch: ["#1c2a38", "#3f6f7a"],
-  hdd: ["#243544", "#4a7a86"],
-  ssd: ["#1c2a38", "#5c7d88"],
-  memory: ["#243544", "#3f6f7a"],
-  psu: ["#1c2a38", "#6a7c72"],
-  cpu: ["#243544", "#4d6e7a"],
-  router: ["#1c2a38", "#3f6f7a"],
-  network: ["#243544", "#3f6f7a"],
+  switch: ["#0e2447", "#2563eb"],
+  hdd: ["#16325c", "#3b82f6"],
+  ssd: ["#0e2447", "#4778d1"],
+  memory: ["#16325c", "#2563eb"],
+  psu: ["#0e2447", "#3d6fb0"],
+  cpu: ["#16325c", "#245fd0"],
+  router: ["#0e2447", "#2563eb"],
+  network: ["#16325c", "#2563eb"],
 };
 
 export default function CategoryBannerGrid({ categories }: { categories: Category[] }) {

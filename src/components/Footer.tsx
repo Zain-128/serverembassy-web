@@ -44,7 +44,7 @@ export default function Footer() {
 
   return (
     <footer className="mt-8 border-t border-line bg-navy text-white">
-      <div className="h-1 bg-[linear-gradient(90deg,#5fa6b3,#3f6f7a,#2a4a52,#3f6f7a,#5fa6b3)]" />
+      <div className="h-1 bg-[linear-gradient(90deg,#8ab6ff,#2563eb,#1a3a6b,#2563eb,#8ab6ff)]" />
 
       <section className="border-b border-white/10">
         <div className="container-se flex flex-col items-center gap-6 py-12 text-center md:flex-row md:justify-between md:text-left">

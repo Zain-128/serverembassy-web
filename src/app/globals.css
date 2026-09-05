@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #1c2a38;
-  --color-navy-mid: #243544;
-  --color-brand: #3f6f7a;
-  --color-brand-dark: #335a63;
-  --color-brand-soft: #e7eef0;
-  --color-sale: #a34b3c;
-  --color-ink: #1c2430;
-  --color-muted: #5c6b75;
-  --color-line: #d5dee3;
-  --color-page: #eef2f3;
+  --color-navy: #0e2447;
+  --color-navy-mid: #1a3a6b;
+  --color-brand: #2563eb;
+  --color-brand-dark: #1d4ed8;
+  --color-brand-soft: #e8f0fe;
+  --color-sale: #dc2626;
+  --color-ink: #101b2d;
+  --color-muted: #52627a;
+  --color-line: #d7e2f2;
+  --color-page: #f6f9fd;
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
-  --shadow-card: 0 1px 2px rgba(28, 42, 56, 0.05), 0 6px 20px rgba(28, 42, 56, 0.06);
-  --shadow-lift: 0 18px 48px rgba(28, 42, 56, 0.16);
-  --shadow-soft: 0 2px 10px rgba(28, 42, 56, 0.05);
-  --shadow-btn: 0 8px 20px rgba(63, 111, 122, 0.28);
+  --shadow-card: 0 1px 2px rgba(14, 36, 71, 0.05), 0 6px 20px rgba(14, 36, 71, 0.07);
+  --shadow-lift: 0 18px 48px rgba(14, 36, 71, 0.16);
+  --shadow-soft: 0 2px 10px rgba(14, 36, 71, 0.05);
+  --shadow-btn: 0 8px 20px rgba(37, 99, 235, 0.3);
 }
 
 html {
@@ -32,8 +32,8 @@ body {
   overflow-x: clip;
   background-color: var(--color-page);
   background-image:
-    radial-gradient(1200px 480px at 12% -8%, rgba(63, 111, 122, 0.09), transparent 55%),
-    radial-gradient(900px 420px at 100% 8%, rgba(28, 42, 56, 0.06), transparent 50%);
+    radial-gradient(1200px 480px at 12% -8%, rgba(37, 99, 235, 0.07), transparent 55%),
+    radial-gradient(900px 420px at 100% 8%, rgba(14, 36, 71, 0.05), transparent 50%);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
@@ -68,7 +68,7 @@ button {
 }
 
 ::selection {
-  background: rgba(63, 111, 122, 0.22);
+  background: rgba(59, 130, 246, 0.2);
 }
 
 :focus-visible {
@@ -87,13 +87,13 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(28, 42, 56, 0.22);
+  background: rgba(30, 64, 175, 0.28);
   border-radius: 999px;
   border: 3px solid var(--color-page);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(28, 42, 56, 0.4);
+  background: rgba(30, 64, 175, 0.45);
 }
 
 .container-se {
@@ -133,14 +133,14 @@ button {
 .btn-primary {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #4c8a96 0%, #3f6f7a 55%, #335a63 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 55%, #1d4ed8 100%);
   color: #fff;
   box-shadow: var(--shadow-btn);
 }
 
 .btn-primary:hover {
   filter: brightness(1.06);
-  box-shadow: 0 12px 28px rgba(63, 111, 122, 0.36);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary::after {
@@ -157,14 +157,14 @@ button {
 }
 
 .btn-dark {
-  background: linear-gradient(135deg, #243544, #1c2a38 60%, #152028);
+  background: linear-gradient(135deg, #1a3a6b, #0e2447 60%, #0a1a36);
   color: #fff;
-  box-shadow: 0 8px 20px rgba(28, 42, 56, 0.25);
+  box-shadow: 0 8px 20px rgba(14, 36, 71, 0.25);
 }
 
 .btn-dark:hover {
   filter: brightness(1.1);
-  box-shadow: 0 12px 28px rgba(28, 42, 56, 0.32);
+  box-shadow: 0 12px 28px rgba(14, 36, 71, 0.32);
 }
 
 .btn-outline {
@@ -206,7 +206,7 @@ button {
 }
 
 .card:hover {
-  border-color: rgba(63, 111, 122, 0.35);
+  border-color: rgba(37, 99, 235, 0.35);
   box-shadow: var(--shadow-lift);
   transform: translateY(-4px);
 }
@@ -227,7 +227,7 @@ button {
 }
 
 .text-gradient {
-  background: linear-gradient(92deg, #5fa6b3 0%, #8fc3cb 45%, #b7d5da 100%);
+  background: linear-gradient(92deg, #8ab6ff 0%, #3b82f6 55%, #93c5fd 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -414,7 +414,7 @@ button {
   isolation: isolate;
   overflow: hidden;
   color: #f4f7f8;
-  background: #152028;
+  background: #0e2447;
 }
 
 .hero-carousel::before {
@@ -437,8 +437,8 @@ button {
   overflow: hidden;
   color: #f4f7f8;
   background:
-    radial-gradient(900px 420px at 78% 18%, rgba(90, 148, 156, 0.28), transparent 58%),
-    linear-gradient(160deg, #2a3c4c 0%, #1c2a38 46%, #152028 100%);
+    radial-gradient(900px 420px at 78% 18%, rgba(59, 130, 246, 0.3), transparent 58%),
+    linear-gradient(160deg, #1e3a70 0%, #0e2447 46%, #0a1a36 100%);
 }
 
 .hero-stage::before {

@@ -26,8 +26,8 @@ export default function PromoBanners({ banners }: { banners: Banner[] }) {
               style={{
                 background:
                   i % 2 === 0
-                    ? "linear-gradient(135deg, #243544, #3f6f7a)"
-                    : "linear-gradient(135deg, #1c2a38, #6a7c72)",
+                    ? "linear-gradient(135deg, #1a3a6b, #2563eb)"
+                    : "linear-gradient(135deg, #0e2447, #3d6fb0)",
               }}
             >
               <div className="absolute inset-0 opacity-20 [background-image:repeating-linear-gradient(90deg,transparent_0_18px,rgba(255,255,255,.14)_18px_19px)]" />

@@ -28,8 +28,8 @@ const fallbackSlides: Slide[] = [
     sub: "Enterprise switches, storage, and power — tested, warrantied, and ready to ship in 1–2 days.",
     cta: "Shop catalog",
     href: "/shop",
-    from: "#2a3c4c",
-    mid: "#1c2a38",
+    from: "#1e3a70",
+    mid: "#0e2447",
   },
   {
     pre: "Deals up to ",
@@ -40,8 +40,8 @@ const fallbackSlides: Slide[] = [
     href: "/shop",
     cta2: "Weekly deals",
     href2: "#deals",
-    from: "#224651",
-    mid: "#1c2a38",
+    from: "#20528a",
+    mid: "#0e2447",
   },
   {
     pre: "Need a ",
@@ -50,8 +50,8 @@ const fallbackSlides: Slide[] = [
     sub: "Hard-to-find SKUs, bulk pricing, and dedicated account managers for B2B buyers.",
     cta: "Request a quote",
     href: "#quote",
-    from: "#2a3c4c",
-    mid: "#152028",
+    from: "#1e3a70",
+    mid: "#0a1a36",
   },
 ];
 
@@ -66,8 +66,8 @@ function buildSlides(banners: Banner[]): Slide[] {
       sub: b.subtitle,
       cta: b.cta,
       href: b.href,
-      from: "#224651",
-      mid: "#152028",
+      from: "#20528a",
+      mid: "#0a1a36",
     }));
   return [...custom, ...fallbackSlides].slice(0, 4);
 }
@@ -107,7 +107,7 @@ export default function HeroCarousel({
               active ? "z-[1] opacity-100" : "pointer-events-none z-0 opacity-0"
             }`}
             style={{
-              background: `radial-gradient(900px 420px at 78% 18%, rgba(90,148,156,0.25), transparent 58%), linear-gradient(160deg, ${s.from} 0%, ${s.mid} 60%, #152028 100%)`,
+              background: `radial-gradient(900px 420px at 78% 18%, rgba(59,130,246,0.25), transparent 58%), linear-gradient(160deg, ${s.from} 0%, ${s.mid} 60%, #0a1a36 100%)`,
             }}
           >
             <div
