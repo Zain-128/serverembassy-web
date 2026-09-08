@@ -37,7 +37,7 @@ export default function LoginPage() {
         fullName: String(form.get("fullName") ?? ""),
         company: String(form.get("company") ?? "") || undefined,
       }).unwrap();
-      toast("Account created! Welcome to Server Embassy.", "success");
+      toast("Account created! Welcome to Power Line Devices.", "success");
       router.push("/account");
     } catch (e) {
       const msg =

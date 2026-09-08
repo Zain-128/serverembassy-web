@@ -101,7 +101,7 @@ export function mapBanner(b: Record<string, unknown>): Banner {
 
 export function mapSettings(s: Record<string, unknown>): StoreSettings {
   return {
-    name: String(s.storeName ?? "Server Embassy"),
+    name: String(s.storeName ?? "Power Line Devices"),
     tagline: String(s.tagline ?? ""),
     phone: String(s.phone ?? ""),
     email: String(s.supportEmail ?? ""),

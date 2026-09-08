@@ -1,21 +1,36 @@
-export default function Logo({ light = false }: { light?: boolean }) {
+import Image from "next/image";
+
+const BRAND = "Power Line Devices";
+
+export default function Logo({
+  light = false,
+  compact = false,
+}: {
+  light?: boolean;
+  compact?: boolean;
+}) {
+  const src = light
+    ? compact
+      ? "/brand/logo-icon-dark.jpg"
+      : "/brand/logo-full-dark.jpg"
+    : compact
+      ? "/brand/logo-icon-light.jpg"
+      : "/brand/logo-full-light.jpg";
+
   return (
-    <span className="flex items-center gap-2.5">
-      <span className={`grid h-9 w-9 place-items-center ${light ? "bg-white/15 text-white" : "bg-navy text-white"}`}>
-        <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden>
-          <rect x="2" y="3" width="14" height="2" fill="currentColor" />
-          <rect x="2" y="8" width="14" height="2" fill="currentColor" />
-          <rect x="2" y="13" width="9" height="2" fill="currentColor" />
-        </svg>
-      </span>
-      <span className="leading-tight">
-        <span className={`font-display block text-[15px] tracking-tight ${light ? "text-white" : "text-navy"}`}>
-          Server Embassy
-        </span>
-        <span className={`block text-[10px] uppercase tracking-[0.14em] ${light ? "text-white/55" : "text-muted"}`}>
-          Enterprise hardware
-        </span>
-      </span>
+    <span className="inline-flex items-center">
+      <Image
+        src={src}
+        alt={BRAND}
+        width={compact ? 40 : 168}
+        height={compact ? 40 : 48}
+        className={
+          compact
+            ? "h-9 w-9 object-contain"
+            : "h-10 w-auto max-w-[168px] object-contain object-left md:h-11"
+        }
+        priority
+      />
     </span>
   );
 }

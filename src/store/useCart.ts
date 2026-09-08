@@ -10,7 +10,7 @@ const FALLBACK_SETTINGS = {
   freeShippingThreshold: 199,
   taxRate: 0.07,
   freeShippingLabel: "Free shipping on orders over $199",
-  name: "Server Embassy",
+  name: "Power Line Devices",
   tagline: "",
   phone: "",
   email: "",

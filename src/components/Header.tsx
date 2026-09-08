@@ -67,6 +67,13 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen || cartOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen, cartOpen]);
+
   function onSearch(event: FormEvent) {
     event.preventDefault();
     const next = query.trim();
@@ -81,145 +88,147 @@ export default function Header() {
   }
 
   return (
-    <header
-      className={`sticky top-0 z-50 border-b border-line/80 bg-white/90 backdrop-blur-md transition-shadow duration-300 ${
-        scrolled ? "shadow-card" : ""
-      }`}
-    >
-      <div className="border-b border-white/10 bg-navy text-center text-[11px] font-medium tracking-wide text-white/80">
-        <div className="container-se py-2">
-          <TopShippingStrip />
+    <>
+      <header
+        className={`sticky top-0 z-40 border-b border-line/80 bg-white/90 backdrop-blur-md transition-shadow duration-300 ${
+          scrolled ? "shadow-card" : ""
+        }`}
+      >
+        <div className="border-b border-white/10 bg-navy text-center text-[11px] font-medium tracking-wide text-white/80">
+          <div className="container-se py-2">
+            <TopShippingStrip />
+          </div>
         </div>
-      </div>
 
-      <div className="container-se grid grid-cols-[auto_1fr_auto] items-center gap-2 py-3 sm:gap-4 lg:grid-cols-[220px_1fr_auto]">
-        <Link href="/" aria-label="Server Embassy home" className="min-w-0 shrink-0">
-          <Logo />
-        </Link>
-
-        <form onSubmit={onSearch} className="group hidden items-center rounded-full border border-line bg-page/60 pl-4 transition focus-within:border-brand focus-within:bg-white focus-within:ring-2 focus-within:ring-brand/25 lg:flex">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search SKU, brand, or product"
-            className="min-w-0 flex-1 bg-transparent py-2.5 outline-none"
-          />
-          <button type="submit" className="m-1 grid h-9 w-9 place-items-center rounded-full bg-navy text-white transition hover:bg-brand" aria-label="Search">
-            <Search size={16} />
-          </button>
-        </form>
-
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          {settings.phone ? (
-            <div className="hidden items-center gap-2 pr-2 text-sm xl:flex">
-              <Headphones className="text-brand" size={16} />
-              <a href={`tel:${settings.phone}`} className="font-medium hover:text-brand">
-                {settings.phone}
-              </a>
-            </div>
-          ) : null}
-          <Link href="/login" className="nav-link hidden items-center gap-1.5 py-1 text-sm md:flex">
-            <User size={16} /> Account
+        <div className="container-se grid grid-cols-[auto_1fr_auto] items-center gap-2 py-3 sm:gap-4 lg:grid-cols-[220px_1fr_auto]">
+          <Link href="/" aria-label="Server Embassy home" className="min-w-0 shrink-0">
+            <Logo />
           </Link>
-          <button
-            type="button"
-            className="relative flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm font-semibold shadow-soft transition hover:-translate-y-0.5 hover:shadow-card"
-            onClick={() => setCartOpen(true)}
-          >
-            <ShoppingCart size={18} />
-            <span className="hidden sm:inline">{formatMoney(subtotal)}</span>
-            {count > 0 ? (
-              <span className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-sale px-1 text-[11px] text-white">
-                {count}
-              </span>
-            ) : null}
-          </button>
-          <button
-            type="button"
-            className="rounded-full border border-line bg-white p-2.5 shadow-soft lg:hidden"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-          >
-            <Menu size={18} />
-          </button>
-        </div>
-      </div>
 
-      <nav className="hidden border-t border-line/70 lg:block">
-        <div className="container-se flex items-center gap-1">
-          <div
-            className="relative"
-            onMouseEnter={() => setCatsOpen(true)}
-            onMouseLeave={() => setCatsOpen(false)}
-          >
-            <button
-              type="button"
-              className="nav-link flex items-center gap-2 px-3 py-3 text-sm font-semibold text-navy"
-            >
-              Categories <ChevronDown size={15} className={`transition-transform duration-200 ${catsOpen ? "rotate-180" : ""}`} />
+          <form onSubmit={onSearch} className="group hidden items-center rounded-full border border-line bg-page/60 pl-4 transition focus-within:border-brand focus-within:bg-white focus-within:ring-2 focus-within:ring-brand/25 lg:flex">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search SKU, brand, or product"
+              className="min-w-0 flex-1 bg-transparent py-2.5 outline-none"
+            />
+            <button type="submit" className="m-1 grid h-9 w-9 place-items-center rounded-full bg-navy text-white transition hover:bg-brand" aria-label="Search">
+              <Search size={16} />
             </button>
-            {catsOpen && tree.length ? (
-              <div className="anim-dropdown absolute left-0 top-full z-40 min-w-[520px] rounded-2xl border border-line bg-white p-6 shadow-lift">
-                <div className="grid grid-cols-2 gap-6">
-                  {tree.map((parent) => (
-                    <div key={parent.id}>
-                      <Link
-                        href={`/shop/${parent.slug}`}
-                        className="font-display text-navy hover:text-brand"
-                        onClick={() => setCatsOpen(false)}
-                      >
-                        {parent.name}
-                      </Link>
-                      <ul className="mt-2 space-y-1 text-sm text-muted">
-                        {(parent.children?.length ? parent.children : [parent]).map((child) => (
-                          <li key={child.id}>
-                            <Link
-                              href={`/shop/${child.slug}`}
-                              className="hover:text-navy"
-                              onClick={() => setCatsOpen(false)}
-                            >
-                              {child.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
+          </form>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            {settings.phone ? (
+              <div className="hidden items-center gap-2 pr-2 text-sm xl:flex">
+                <Headphones className="text-brand" size={16} />
+                <a href={`tel:${settings.phone}`} className="font-medium hover:text-brand">
+                  {settings.phone}
+                </a>
               </div>
             ) : null}
+            <Link href="/login" className="nav-link hidden items-center gap-1.5 py-1 text-sm md:flex">
+              <User size={16} /> Account
+            </Link>
+            <button
+              type="button"
+              className="relative flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm font-semibold shadow-soft transition hover:-translate-y-0.5 hover:shadow-card"
+              onClick={() => setCartOpen(true)}
+            >
+              <ShoppingCart size={18} />
+              <span className="hidden sm:inline">{formatMoney(subtotal)}</span>
+              {count > 0 ? (
+                <span className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-sale px-1 text-[11px] text-white">
+                  {count}
+                </span>
+              ) : null}
+            </button>
+            <button
+              type="button"
+              className="rounded-full border border-line bg-white p-2.5 shadow-soft lg:hidden"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu size={18} />
+            </button>
           </div>
-
-          {links.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/shop/${cat.slug}`}
-              className={`nav-link px-3 py-3 text-sm ${
-                pathname === `/shop/${cat.slug}` ? "is-active font-semibold text-navy" : "text-muted hover:text-navy"
-              }`}
-            >
-              {cat.name}
-            </Link>
-          ))}
-
-          <span className="mx-2 h-4 w-px bg-line" />
-
-          {staticLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`nav-link px-3 py-3 text-sm ${
-                isActive(link.href) ? "is-active font-semibold text-navy" : "text-muted hover:text-navy"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
         </div>
-      </nav>
+
+        <nav className="hidden border-t border-line/70 lg:block">
+          <div className="container-se flex items-center gap-1">
+            <div
+              className="relative"
+              onMouseEnter={() => setCatsOpen(true)}
+              onMouseLeave={() => setCatsOpen(false)}
+            >
+              <button
+                type="button"
+                className="nav-link flex items-center gap-2 px-3 py-3 text-sm font-semibold text-navy"
+              >
+                Categories <ChevronDown size={15} className={`transition-transform duration-200 ${catsOpen ? "rotate-180" : ""}`} />
+              </button>
+              {catsOpen && tree.length ? (
+                <div className="anim-dropdown absolute left-0 top-full z-50 min-w-[520px] rounded-2xl border border-line bg-white p-6 shadow-lift">
+                  <div className="grid grid-cols-2 gap-6">
+                    {tree.map((parent) => (
+                      <div key={parent.id}>
+                        <Link
+                          href={`/shop/${parent.slug}`}
+                          className="font-display text-navy hover:text-brand"
+                          onClick={() => setCatsOpen(false)}
+                        >
+                          {parent.name}
+                        </Link>
+                        <ul className="mt-2 space-y-1 text-sm text-muted">
+                          {(parent.children?.length ? parent.children : [parent]).map((child) => (
+                            <li key={child.id}>
+                              <Link
+                                href={`/shop/${child.slug}`}
+                                className="hover:text-navy"
+                                onClick={() => setCatsOpen(false)}
+                              >
+                                {child.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            {links.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/shop/${cat.slug}`}
+                className={`nav-link px-3 py-3 text-sm ${
+                  pathname === `/shop/${cat.slug}` ? "is-active font-semibold text-navy" : "text-muted hover:text-navy"
+                }`}
+              >
+                {cat.name}
+              </Link>
+            ))}
+
+            <span className="mx-2 h-4 w-px bg-line" />
+
+            {staticLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`nav-link px-3 py-3 text-sm ${
+                  isActive(link.href) ? "is-active font-semibold text-navy" : "text-muted hover:text-navy"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      </header>
 
       {menuOpen ? (
-        <div className="anim-fade fixed inset-0 z-50 bg-navy/50 backdrop-blur-sm lg:hidden" onClick={() => setMenuOpen(false)}>
+        <div className="anim-fade fixed inset-0 z-[60] bg-navy/50 backdrop-blur-sm lg:hidden" onClick={() => setMenuOpen(false)}>
           <div
             className="anim-drawer-left absolute right-0 top-0 h-full w-[min(100%,360px)] overflow-y-auto bg-white p-5"
             onClick={(e) => e.stopPropagation()}
@@ -275,7 +284,7 @@ export default function Header() {
       ) : null}
 
       {cartOpen ? (
-        <div className="anim-fade fixed inset-0 z-50 bg-navy/50 backdrop-blur-sm" onClick={() => setCartOpen(false)}>
+        <div className="anim-fade fixed inset-0 z-[60] bg-navy/50 backdrop-blur-sm" onClick={() => setCartOpen(false)}>
           <aside
             className="anim-drawer-right absolute right-0 top-0 flex h-full w-[min(100%,400px)] flex-col bg-white"
             onClick={(e) => e.stopPropagation()}
@@ -342,6 +351,6 @@ export default function Header() {
           </aside>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }

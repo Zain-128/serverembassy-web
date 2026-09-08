@@ -5,7 +5,7 @@ export default async function AboutPage() {
 
   return (
     <div className="container-se max-w-3xl py-12">
-      <h1 className="text-4xl font-bold text-navy">About {settings?.name ?? "Server Embassy"}</h1>
+      <h1 className="text-4xl font-bold text-navy">About {settings?.name ?? "Power Line Devices"}</h1>
       <p className="mt-4 text-lg text-muted">
         {settings?.tagline ||
           "Trusted enterprise IT hardware"}. We source new, certified refurbished, and end-of-life IT hardware for

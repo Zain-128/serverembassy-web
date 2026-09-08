@@ -4,7 +4,7 @@ import { useGetSettingsQuery } from "@/store/storeApi";
 import type { StoreSettings } from "@/types/store";
 
 export const DEFAULT_SETTINGS: StoreSettings = {
-  name: "Server Embassy",
+  name: "Power Line Devices",
   tagline: "",
   phone: "",
   email: "",

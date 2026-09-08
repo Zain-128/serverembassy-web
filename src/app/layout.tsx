@@ -17,7 +17,7 @@ const sora = Sora({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getStoreSettings().catch(() => null);
-  const name = settings?.name ?? "Server Embassy";
+  const name = settings?.name ?? "Power Line Devices";
   return {
     title: {
       default: `${name} | Trusted Enterprise IT Hardware`,
@@ -25,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description:
       "Enterprise IT hardware — server hard drives, memory, power supplies, network switches, and more.",
+    icons: { icon: "/favicon.jpg" },
   };
 }
 
