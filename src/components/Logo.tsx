@@ -2,35 +2,33 @@ import Image from "next/image";
 
 const BRAND = "Power Line Devices";
 
-export default function Logo({
-  light = false,
-  compact = false,
-}: {
-  light?: boolean;
-  compact?: boolean;
-}) {
-  const src = light
-    ? compact
-      ? "/brand/logo-icon-dark.jpg"
-      : "/brand/logo-full-dark.jpg"
-    : compact
-      ? "/brand/logo-icon-light.jpg"
-      : "/brand/logo-full-light.jpg";
+export default function Logo({ light = false }: { light?: boolean }) {
+  // black icon = white P (for dark surfaces); white icon = blue P (for light surfaces)
+  const src = light ? "/brand/logo-icon-dark.jpg" : "/brand/logo-icon-light.jpg";
 
   return (
-    <span className="inline-flex items-center">
+    <span className="flex items-center gap-2.5">
       <Image
         src={src}
-        alt={BRAND}
-        width={compact ? 40 : 168}
-        height={compact ? 40 : 48}
-        className={
-          compact
-            ? "h-9 w-9 object-contain"
-            : "h-10 w-auto max-w-[168px] object-contain object-left md:h-11"
-        }
+        alt=""
+        width={40}
+        height={40}
+        className="h-9 w-9 shrink-0 rounded-md object-contain"
         priority
+        aria-hidden
       />
+      <span className="leading-tight">
+        <span
+          className={`font-display block text-[15px] tracking-tight ${light ? "text-white" : "text-navy"}`}
+        >
+          {BRAND}
+        </span>
+        <span
+          className={`block text-[10px] uppercase tracking-[0.14em] ${light ? "text-white/55" : "text-muted"}`}
+        >
+          Enterprise hardware
+        </span>
+      </span>
     </span>
   );
 }
