@@ -6,6 +6,7 @@ import { Mail } from "lucide-react";
 import { useSubscribeNewsletterMutation } from "@/store/storeApi";
 import { useStoreSettings } from "@/context/StoreContext";
 import Logo from "@/components/Logo";
+import { useToast } from "@/components/Toast";
 
 const shopLinks = [
   ["Shop all", "/shop"],
@@ -28,17 +29,17 @@ const policies = [
 export default function Footer() {
   const { settings: store } = useStoreSettings();
   const [email, setEmail] = useState("");
-  const [msg, setMsg] = useState("");
   const [subscribe] = useSubscribeNewsletterMutation();
+  const toast = useToast().toast;
 
   async function onSubscribe(event: FormEvent) {
     event.preventDefault();
     try {
       await subscribe(email).unwrap();
-      setMsg("Subscribed. Welcome on board!");
       setEmail("");
+      toast("Subscribed! Welcome on board.", "success");
     } catch {
-      setMsg("Could not subscribe. Try again.");
+      toast("Could not subscribe. Try again.", "error");
     }
   }
 
@@ -59,7 +60,7 @@ export default function Footer() {
               First access to restocks, weekly deals, and hard-to-find SKUs.
             </p>
           </div>
-          <form onSubmit={onSubscribe} className="w-full max-w-md">
+<form onSubmit={onSubscribe} className="w-full max-w-md">
             <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 p-1.5 transition focus-within:border-white/50">
               <input
                 type="email"
@@ -69,11 +70,10 @@ export default function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm text-white outline-none placeholder:text-white/40"
               />
-<button type="submit" className="btn btn-primary shrink-0 py-2.5!">
-              Join now
-            </button>
+              <button type="submit" className="btn btn-primary shrink-0 py-2.5!">
+                Join now
+              </button>
             </div>
-            {msg ? <p className="mt-2 text-xs text-white/70">{msg}</p> : null}
           </form>
         </div>
       </section>

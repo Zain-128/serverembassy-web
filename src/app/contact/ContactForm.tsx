@@ -2,38 +2,28 @@
 
 import { type FormEvent, useState } from "react";
 import { useCreateContactMutation } from "@/store/storeApi";
+import { useToast } from "@/components/Toast";
 
 export default function ContactForm() {
+  const toast = useToast().toast;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
   const [sendMessage, { isLoading }] = useCreateContactMutation();
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    setError("");
     try {
       await sendMessage({ name, email, subject, message }).unwrap();
-      setSent(true);
       setName("");
       setEmail("");
       setSubject("");
       setMessage("");
+      toast("Message sent! We'll get back to you shortly.", "success");
     } catch {
-      setError("Could not send message. Please try again.");
+      toast("Could not send message. Please try again.", "error");
     }
-  }
-
-  if (sent) {
-    return (
-      <div className="rounded-3xl bg-white p-6 text-center ring-1 ring-line shadow-card">
-        <p className="font-semibold text-navy">Message sent!</p>
-        <p className="mt-2 text-sm text-muted">A specialist will get back to you shortly.</p>
-      </div>
-    );
   }
 
   return (
@@ -74,7 +64,6 @@ export default function ContactForm() {
           className="mt-1 min-h-32 w-full rounded-lg border border-line px-3 py-2"
         />
       </label>
-      {error ? <p className="mb-3 text-sm text-sale">{error}</p> : null}
       <button type="submit" disabled={isLoading} className="btn btn-primary disabled:opacity-60">
         {isLoading ? "Sending…" : "Send"}
       </button>

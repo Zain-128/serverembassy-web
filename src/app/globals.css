@@ -482,6 +482,36 @@ button {
   }
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%) translateY(-8px);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-slide-out {
+  animation: slideOut 0.2s ease-in;
+}
+
 .rise {
   animation: rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }

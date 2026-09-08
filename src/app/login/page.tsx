@@ -1,35 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useCustomerLoginMutation, useRegisterMutation } from "@/store/authApi";
+import { useToast } from "@/components/Toast";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [signInError, setSignInError] = useState<string | null>(null);
-  const [registerError, setRegisterError] = useState<string | null>(null);
+  const toast = useToast().toast;
   const [customerLogin, { isLoading: signingIn }] = useCustomerLoginMutation();
   const [register, { isLoading: registering }] = useRegisterMutation();
 
   async function onSignIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSignInError(null);
     const form = new FormData(event.currentTarget);
     try {
       await customerLogin({
         email: String(form.get("email") ?? ""),
         password: String(form.get("password") ?? ""),
       }).unwrap();
+      toast("Welcome back!", "success");
       router.push("/account");
     } catch {
-      setSignInError("Invalid email or password.");
+      toast("Invalid email or password.", "error");
     }
   }
 
   async function onRegister(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setRegisterError(null);
     const form = new FormData(event.currentTarget);
     try {
       await register({
@@ -38,13 +37,14 @@ export default function LoginPage() {
         fullName: String(form.get("fullName") ?? ""),
         company: String(form.get("company") ?? "") || undefined,
       }).unwrap();
+      toast("Account created! Welcome to Server Embassy.", "success");
       router.push("/account");
     } catch (e) {
       const msg =
         e && typeof e === "object" && "data" in e && e.data && typeof e.data === "object" && "error" in e.data
           ? String((e.data as { error: unknown }).error)
           : "Unable to create an account. Please try again.";
-      setRegisterError(msg);
+      toast(msg, "error");
     }
   }
 
@@ -70,7 +70,6 @@ export default function LoginPage() {
             className="mt-1 w-full rounded-lg border border-line px-3 py-2"
           />
         </label>
-        {signInError && <p className="mt-3 text-sm text-sale">{signInError}</p>}
         <button type="submit" disabled={signingIn} className="btn btn-primary mt-5 w-full">
           {signingIn ? "Signing in…" : "Log in"}
         </button>
@@ -109,7 +108,6 @@ export default function LoginPage() {
             className="mt-1 w-full rounded-lg border border-line px-3 py-2"
           />
         </label>
-        {registerError && <p className="mt-3 text-sm text-sale">{registerError}</p>}
         <button type="submit" disabled={registering} className="btn btn-dark mt-5 w-full">
           {registering ? "Creating account…" : "Register"}
         </button>

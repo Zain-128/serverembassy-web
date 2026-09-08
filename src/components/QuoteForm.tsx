@@ -1,17 +1,16 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { useCreateQuoteMutation } from "@/store/storeApi";
+import { useToast } from "@/components/Toast";
 
 export default function QuoteForm() {
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
+  const toast = useToast().toast;
   const [createQuote] = useCreateQuoteMutation();
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError("");
     const fd = new FormData(event.currentTarget);
     try {
       await createQuote({
@@ -24,20 +23,11 @@ export default function QuoteForm() {
         targetPrice: Number(fd.get("targetPrice")) || undefined,
         message: String(fd.get("message") ?? "") || undefined,
       }).unwrap();
-      setSent(true);
       event.currentTarget.reset();
+      toast("Quote request submitted! Our team will follow up shortly.", "success");
     } catch {
-      setError("Could not submit quote. Is the API running?");
+      toast("Could not submit quote. Is the API running?", "error");
     }
-  }
-
-  if (sent) {
-    return (
-      <div className="rounded-3xl border border-line bg-white p-8 shadow-card">
-        <h2 className="font-display text-2xl text-navy">Request received</h2>
-        <p className="mt-2 text-sm text-muted">Our team will follow up shortly.</p>
-      </div>
-    );
   }
 
   return (
@@ -46,7 +36,6 @@ export default function QuoteForm() {
       <p className="mt-1 text-sm text-muted">
         Bulk orders, hard-to-find SKUs, or dedicated account management.
       </p>
-      {error ? <p className="mt-3 text-sm text-sale">{error}</p> : null}
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <label className="text-sm font-medium">
           Name

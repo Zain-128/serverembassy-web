@@ -8,42 +8,40 @@ import { formatMoney } from "@/lib/format";
 import { useCreateOrderMutation, useValidateCouponMutation } from "@/store/storeApi";
 import { useAppSelector } from "@/store";
 import { useCart } from "@/lib/cart";
+import { useToast } from "@/components/Toast";
 
 export default function CheckoutPage() {
   const { lines, subtotal, shipping, tax, total, clear } = useCart();
   const customerId = useAppSelector((s) => s.auth.customer?.id);
   const router = useRouter();
+  const toast = useToast().toast;
   const [method, setMethod] = useState<"card" | "paypal" | "wire">("card");
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
-  const [error, setError] = useState("");
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
-  const [couponError, setCouponError] = useState("");
   const [createOrder, { isLoading: loading }] = useCreateOrderMutation();
   const [validateCoupon] = useValidateCouponMutation();
 
   async function applyCoupon() {
-    setCouponError("");
-    const code = coupon.trim();
+    const code = coupon.trim().toUpperCase();
     if (!code) return;
     try {
       const result = await validateCoupon({ code, subtotal }).unwrap();
       if (result.valid && result.discount != null) {
         setDiscount(result.discount);
-        setCouponError("");
+        toast(result.discount > 0 ? `Coupon applied! Saved ${formatMoney(result.discount)}` : "Coupon applied", "success");
       } else {
         setDiscount(0);
-        setCouponError(result.error ?? "Invalid coupon code");
+        toast(result.error ?? "Invalid coupon code", "error");
       }
     } catch {
       setDiscount(0);
-      setCouponError("Could not validate coupon. Is the API running?");
+      toast("Could not validate coupon. Is the API running?", "error");
     }
   }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError("");
     const fd = new FormData(event.currentTarget);
 
     const address = {
@@ -67,12 +65,13 @@ export default function CheckoutPage() {
       }).unwrap();
       setOrderNumber(order.orderNumber);
       clear();
+      toast("Order placed successfully!", "success");
     } catch (e) {
       const message =
         e && typeof e === "object" && "data" in e
           ? String((e as { data?: { error?: string } }).data?.error ?? "Checkout failed")
           : "Checkout failed. Is the API running?";
-      setError(message);
+      toast(message, "error");
     }
   }
 
@@ -104,7 +103,6 @@ export default function CheckoutPage() {
   return (
     <div className="container-se py-8">
       <h1 className="text-3xl font-bold text-navy">Checkout</h1>
-      {error ? <p className="mt-2 text-sm text-sale">{error}</p> : null}
       <form onSubmit={onSubmit} className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr_320px]">
         <section className="rounded-2xl bg-white p-6 ring-1 ring-line">
           <h2 className="font-semibold">Billing details</h2>
@@ -196,7 +194,7 @@ export default function CheckoutPage() {
                   Apply
                 </button>
               </div>
-              {couponError ? <span className="mt-1 block text-xs text-sale">{couponError}</span> : null}
+              
             </label>
           </div>
           <div className="space-y-1 border-t border-line pt-3 text-sm">
