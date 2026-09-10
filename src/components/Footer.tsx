@@ -2,7 +2,7 @@
 
 import { type FormEvent, useState } from "react";
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { ArrowRight, ChevronRight, Mail, ShieldCheck } from "lucide-react";
 import { useSubscribeNewsletterMutation } from "@/store/storeApi";
 import { useStoreSettings } from "@/context/StoreContext";
 import Logo from "@/components/Logo";
@@ -19,6 +19,7 @@ const company = [
   ["About us", "/about"],
   ["Contact", "/contact"],
   ["FAQ", "/faq"],
+  ["Invite friends", "/invite"],
 ];
 
 const policies = [
@@ -44,11 +45,13 @@ export default function Footer() {
   }
 
   return (
-    <footer className="mt-8 border-t border-line bg-navy text-white">
+    <footer className="relative mt-8 overflow-hidden bg-navy text-white">
       <div className="h-1 bg-[linear-gradient(90deg,#8ab6ff,#2563eb,#1a3a6b,#2563eb,#8ab6ff)]" />
 
-      <section className="border-b border-white/10">
-        <div className="container-se flex flex-col items-center gap-6 py-12 text-center md:flex-row md:justify-between md:text-left">
+      {/* newsletter */}
+      <section className="relative border-b border-white/10">
+        <div className="pointer-events-none absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-brand/20 blur-3xl" />
+        <div className="container-se relative flex flex-col items-center gap-6 py-12 text-center md:flex-row md:justify-between md:text-left">
           <div className="max-w-md">
             <p className="flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-brand-soft md:justify-start">
               <Mail size={16} /> Deals & restocks
@@ -60,7 +63,7 @@ export default function Footer() {
               First access to restocks, weekly deals, and hard-to-find SKUs.
             </p>
           </div>
-<form onSubmit={onSubscribe} className="w-full max-w-md">
+          <form onSubmit={onSubscribe} className="w-full max-w-md">
             <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 p-1.5 transition focus-within:border-white/50">
               <input
                 type="email"
@@ -70,20 +73,25 @@ export default function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm text-white outline-none placeholder:text-white/40"
               />
-              <button type="submit" className="btn btn-primary shrink-0 py-2.5!">
+              <button type="submit" className="btn btn-primary group shrink-0 py-2.5!">
                 Join now
+                <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
               </button>
             </div>
           </form>
         </div>
       </section>
 
-      <div className="container-se grid gap-10 py-14 md:grid-cols-4">
+      <div className="container-se grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <Logo light />
           {store.address ? <p className="mt-4 text-sm text-white/60">{store.address}</p> : null}
           {store.phone ? <p className="mt-2 text-sm text-white/60">{store.phone}</p> : null}
           {store.email ? <p className="text-sm text-white/60">{store.email}</p> : null}
+          <p className="mt-4 flex items-start gap-1.5 text-xs text-white/45">
+            <ShieldCheck size={14} className="mt-0.5 shrink-0 text-brand-soft" />
+            Every unit bench-tested and warranty-backed before it ships.
+          </p>
         </div>
         {[
           ["Shop", shopLinks],
@@ -91,11 +99,17 @@ export default function Footer() {
           ["Policies", policies],
         ].map(([heading, items]) => (
           <div key={String(heading)}>
-            <h3 className="font-display mb-3">{heading}</h3>
-            <ul className="space-y-2 text-sm text-white/65">
+            <h3 className="font-display mb-4 text-sm font-semibold uppercase tracking-wider text-brand-soft">
+              {heading}
+            </h3>
+            <ul className="space-y-2.5 text-sm text-white/60">
               {(items as string[][]).map(([label, href]) => (
                 <li key={href}>
-                  <Link href={href} className="transition-colors hover:text-white">
+                  <Link
+                    href={href}
+                    className="inline-flex items-center gap-1 transition-colors hover:text-white"
+                  >
+                    <ChevronRight size={12} className="text-white/25 transition-colors group-hover:text-brand-soft" />
                     {label}
                   </Link>
                 </li>
@@ -104,7 +118,7 @@ export default function Footer() {
           </div>
         ))}
       </div>
-      <div className="border-t border-white/10 py-4 text-center text-xs text-white/40">
+      <div className="border-t border-white/10 py-5 text-center text-xs text-white/40">
         © {new Date().getFullYear()} {store.name} · Tested enterprise IT hardware
       </div>
     </footer>

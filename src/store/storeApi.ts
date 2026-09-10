@@ -16,6 +16,7 @@ import type {
   Category,
   CmsPage,
   CustomerOrder,
+  InviteLeaderboardEntry,
   Product,
   ProductListResult,
   StoreSettings,
@@ -172,6 +173,9 @@ export const storeApi = createApi({
     >({
       query: (body) => ({ url: "/store/coupons/validate", method: "POST", body }),
     }),
+    getInviteLeaderboard: builder.query<InviteLeaderboardEntry[], void>({
+      query: () => "/store/invite-leaderboard",
+    }),
   }),
 });
 
@@ -192,4 +196,5 @@ export const {
   useSubscribeNewsletterMutation,
   useCreateContactMutation,
   useValidateCouponMutation,
+  useGetInviteLeaderboardQuery,
 } = storeApi;

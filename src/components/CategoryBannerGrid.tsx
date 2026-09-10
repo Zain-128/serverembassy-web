@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Category } from "@/types/store";
 import Reveal from "@/components/Reveal";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const palettes: Record<string, [string, string]> = {
   switch: ["#0e2447", "#2563eb"],
@@ -21,15 +22,12 @@ export default function CategoryBannerGrid({ categories }: { categories: Categor
 
   return (
     <section className="container-se py-16">
-      <Reveal>
-        <div className="mb-8">
-          <p className="section-label">Catalog</p>
-          <h2 className="mt-2 text-3xl text-navy">Shop by category</h2>
-          <p className="mt-2 max-w-xl text-muted">
-            Category banners for the hardware families we stock every week.
-          </p>
-        </div>
-      </Reveal>
+      <SectionHeader
+        eyebrow="Catalog"
+        title="Shop by category"
+        description="Category banners for the hardware families we stock every week."
+        href="/shop"
+      />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((cat, i) => {
           const [from, to] = palettes[cat.icon ?? "network"] ?? palettes.network;
@@ -37,7 +35,7 @@ export default function CategoryBannerGrid({ categories }: { categories: Categor
             <Reveal key={cat.id} delay={(i % 3) * 90}>
               <Link
                 href={`/shop/${cat.slug}`}
-                className="shine group relative block min-h-52 overflow-hidden rounded-2xl text-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+                className="shine group relative block min-h-52 overflow-hidden rounded-3xl text-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
                 style={{ background: `linear-gradient(145deg, ${from}, ${to})` }}
               >
                 <div className="absolute inset-0 opacity-25 [background-image:repeating-linear-gradient(90deg,transparent_0_18px,rgba(255,255,255,.14)_18px_19px)]" />

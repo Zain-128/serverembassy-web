@@ -106,3 +106,17 @@ export type CustomerOrder = {
     lineTotal: number;
   }>;
 };
+
+export type Invite = {
+  id: string;
+  email: string;
+  status: "pending" | "accepted" | "expired";
+  createdAt: string;
+};
+
+export type InviteLeaderboardEntry = {
+  id: string;
+  fullName: string;
+  email: string;
+  inviteCount: number;
+};

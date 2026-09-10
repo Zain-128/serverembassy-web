@@ -1,11 +1,11 @@
 export function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-lg bg-line/70 ${className}`} />;
+  return <div className={`animate-pulse rounded-xl bg-line/70 ${className}`} />;
 }
 
 export function ProductCardSkeleton() {
   return (
-    <div className="group overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-soft transition-shadow">
-      <div className="relative aspect-square overflow-hidden rounded-xl bg-line/50">
+    <div className="overflow-hidden rounded-[1.4rem] border border-line bg-white p-3 shadow-card">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-line/40">
         <Skeleton className="absolute inset-0 rounded-none opacity-60" />
       </div>
       <div className="px-1 pt-3">
@@ -14,7 +14,7 @@ export function ProductCardSkeleton() {
         <Skeleton className="mt-2 h-3.5 w-3/5" />
         <div className="mt-3 flex items-center justify-between">
           <Skeleton className="h-5 w-16" />
-          <Skeleton className="h-9 w-9 rounded-full" />
+          <Skeleton className="h-9 w-24 rounded-full" />
         </div>
       </div>
     </div>

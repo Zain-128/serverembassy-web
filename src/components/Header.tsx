@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
+  ArrowRight,
   ChevronDown,
+  Gift,
   Headphones,
   Menu,
   Search,
@@ -129,6 +132,9 @@ export default function Header() {
             <Link href="/login" className="nav-link hidden items-center gap-1.5 py-1 text-sm md:flex">
               <User size={16} /> Account
             </Link>
+            <Link href="/invite" className="nav-link hidden items-center gap-1.5 py-1 text-sm md:flex">
+              <Gift size={16} /> Invite
+            </Link>
             <button
               type="button"
               className="relative flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm font-semibold shadow-soft transition hover:-translate-y-0.5 hover:shadow-card"
@@ -136,11 +142,20 @@ export default function Header() {
             >
               <ShoppingCart size={18} />
               <span className="hidden sm:inline">{formatMoney(subtotal)}</span>
-              {count > 0 ? (
-                <span className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-sale px-1 text-[11px] text-white">
-                  {count}
-                </span>
-              ) : null}
+              <AnimatePresence>
+                {count > 0 ? (
+                  <motion.span
+                    key={count}
+                    className="absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-sale px-1 text-[11px] text-white"
+                    initial={{ scale: 0.4, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.4, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                  >
+                    {count}
+                  </motion.span>
+                ) : null}
+              </AnimatePresence>
             </button>
             <button
               type="button"
@@ -167,23 +182,24 @@ export default function Header() {
                 Categories <ChevronDown size={15} className={`transition-transform duration-200 ${catsOpen ? "rotate-180" : ""}`} />
               </button>
               {catsOpen && tree.length ? (
-                <div className="anim-dropdown absolute left-0 top-full z-50 min-w-[520px] rounded-2xl border border-line bg-white p-6 shadow-lift">
-                  <div className="grid grid-cols-2 gap-6">
+                <div className="anim-dropdown absolute left-0 top-full z-50 min-w-[560px] rounded-3xl border border-line bg-white p-7 shadow-lift">
+                  <div className="grid grid-cols-2 gap-x-10 gap-y-8">
                     {tree.map((parent) => (
                       <div key={parent.id}>
+                        <div className="h-px w-8 bg-brand" />
                         <Link
                           href={`/shop/${parent.slug}`}
-                          className="font-display text-navy hover:text-brand"
+                          className="mt-2 block font-display text-base font-semibold text-navy transition-colors hover:text-brand"
                           onClick={() => setCatsOpen(false)}
                         >
                           {parent.name}
                         </Link>
-                        <ul className="mt-2 space-y-1 text-sm text-muted">
+                        <ul className="mt-2.5 space-y-1.5 text-sm text-muted">
                           {(parent.children?.length ? parent.children : [parent]).map((child) => (
                             <li key={child.id}>
                               <Link
                                 href={`/shop/${child.slug}`}
-                                className="hover:text-navy"
+                                className="transition-colors hover:text-brand"
                                 onClick={() => setCatsOpen(false)}
                               >
                                 {child.name}
@@ -193,6 +209,12 @@ export default function Header() {
                         </ul>
                       </div>
                     ))}
+                  </div>
+                  <div className="mt-6 rounded-2xl bg-gradient-to-r from-brand-soft/50 via-brand/10 to-transparent px-5 py-4">
+                    <Link href="/shop" className="flex items-center justify-between font-medium text-navy" onClick={() => setCatsOpen(false)}>
+                      <span>Browse the entire catalog</span>
+                      <ArrowRight size={16} className="text-brand" />
+                    </Link>
                   </div>
                 </div>
               ) : null}
@@ -295,40 +317,50 @@ export default function Header() {
                 <X />
               </button>
             </div>
-            <div className="border-b border-line p-4">
+            <div className="border-b border-line bg-gradient-to-br from-brand-soft/30 to-transparent p-4">
               <FreeShippingBar compact />
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               {lines.length === 0 ? (
-                <p className="text-sm text-muted">Your cart is empty.</p>
+                <p className="rounded-2xl bg-page/60 p-6 text-center text-sm text-muted">
+                  Your cart is empty.
+                </p>
               ) : (
                 <ul className="space-y-4">
                   {lines.map(({ product, qty }) => {
                     const icon = product.category?.slug?.includes("drive") ? "hdd" : "network";
                     return (
-                      <li key={product.id} className="flex gap-3">
-                        <div className="h-16 w-16 overflow-hidden">
+                      <li key={product.id} className="flex gap-3 rounded-2xl border border-line bg-white p-2.5">
+                        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-page/60 ring-1 ring-line">
                           <ProductVisual product={product} icon={icon} className="h-16" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="line-clamp-2 text-sm font-medium">{product.title}</p>
-                          <p className="text-sm font-semibold">{formatMoney(product.price)}</p>
-                          <div className="mt-1 flex items-center gap-2">
-                            <button type="button" onClick={() => setQty(product.id, qty - 1)}>
-                              −
-                            </button>
-                            <span className="w-6 text-center text-sm">{qty}</span>
-                            <button type="button" onClick={() => setQty(product.id, qty + 1)}>
-                              +
-                            </button>
+                          <p className="line-clamp-2 text-sm font-medium text-navy">{product.title}</p>
+                          <p className="text-sm font-semibold text-navy">{formatMoney(product.price)}</p>
+                          <div className="mt-1.5 inline-flex items-center overflow-hidden rounded-full border border-line">
                             <button
                               type="button"
-                              className="ml-auto text-xs text-sale"
-                              onClick={() => remove(product.id)}
+                              className="grid h-7 w-7 place-items-center text-muted transition hover:text-brand"
+                              onClick={() => setQty(product.id, qty - 1)}
                             >
-                              Remove
+                              −
+                            </button>
+                            <span className="w-7 text-center text-sm font-semibold">{qty}</span>
+                            <button
+                              type="button"
+                              className="grid h-7 w-7 place-items-center text-muted transition hover:text-brand"
+                              onClick={() => setQty(product.id, qty + 1)}
+                            >
+                              +
                             </button>
                           </div>
+                          <button
+                            type="button"
+                            className="ml-auto mt-1.5 block text-xs text-sale hover:underline"
+                            onClick={() => remove(product.id)}
+                          >
+                            Remove
+                          </button>
                         </div>
                       </li>
                     );

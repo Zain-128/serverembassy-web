@@ -4,6 +4,7 @@ import { type FormEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { useCreateQuoteMutation } from "@/store/storeApi";
 import { useToast } from "@/components/Toast";
+import { TextField, TextareaField } from "@/components/ui/fields";
 
 export default function QuoteForm() {
   const toast = useToast().toast;
@@ -36,39 +37,15 @@ export default function QuoteForm() {
       <p className="mt-1 text-sm text-muted">
         Bulk orders, hard-to-find SKUs, or dedicated account management.
       </p>
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <label className="text-sm font-medium">
-          Name
-          <input name="name" required className="mt-1 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
-        <label className="text-sm font-medium">
-          Email
-          <input name="email" type="email" required className="mt-1 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
-        <label className="text-sm font-medium">
-          Phone
-          <input name="phone" className="mt-1 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
-        <label className="text-sm font-medium">
-          Company
-          <input name="company" className="mt-1 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
-        <label className="text-sm font-medium">
-          Part Number
-          <input name="partNumber" className="mt-1 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
-        <label className="text-sm font-medium">
-          Quantity
-          <input name="quantity" type="number" min={1} className="mt-1 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
-        <label className="text-sm font-medium">
-          Target Price
-          <input name="targetPrice" type="number" min={0} step="0.01" className="mt-1 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
-        <label className="col-span-full text-sm font-medium">
-          Message
-          <textarea name="message" className="mt-1 min-h-24 w-full rounded-lg border border-line px-3 py-2" />
-        </label>
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <TextField label="Name" name="name" required placeholder="Jane Doe" />
+        <TextField label="Email" name="email" type="email" required placeholder="you@company.com" />
+        <TextField label="Phone" name="phone" placeholder="+1 555 000 1234" />
+        <TextField label="Company" name="company" placeholder="Acme Corp" />
+        <TextField label="Part number" name="partNumber" placeholder="e.g. 00AJ140" />
+        <TextField label="Quantity" name="quantity" type="number" min={1} placeholder="10" />
+        <TextField label="Target price" name="targetPrice" type="number" min={0} step="0.01" placeholder="e.g. 120.00" />
+        <TextareaField label="Message" name="message" placeholder="Anything we should know?" />
       </div>
       <button type="submit" className="btn btn-primary group mt-5">
         Submit

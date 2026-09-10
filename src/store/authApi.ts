@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery, type BaseQueryFn, type FetchArgs } from "@re
 import type { RootState } from "./index";
 import { getApiUrl } from "@/lib/api/config";
 import { setCredentials, setCustomer, logout, type CustomerProfile } from "./authSlice";
+import type { Invite } from "@/types/store";
 
 type AuthResponse = { token: string; user: CustomerProfile };
 
@@ -25,7 +26,7 @@ const baseQueryWithLogout: BaseQueryFn<string | FetchArgs> = async (args, api, e
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithLogout,
-  tagTypes: ["Auth", "CustomerOrders"],
+  tagTypes: ["Auth", "CustomerOrders", "Invites"],
   endpoints: (builder) => ({
     register: builder.mutation<AuthResponse, Partial<CustomerProfile> & { password: string }>({
       query: (body) => ({ url: "/register", method: "POST", body }),
@@ -62,8 +63,30 @@ export const authApi = createApi({
         dispatch(logout());
       },
     }),
+    deleteAccount: builder.mutation<{ message: string }, { password: string }>({
+      query: (body) => ({ url: "/customer/account", method: "DELETE", body }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(logout());
+      },
+    }),
+    sendInvite: builder.mutation<Invite, string>({
+      query: (email) => ({ url: "/customer/invite", method: "POST", body: { email } }),
+      invalidatesTags: ["Invites"],
+    }),
+    getMyInvites: builder.query<{ inviteCount: number; invites: Invite[] }, void>({
+      query: () => "/customer/invites",
+      providesTags: ["Invites"],
+    }),
   }),
 });
 
-export const { useRegisterMutation, useCustomerLoginMutation, useGetMeQuery, useLogoutMutation } =
-  authApi;
+export const {
+  useRegisterMutation,
+  useCustomerLoginMutation,
+  useGetMeQuery,
+  useLogoutMutation,
+  useDeleteAccountMutation,
+  useSendInviteMutation,
+  useGetMyInvitesQuery,
+} = authApi;

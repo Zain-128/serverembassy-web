@@ -536,6 +536,144 @@ button {
   color: var(--color-brand);
 }
 
+/* ---------- 3D helpers ---------- */
+
+.persp {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Floating device (GPU friendly, transform-only) */
+
+.anim-float-y {
+  animation: floatY 6s ease-in-out infinite;
+}
+
+.anim-float-y-slow {
+  animation: floatY 9s ease-in-out infinite;
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+/* Ambient light orbs */
+
+.anim-orb {
+  animation: orb-drift 16s ease-in-out infinite;
+}
+
+.anim-orb-2 {
+  animation: orb-drift 22s ease-in-out infinite reverse;
+}
+
+@keyframes orb-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(34px, -22px, 0) scale(1.12);
+  }
+  66% {
+    transform: translate3d(-22px, -12px, 0) scale(0.94);
+  }
+}
+
+.anim-pulse-glow {
+  animation: pulse-glow 5.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.07);
+  }
+}
+
+/* Device specular sheen sweep */
+
+.device-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.device-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.24) 50%, transparent 58%);
+  transform: translateX(-120%);
+  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.group:hover .device-sheen::after,
+.device-sheen.motion-sheen::after {
+  transform: translateX(120%);
+}
+
+/* Cursor-following radial glow (uses --mx / --my set from JS) */
+
+.card-radial {
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(37, 99, 235, 0.13),
+    transparent 65%
+  );
+}
+
+/* Pseudo-3D slab edges */
+
+.device-edge-light {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 40%);
+}
+
+/* Floor shadow under floating devices */
+
+.device-floor {
+  background: radial-gradient(closest-side, rgba(10, 18, 26, 0.48), rgba(10, 18, 26, 0) 72%);
+  filter: blur(7px);
+}
+
+/* Hero aurora backdrop */
+
+.hero-aurora {
+  background:
+    radial-gradient(820px 420px at 78% 12%, rgba(59, 130, 246, 0.32), transparent 58%),
+    radial-gradient(620px 340px at 12% 88%, rgba(30, 82, 138, 0.4), transparent 55%),
+    linear-gradient(160deg, #1e3a70 0%, #0e2447 46%, #0a1a36 100%);
+}
+
+/* Vertical reveal line for feature scenes */
+
+.feature-line {
+  background: linear-gradient(180deg, transparent, rgba(37, 99, 235, 0.8), transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

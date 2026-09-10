@@ -20,7 +20,7 @@ export default function PromoBanners({ banners }: { banners: Banner[] }) {
           <Reveal key={banner.id} delay={(i % 2) * 90}>
             <Link
               href={banner.href}
-              className={`shine group relative block overflow-hidden rounded-2xl text-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift ${
+              className={`shine group relative block overflow-hidden rounded-3xl text-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift ${
                 i === 0 ? "min-h-52" : "min-h-44"
               }`}
               style={{
