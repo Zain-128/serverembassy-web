@@ -1,59 +1,45 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "motion/react";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { Banner, Product } from "@/types/store";
-import DeviceScene from "@/components/3d/DeviceScene";
-import MagneticButton from "@/components/ui/MagneticButton";
-import { EASE, useIsTouch } from "@/lib/motion";
+import ProductVisual from "@/components/ProductVisual";
+import { EASE } from "@/lib/motion";
 
 type Slide = {
-  eyebrow?: string;
-  pre: string;
-  gradient: string;
-  post: string;
-  sub: string;
-  cta: string;
-  cta2?: string;
-  href: string;
-  href2?: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  categories: { label: string; href: string }[];
 };
+
+const defaultCategories = [
+  { label: "Servers", href: "/shop?q=server" },
+  { label: "Storage", href: "/shop?q=storage" },
+  { label: "Networking", href: "/shop?q=network" },
+  { label: "Cloud", href: "/shop" },
+  { label: "ITAD", href: "/contact" },
+];
 
 const fallbackSlides: Slide[] = [
   {
-    pre: "Server hardware, ",
-    gradient: "beautifully",
-    post: " curated.",
-    sub: "Enterprise switches, storage, and power — tested, warrantied, and ready to ship in 1–2 days.",
-    cta: "Shop catalog",
-    href: "/shop",
+    eyebrow: "your global end to end it solution partner | not your typical VAR",
+    title: "Shop new, used & refurbished",
+    subtitle: "Servers, storage & networking",
+    categories: defaultCategories,
   },
   {
-    pre: "Deals up to ",
-    gradient: "40% off",
-    post: " on in-stock hardware",
-    sub: "Rotating deals on enterprise storage, switches, and power — while stock lasts.",
-    cta: "Shop deals",
-    href: "/shop",
-    cta2: "Weekly deals",
-    href2: "#deals",
+    eyebrow: "enterprise hardware · tested · warrantied",
+    title: "In-stock rack ready gear",
+    subtitle: "Switches, drives, memory & power",
+    categories: defaultCategories,
   },
   {
-    pre: "Need a ",
-    gradient: "volume quote?",
-    post: "",
-    sub: "Hard-to-find SKUs, bulk pricing, and dedicated account managers for B2B buyers.",
-    cta: "Request a quote",
-    href: "#quote",
+    eyebrow: "b2b pricing · volume quotes · fast dispatch",
+    title: "Build out with confidence",
+    subtitle: "Hard-to-find SKUs, ready to ship",
+    categories: defaultCategories,
   },
 ];
 
@@ -62,58 +48,94 @@ function buildSlides(banners: Banner[]): Slide[] {
     .filter((b) => b.active && b.size === "hero")
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map<Slide>((b) => ({
-      eyebrow: b.title.split(" ")[0],
-      pre: b.title,
-      gradient: "",
-      post: "",
-      sub: b.subtitle,
-      cta: b.cta,
-      href: b.href,
+      eyebrow: b.subtitle || fallbackSlides[0].eyebrow,
+      title: b.title,
+      subtitle: b.cta || fallbackSlides[0].subtitle,
+      categories: defaultCategories,
     }));
-  return [...custom, ...fallbackSlides].slice(0, 4);
+  return (custom.length ? custom : fallbackSlides).slice(0, 4);
+}
+
+function HardwareStage({
+  products,
+  side,
+}: {
+  products: Product[];
+  side: "left" | "right";
+}) {
+  const primary = products[0];
+  const secondary = products[1];
+  const offset = side === "left" ? "-translate-x-[8%]" : "translate-x-[8%]";
+
+  return (
+    <div className={`relative hidden h-full min-h-[420px] items-center justify-center lg:flex ${offset}`}>
+      {primary ? (
+        <motion.div
+          className={`anim-float absolute ${side === "left" ? "left-[8%] top-[12%]" : "right-[6%] top-[8%]"} h-[210px] w-[210px] xl:h-[250px] xl:w-[250px]`}
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE }}
+        >
+          <div className="h-full w-full overflow-hidden rounded-[28px] border border-white/15 bg-white/5 p-3 shadow-[0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm">
+            <ProductVisual
+              product={primary}
+              icon={primary.category?.slug?.includes("drive") ? "hdd" : "network"}
+              className="h-full rounded-2xl"
+            />
+          </div>
+        </motion.div>
+      ) : null}
+      {secondary ? (
+        <motion.div
+          className={`anim-float-slow absolute ${side === "left" ? "bottom-[10%] right-[4%]" : "bottom-[12%] left-[2%]"} h-[150px] w-[150px] xl:h-[180px] xl:w-[180px]`}
+          initial={{ opacity: 0, y: 36 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.15, ease: EASE }}
+        >
+          <div className="h-full w-full overflow-hidden rounded-[24px] border border-white/15 bg-white/5 p-2.5 shadow-[0_24px_60px_rgba(0,0,0,0.4)] backdrop-blur-sm">
+            <ProductVisual
+              product={secondary}
+              icon={secondary.category?.slug?.includes("drive") ? "hdd" : "switch"}
+              className="h-full rounded-xl"
+            />
+          </div>
+        </motion.div>
+      ) : (
+        <div
+          className={`absolute ${side === "left" ? "bottom-[14%] right-[10%]" : "bottom-[16%] left-[8%]"} h-28 w-28 rounded-full border border-brand/40 bg-brand/20 blur-0`}
+          aria-hidden
+        />
+      )}
+    </div>
+  );
 }
 
 export default function HeroCarousel({
   banners,
   featured,
+  products = [],
 }: {
   banners: Banner[];
   featured?: Product;
+  products?: Product[];
 }) {
   const slides = useMemo(() => buildSlides(banners), [banners]);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
-  const touch = useIsTouch();
-  const sectionRef = useRef<HTMLElement>(null);
 
-  const icon = featured?.category?.slug?.includes("drive") ?? false ? "hdd" : "network";
-
-  // Cursor parallax (desktop only)
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const smx = useSpring(mx, { stiffness: 55, damping: 18, mass: 0.6 });
-  const smy = useSpring(my, { stiffness: 55, damping: 18, mass: 0.6 });
-  const prodX = useTransform(smx, (v) => v * 22);
-  const prodY = useTransform(smy, (v) => v * 16);
-  const prodRotX = useTransform(smy, (v) => v * -10);
-  const prodRotY = useTransform(smx, (v) => v * 14);
-  const gridX = useTransform(smx, (v) => v * 16);
-  const gridY = useTransform(smy, (v) => v * 12);
-  const orbX = useTransform(smx, (v) => v * -34);
-  const orbY = useTransform(smy, (v) => v * -26);
-
-  const onPointerMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (reduce || touch) return;
-      const el = sectionRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      mx.set((e.clientX - rect.left) / rect.width - 0.5);
-      my.set((e.clientY - rect.top) / rect.height - 0.5);
-    },
-    [reduce, touch, mx, my],
-  );
+  const stageProducts = useMemo(() => {
+    const pool = [featured, ...products].filter(Boolean) as Product[];
+    const unique: Product[] = [];
+    const seen = new Set<string>();
+    for (const p of pool) {
+      if (seen.has(p.id)) continue;
+      seen.add(p.id);
+      unique.push(p);
+      if (unique.length >= 4) break;
+    }
+    return unique;
+  }, [featured, products]);
 
   useEffect(() => {
     if (paused || slides.length < 2) return;
@@ -121,152 +143,73 @@ export default function HeroCarousel({
     return () => clearInterval(timer);
   }, [paused, slides.length]);
 
-  const next = () => setIndex((i) => (i + 1) % slides.length);
-  const prev = () => setIndex((i) => (i - 1 + slides.length) % slides.length);
   const slide = slides[index];
 
   return (
     <section
-      ref={sectionRef as never}
-      className="hero-aurora relative isolation-auto min-h-[700px] overflow-hidden text-white md:h-[660px] md:min-h-0"
+      className="hero-aurora relative isolation-auto min-h-[560px] overflow-hidden text-white md:min-h-[620px] lg:min-h-[680px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      onMouseMove={onPointerMove}
     >
-      {/* Layered background */}
-      <motion.div
-        className="absolute inset-0"
-        style={{ backgroundImage: "repeating-linear-gradient(90deg, transparent 0 56px, rgba(255,255,255,0.05) 56px 57px), repeating-linear-gradient(180deg, transparent 0 18px, rgba(255,255,255,0.06) 18px 19px)", x: reduce ? undefined : gridX, y: reduce ? undefined : gridY, maskImage: "linear-gradient(90deg, transparent 30%, black 74%)", willChange: "transform" }}
+      <div className="hero-hex absolute inset-0 opacity-70" aria-hidden />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(6,12,24,0.55)_72%,rgba(6,12,24,0.88)_100%)]"
         aria-hidden
       />
-      <motion.div
-        className="anim-orb absolute -right-24 top-10 h-[420px] w-[420px] rounded-full bg-brand/25 blur-[110px]"
-        style={{ x: reduce ? undefined : orbX, y: reduce ? undefined : orbY }}
-        aria-hidden
-      />
-      <motion.div
-        className="anim-orb-2 absolute -left-32 bottom-[-160px] h-[460px] w-[460px] rounded-full bg-[#2f6fe4]/20 blur-[120px]"
-        style={{ x: reduce ? undefined : orbX, y: reduce ? undefined : orbY }}
-        aria-hidden
-      />
-      <div className="absolute inset-x-0 bottom-[88px] h-[260px] bg-[radial-gradient(closest-side,rgba(244,247,248,0.07),transparent)]" aria-hidden />
+      <div className="anim-orb absolute left-[8%] top-[18%] h-64 w-64 rounded-full bg-brand/25 blur-[100px]" aria-hidden />
+      <div className="anim-orb-2 absolute right-[10%] bottom-[12%] h-72 w-72 rounded-full bg-[#3b82f6]/20 blur-[110px]" aria-hidden />
 
-      <div className="container-se relative z-10 grid h-full items-center gap-8 pt-12 pb-24 md:grid-cols-[1.05fr_0.95fr] md:gap-10 md:pb-0 md:pt-10">
-        {/* Copy */}
-        <div className="relative z-10 md:pb-2">
+      <div className="container-se relative z-10 grid min-h-[560px] items-center py-14 md:min-h-[620px] lg:min-h-[680px] lg:grid-cols-[0.95fr_1.2fr_0.95fr] lg:gap-4 lg:py-10">
+        <HardwareStage products={stageProducts.slice(0, 2)} side="left" />
+
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={index}
-              initial={reduce ? { opacity: 1 } : { opacity: 0, y: 26, filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={reduce ? { opacity: 1 } : { opacity: 0, y: -18, filter: "blur(8px)" }}
-              transition={{ duration: 0.6, ease: EASE }}
+              initial={reduce ? { opacity: 1 } : { opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? { opacity: 1 } : { opacity: 0, y: -16 }}
+              transition={{ duration: 0.55, ease: EASE }}
             >
-              <p className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 backdrop-blur">
-                <Sparkles size={13} className="text-sky-300" />
-                {slide.eyebrow ?? "Enterprise IT hardware"}
+              <p className="mx-auto inline-flex max-w-[92%] items-center justify-center rounded-full bg-brand px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white sm:text-[11px]">
+                {slide.eyebrow}
               </p>
-              <h1 className="mt-5 max-w-xl font-display text-4xl font-bold tracking-tight text-white md:text-6xl">
-                {slide.pre}
-                {slide.gradient ? <span className="text-gradient">{slide.gradient}</span> : null}
-                {slide.post}
+              <h1 className="mt-6 font-display text-[clamp(2rem,5.4vw,4.25rem)] font-bold uppercase leading-[0.98] tracking-[-0.02em] text-white">
+                {slide.title}
               </h1>
-              <p className="mt-4 max-w-md text-base text-white/70 md:text-lg">{slide.sub}</p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <MagneticButton href={slide.href} className="btn btn-primary group text-sm md:text-base">
-                  {slide.cta}
-                  <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-                </MagneticButton>
-                {slide.cta2 && slide.href2 ? (
-                  <Link href={slide.href2} className="btn btn-ghost text-sm md:text-base">
-                    {slide.cta2}
-                  </Link>
-                ) : null}
+              <p className="mt-4 font-display text-[clamp(1.05rem,2.4vw,1.85rem)] font-medium uppercase tracking-[0.06em] text-white/85">
+                {slide.subtitle}
+              </p>
+              <div className="mx-auto mt-8 inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full bg-brand px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-white sm:text-[13px]">
+                {slide.categories.map((cat, i) => (
+                  <span key={cat.label} className="inline-flex items-center gap-2">
+                    {i > 0 ? <span className="text-white/50">•</span> : null}
+                    <Link href={cat.href} className="transition hover:text-white/80">
+                      {cat.label}
+                    </Link>
+                  </span>
+                ))}
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Product stage */}
-        <div className="relative min-h-[280px] [mask-image:linear-gradient(180deg,black_70%,transparent)] md:min-h-[430px] md:[mask-image:none]">
-          {featured ? (
-            <motion.div
-              className="absolute left-1/2 top-1/2 h-[240px] w-[240px] max-w-[78vw] -translate-x-1/2 -translate-y-1/2 md:h-[360px] md:w-[360px] xl:h-[410px] xl:w-[410px]"
-              style={{ x: reduce || touch ? undefined : prodX, y: reduce || touch ? undefined : prodY, rotateX: reduce || touch ? undefined : prodRotX, rotateY: reduce || touch ? undefined : prodRotY }}
-              initial={{ opacity: 0, scale: 0.9, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2, ease: EASE }}
-            >
-              <div className="persp h-full w-full" style={{ perspective: 1200 }}>
-                <DeviceScene
-                  product={featured}
-                  icon={icon}
-                  className="h-full w-full"
-                  tilt={false}
-                  angle={-8}
-                  altitude={4}
-                />
-              </div>
-
-              <Link
-                href={`/product/${featured.slug}`}
-                className="group absolute right-0 top-[-6px] rounded-2xl border border-white/15 bg-white/10 px-4 py-2.5 text-right backdrop-blur-md transition-colors hover:bg-white/20"
-              >
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60">From</p>
-                <p className="font-display text-xl font-bold text-white">
-                  ${Math.floor(featured.price)}
-                </p>
-              </Link>
-            </motion.div>
-          ) : (
-            <motion.div
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-2xl text-white/40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              Premium hardware, ready to ship.
-            </motion.div>
-          )}
-        </div>
+        <HardwareStage products={stageProducts.slice(2, 4)} side="right" />
       </div>
 
-      {/* Controls */}
       {slides.length > 1 ? (
-        <div className="absolute inset-x-0 bottom-6 z-20">
-          <div className="container-se flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              {slides.map((s, i) => (
-                <button
-                  key={`d-${i}`}
-                  type="button"
-                  aria-label={`Go to slide ${i + 1}`}
-                  onClick={() => setIndex(i)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    i === index ? "w-8 bg-brand-soft" : "w-2.5 bg-white/30 hover:bg-white/60"
-                  }`}
-                />
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={prev}
-                aria-label="Previous slide"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur transition hover:bg-white/20"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                type="button"
-                onClick={next}
-                aria-label="Next slide"
-                className="grid h-10 w-10 place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur transition hover:bg-white/20"
-              >
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          </div>
+        <div className="absolute inset-x-0 bottom-7 z-20 flex justify-center gap-2">
+          {slides.map((_, i) => (
+            <button
+              key={`d-${i}`}
+              type="button"
+              aria-label={`Go to slide ${i + 1}`}
+              onClick={() => setIndex(i)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                i === index ? "w-8 bg-brand ring-2 ring-brand/40 ring-offset-2 ring-offset-transparent" : "w-2.5 bg-white/35 hover:bg-white/65"
+              }`}
+            />
+          ))}
         </div>
       ) : null}
     </section>

@@ -1,34 +1,38 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronRight, Mail, ShieldCheck } from "lucide-react";
-import { useSubscribeNewsletterMutation } from "@/store/storeApi";
+import { ArrowRight, Mail, Phone } from "lucide-react";
+import {
+  useGetCategoryTreeQuery,
+  useSubscribeNewsletterMutation,
+} from "@/store/storeApi";
 import { useStoreSettings } from "@/context/StoreContext";
 import Logo from "@/components/Logo";
 import { useToast } from "@/components/Toast";
+import { navCategories } from "@/lib/nav";
 
-const shopLinks = [
-  ["Shop all", "/shop"],
-  ["Network Switches", "/shop/network-switches"],
-  ["Hard Drives", "/shop/hard-drives"],
-  ["Brands", "/#brands"],
-];
-
-const company = [
-  ["About us", "/about"],
-  ["Contact", "/contact"],
-  ["FAQ", "/faq"],
-  ["Invite friends", "/invite"],
-];
-
-const policies = [
-  ["Shipping", "/policies/shipping"],
-  ["Return Policy", "/policies/returns"],
+const FALLBACK_NAV = [
+  { href: "/shop?q=server", label: "Servers" },
+  { href: "/shop?q=storage", label: "Storage" },
+  { href: "/shop?q=network", label: "Networking" },
+  { href: "/shop?q=component", label: "Components" },
+  { href: "/about", label: "Maintenance" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Footer() {
   const { settings: store } = useStoreSettings();
+  const { data: tree = [] } = useGetCategoryTreeQuery();
+  const navLinks = useMemo(() => {
+    const cats = navCategories(tree, 5).map((c) => ({
+      href: `/shop/${c.slug}`,
+      label: c.name,
+    }));
+    if (!cats.length) return FALLBACK_NAV;
+    return [...cats, { href: "/contact", label: "Contact" }];
+  }, [tree]);
+
   const [email, setEmail] = useState("");
   const [subscribe] = useSubscribeNewsletterMutation();
   const toast = useToast().toast;
@@ -44,82 +48,87 @@ export default function Footer() {
     }
   }
 
-  return (
-    <footer className="relative mt-8 overflow-hidden bg-navy text-white">
-      <div className="h-1 bg-[linear-gradient(90deg,#8ab6ff,#2563eb,#1a3a6b,#2563eb,#8ab6ff)]" />
+  const phone = store.phone || "(303) 847-0120";
+  const mail = store.email || "info@powerlinedevices.com";
+  const blurb =
+    store.tagline ||
+    "Enterprise servers, storage, and networking — tested, warrantied, and ready to ship.";
 
-      {/* newsletter */}
-      <section className="relative border-b border-white/10">
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-48 w-[40rem] -translate-x-1/2 rounded-full bg-brand/20 blur-3xl" />
-        <div className="container-se relative flex flex-col items-center gap-6 py-12 text-center md:flex-row md:justify-between md:text-left">
-          <div className="max-w-md">
-            <p className="flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-brand-soft md:justify-start">
-              <Mail size={16} /> Deals & restocks
-            </p>
-            <h2 className="mt-2 font-display text-2xl tracking-tight md:text-3xl">
-              Join the stock alert list
-            </h2>
-            <p className="mt-2 text-sm text-white/60">
-              First access to restocks, weekly deals, and hard-to-find SKUs.
-            </p>
+  return (
+    <footer className="bg-[#05070c] px-4 pb-10 pt-6 sm:px-6">
+      <div className="container-se overflow-hidden rounded-[2rem] bg-white shadow-lift">
+        {/* Logo + nav */}
+        <div className="flex flex-col gap-5 px-6 py-7 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+          <Link href="/" aria-label="Power Line Devices home" className="shrink-0">
+            <Logo />
+          </Link>
+          <nav
+            className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium text-navy md:justify-end"
+            aria-label="Footer"
+          >
+            {navLinks.map((link) => (
+              <Link key={`${link.href}-${link.label}`} href={link.href} className="transition hover:text-brand">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mx-6 h-px bg-navy/15 sm:mx-8 lg:mx-10" />
+
+        {/* Contact + newsletter */}
+        <div className="grid items-center gap-8 px-6 py-8 sm:px-8 md:grid-cols-2 md:gap-0 lg:px-10">
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 md:pr-10">
+            <a
+              href={`tel:${phone.replace(/[^\d+]/g, "")}`}
+              className="inline-flex items-center gap-2.5 text-sm font-semibold text-navy transition hover:text-brand"
+            >
+              <Phone size={18} className="text-brand" strokeWidth={2} />
+              {phone}
+            </a>
+            <a
+              href={`mailto:${mail}`}
+              className="inline-flex items-center gap-2.5 text-sm font-semibold text-navy transition hover:text-brand"
+            >
+              <Mail size={18} className="text-brand" strokeWidth={2} />
+              {mail}
+            </a>
           </div>
-          <form onSubmit={onSubscribe} className="w-full max-w-md">
-            <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 p-1.5 transition focus-within:border-white/50">
+
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 md:border-l md:border-navy/15 md:pl-10">
+            <p className="shrink-0 text-sm font-semibold text-navy">Stay In Touch</p>
+            <form onSubmit={onSubscribe} className="flex min-w-0 flex-1 overflow-hidden rounded-full bg-navy">
               <input
                 type="email"
                 required
-                placeholder="Enter your email"
+                placeholder="Email Address....."
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm text-white outline-none placeholder:text-white/40"
+                className="min-w-0 flex-1 bg-transparent px-5 py-3 text-sm text-white outline-none placeholder:text-white/45"
               />
-              <button type="submit" className="btn btn-primary group shrink-0 py-2.5!">
-                Join now
-                <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
+              <button
+                type="submit"
+                className="inline-flex shrink-0 items-center gap-2 bg-gradient-to-b from-[#3b82f6] to-[#1d4ed8] px-4 py-3 text-sm font-bold text-white transition hover:brightness-110 sm:px-5"
+              >
+                Submit
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-white text-brand">
+                  <ArrowRight size={14} strokeWidth={2.5} />
+                </span>
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-      </section>
 
-      <div className="container-se grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div>
-          <Logo light />
-          {store.address ? <p className="mt-4 text-sm text-white/60">{store.address}</p> : null}
-          {store.phone ? <p className="mt-2 text-sm text-white/60">{store.phone}</p> : null}
-          {store.email ? <p className="text-sm text-white/60">{store.email}</p> : null}
-          <p className="mt-4 flex items-start gap-1.5 text-xs text-white/45">
-            <ShieldCheck size={14} className="mt-0.5 shrink-0 text-brand-soft" />
-            Every unit bench-tested and warranty-backed before it ships.
+        <div className="mx-6 h-px bg-navy/10 sm:mx-8 lg:mx-10" />
+
+        {/* Bottom blurbs */}
+        <div className="grid gap-4 px-6 py-6 text-xs leading-relaxed text-muted sm:px-8 md:grid-cols-2 md:gap-10 lg:px-10">
+          <p>{blurb}</p>
+          <p>
+            © {new Date().getFullYear()} {store.name || "Power Line Devices"}. Original and certified
+            refurbished IT hardware for teams that can&apos;t afford downtime.
           </p>
         </div>
-        {[
-          ["Shop", shopLinks],
-          ["Company", company],
-          ["Policies", policies],
-        ].map(([heading, items]) => (
-          <div key={String(heading)}>
-            <h3 className="font-display mb-4 text-sm font-semibold uppercase tracking-wider text-brand-soft">
-              {heading}
-            </h3>
-            <ul className="space-y-2.5 text-sm text-white/60">
-              {(items as string[][]).map(([label, href]) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="inline-flex items-center gap-1 transition-colors hover:text-white"
-                  >
-                    <ChevronRight size={12} className="text-white/25 transition-colors group-hover:text-brand-soft" />
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <div className="border-t border-white/10 py-5 text-center text-xs text-white/40">
-        © {new Date().getFullYear()} {store.name} · Tested enterprise IT hardware
       </div>
     </footer>
   );

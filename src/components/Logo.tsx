@@ -1,7 +1,5 @@
 import Image from "next/image";
 
-const BRAND = "Power Line Devices";
-
 export default function Logo({ light = false }: { light?: boolean }) {
   // black icon = white P (for dark surfaces); white icon = blue P (for light surfaces)
   const src = light ? "/brand/logo-icon-dark.jpg" : "/brand/logo-icon-light.jpg";
@@ -11,22 +9,26 @@ export default function Logo({ light = false }: { light?: boolean }) {
       <Image
         src={src}
         alt=""
-        width={40}
-        height={40}
-        className="h-9 w-9 shrink-0 rounded-md object-contain"
+        width={44}
+        height={44}
+        className="h-10 w-10 shrink-0 rounded-md object-contain"
         priority
         aria-hidden
       />
-      <span className="leading-tight">
+      <span className="leading-[0.95]">
         <span
-          className={`font-display block text-[15px] tracking-tight ${light ? "text-white" : "text-navy"}`}
+          className={`font-display block text-[17px] font-bold uppercase tracking-[0.04em] ${
+            light ? "text-white" : "text-brand"
+          }`}
         >
-          {BRAND}
+          Powerline
         </span>
         <span
-          className={`block text-[10px] uppercase tracking-[0.14em] ${light ? "text-white/55" : "text-muted"}`}
+          className={`block text-[11px] font-semibold uppercase tracking-[0.22em] ${
+            light ? "text-white/70" : "text-navy"
+          }`}
         >
-          Enterprise hardware
+          Devices
         </span>
       </span>
     </span>
