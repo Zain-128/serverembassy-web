@@ -5,14 +5,27 @@ import type { Category } from "@/types/store";
 import ProductVisual from "@/components/ProductVisual";
 import { useGetProductsQuery } from "@/store/storeApi";
 
+const FALLBACK_CATEGORIES: Category[] = [
+  { id: "cat-1", name: "ACCESSORIES", slug: "accessories", count: 5 } as unknown as Category,
+  { id: "cat-2", name: "phone cases", slug: "phone-cases", count: 8 } as unknown as Category,
+  { id: "cat-3", name: "phone glasses", slug: "phone-glasses", count: 50 } as unknown as Category,
+  { id: "cat-4", name: "headphones", slug: "headphones", count: 6 } as unknown as Category,
+  { id: "cat-5", name: "mobile phones", slug: "mobile-phones", count: 4 } as unknown as Category,
+  { id: "cat-6", name: "chargers", slug: "chargers", count: 9 } as unknown as Category,
+];
+
 function CategoryTile({ category }: { category: Category }) {
-  const { data } = useGetProductsQuery({
-    category: category.slug,
-    limit: 1,
-    inStock: true,
-  });
+  const isFallback = !category.slug || category.slug.startsWith("cat-");
+  const { data } = useGetProductsQuery(
+    {
+      category: category.slug,
+      limit: 1,
+      inStock: true,
+    },
+    { skip: isFallback }
+  );
   const product = data?.items?.[0];
-  const count = data?.total ?? 0;
+  const count = (category as unknown as { count?: number }).count ?? data?.total ?? 0;
   const icon =
     category.icon ??
     (category.slug.includes("drive")
@@ -50,17 +63,16 @@ function CategoryTile({ category }: { category: Category }) {
 }
 
 export default function GoodCategories({ categories }: { categories: Category[] }) {
-  const list = categories.slice(0, 6);
-  if (!list.length) return null;
+  const list = categories.length ? categories.slice(0, 6) : FALLBACK_CATEGORIES;
 
   return (
     <section className="bg-[#05070c] text-white">
       <div className="container-se py-12 md:py-14">
         <div className="mb-8 flex flex-wrap items-baseline gap-x-4 gap-y-2">
           <h2 className="font-display text-xl font-bold uppercase tracking-[0.04em] text-white sm:text-2xl">
-            Our Good Categories
+            OUR GOOD CATEGORIES
           </h2>
-          <p className="text-sm text-white/50">Don&apos;t miss out on this week&apos;s deals</p>
+          <p className="text-sm text-white/50">Dont miss out on this waek deals</p>
         </div>
 
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">

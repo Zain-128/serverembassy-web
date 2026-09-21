@@ -7,29 +7,29 @@ import ProductVisual from "@/components/ProductVisual";
 import Reveal from "@/components/Reveal";
 
 const FALLBACK_BRANDS = [
-  "Juniper",
+  "Juniper NETWORKS",
   "Synology",
-  "Veeam",
+  "VeeAM",
   "HPE",
-  "Dell",
-  "Cisco",
+  "DELL Technologies",
+  "CISCO",
 ];
 
 const features = [
   {
     icon: Network,
     title: "International shipment",
-    text: "Global freight options for rack hardware, with tracked dispatch and customs-ready paperwork.",
+    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
   },
   {
     icon: Rocket,
     title: "Re Shipment",
-    text: "Fast re-ship and RMA turnaround so replacements land before your maintenance window closes.",
+    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
   },
   {
     icon: Contact,
     title: "Contact Us",
-    text: "Talk to a specialist for part numbers, lead times, and volume pricing on enterprise SKUs.",
+    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     href: "/contact",
   },
 ];
@@ -54,7 +54,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
       key: b.id,
       badge: "On Sale This Week",
       title: b.title || "Better Quality Better Service for Your",
-      text: b.subtitle || "Tested enterprise hardware with warranty coverage and fast US shipping.",
+      text: b.subtitle || "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem",
       href: b.href || "/shop",
       product: products[i],
     }));
@@ -65,7 +65,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
       key: "promo-1",
       badge: "On Sale This Week",
       title: "Better Quality Better Service for Your",
-      text: "Certified servers and storage — inspected, warrantied, and ready for production racks.",
+      text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem",
       href: "/shop",
       product: products[0],
     },
@@ -73,7 +73,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
       key: "promo-2",
       badge: "On Sale This Week",
       title: "Better Quality Better Service for Your",
-      text: "Networking gear and components with same-week dispatch on in-stock SKUs.",
+      text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem",
       href: "/shop?sort=newest",
       product: products[1],
     },

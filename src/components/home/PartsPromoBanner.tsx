@@ -25,10 +25,10 @@ export default function PartsPromoBanner({ products = [] }: { products?: Product
                   On Sale This Week
                 </span>
                 <h2 className="mt-5 font-display text-[clamp(1.65rem,3.4vw,2.75rem)] font-bold leading-[1.12] tracking-tight text-white">
-                  Search And Order All Your Device Parts In One Location
+                  Search And order All Your device Parts In One Location
                 </h2>
                 <p className="mt-4 max-w-md text-sm leading-relaxed text-white/80 sm:text-base">
-                  Servers, storage, networking, and components — sourced, tested, and ready to ship from a single catalog.
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                 </p>
                 <Link
                   href="/shop"

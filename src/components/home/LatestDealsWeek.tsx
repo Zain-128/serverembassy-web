@@ -104,7 +104,7 @@ export default function LatestDealsWeek({ products }: { products: Product[] }) {
       <div className="container-se py-12 md:py-14">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <h2 className="font-display text-xl font-semibold tracking-tight text-white sm:text-2xl">
-            Latest Deals for This Week
+            Latest Deals for THis Week
           </h2>
           <div
             className="rounded-full bg-brand px-4 py-2 font-mono text-sm font-semibold tracking-wide text-white tabular-nums shadow-[0_8px_24px_rgba(37,99,235,0.35)]"

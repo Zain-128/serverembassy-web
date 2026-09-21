@@ -205,8 +205,10 @@ export default function HeroCarousel({
               type="button"
               aria-label={`Go to slide ${i + 1}`}
               onClick={() => setIndex(i)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                i === index ? "w-8 bg-brand ring-2 ring-brand/40 ring-offset-2 ring-offset-transparent" : "w-2.5 bg-white/35 hover:bg-white/65"
+              className={`rounded-full transition-all duration-300 ${
+                i === index
+                  ? "h-3.5 w-3.5 border-2 border-[#0066ff] bg-transparent ring-2 ring-[#0066ff]/30 ring-offset-2 ring-offset-transparent"
+                  : "h-2.5 w-2.5 bg-white/80 hover:bg-white"
               }`}
             />
           ))}

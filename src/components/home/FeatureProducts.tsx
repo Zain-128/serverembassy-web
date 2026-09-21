@@ -9,11 +9,11 @@ import { formatMoney } from "@/lib/format";
 import { useGetProductsQuery } from "@/store/storeApi";
 
 const FALLBACK_TABS = [
-  { slug: "server-hard-drives", name: "Server Hard Drives" },
-  { slug: "power-supplies", name: "Power Supplies" },
-  { slug: "solid-state-drives", name: "Solid State Drives" },
-  { slug: "server-memory", name: "Server Memory" },
-  { slug: "network-switches", name: "Network Switches" },
+  { slug: "server-hard-drives", name: "SERVER HARD DRIVES" },
+  { slug: "power-supplies", name: "POWER SUPPLIES" },
+  { slug: "solid-state-drives", name: "SOLID STATE DRIVES" },
+  { slug: "server-memory", name: "SERVER MEMORY" },
+  { slug: "network-switches", name: "NETWORK SWITCHES" },
 ];
 
 function FeatureCard({ product }: { product: Product }) {

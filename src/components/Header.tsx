@@ -25,14 +25,15 @@ import { useGetCategoryTreeQuery } from "@/store/storeApi";
 import { useCart } from "@/lib/cart";
 
 const serviceTabs = [
-  { label: "Hardware", href: "/shop" },
-  { label: "Colocation", href: "/contact" },
-  { label: "Financing", href: "/#quote" },
-  { label: "Buy Back", href: "/contact" },
+  { label: "HARDWARE", href: "/shop" },
+  { label: "COLOCATION", href: "/contact" },
+  { label: "FINANCING", href: "/#quote" },
+  { label: "BUY BACK", href: "/contact" },
 ];
 
 const staticLinks = [
-  { href: "/about", label: "About" },
+  { href: "/shop?q=components", label: "Components" },
+  { href: "/contact", label: "Maintenance" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -49,6 +50,7 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [openMega, setOpenMega] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [activeTab, setActiveTab] = useState("HARDWARE");
 
   useEffect(() => {
     function onScroll() {
@@ -66,6 +68,14 @@ export default function Header() {
     };
   }, [menuOpen, cartOpen]);
 
+  useEffect(() => {
+    if (pathname.startsWith("/shop") || pathname.startsWith("/product") || pathname === "/") {
+      setActiveTab("HARDWARE");
+    } else if (pathname.startsWith("/contact")) {
+      setActiveTab("COLOCATION");
+    }
+  }, [pathname]);
+
   function onSearch(event: FormEvent) {
     event.preventDefault();
     const next = query.trim();
@@ -73,13 +83,6 @@ export default function Header() {
     setMenuOpen(false);
     setSearchOpen(false);
   }
-
-  const activeService =
-    pathname.startsWith("/shop") || pathname.startsWith("/product")
-      ? "Hardware"
-      : pathname === "/contact"
-        ? "Colocation"
-        : "Hardware";
 
   return (
     <>
@@ -93,26 +96,27 @@ export default function Header() {
           <div className="container-se py-2">
             the market is changing daily. Stay on top of changes with our{" "}
             <Link href="/shop" className="font-semibold text-white underline underline-offset-2">
-              market update
+              January market update
             </Link>
-            .
           </div>
         </div>
 
         {/* Service tabs + contact */}
-        <div className="bg-brand text-white">
+        <div className="bg-[#0066ff] text-white">
           <div className="container-se flex flex-wrap items-stretch justify-between gap-y-0">
-            <nav className="flex flex-wrap" aria-label="Services">
+            <nav className="flex flex-wrap items-stretch" aria-label="Services">
               {serviceTabs.map((tab) => {
-                const active = tab.label === activeService;
+                const active = activeTab === tab.label;
                 return (
                   <Link
                     key={tab.label}
                     href={tab.href}
-                    className={`px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] transition sm:px-5 ${
+                    onClick={() => setActiveTab(tab.label)}
+                    style={{ color: active ? "#0066ff" : "#ffffff" }}
+                    className={`flex items-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] transition sm:px-6 ${
                       active
-                        ? "bg-white text-brand"
-                        : "text-white/90 hover:bg-white/10"
+                        ? "bg-white text-[#0066ff] shadow-sm font-extrabold"
+                        : "text-white hover:bg-white/10"
                     }`}
                   >
                     {tab.label}
@@ -121,24 +125,17 @@ export default function Header() {
               })}
             </nav>
             <div className="hidden items-center gap-5 bg-brand-dark/40 px-4 text-[11px] sm:flex lg:px-5">
-              {settings.email ? (
-                <a
-                  href={`mailto:${settings.email}`}
-                  className="inline-flex items-center gap-1.5 text-white/90 hover:text-white"
-                >
-                  <Mail size={12} />
-                  {settings.email}
-                </a>
-              ) : null}
-              {settings.address ? (
-                <span className="inline-flex items-center gap-1.5 text-white/80">
-                  <MapPin size={12} />
-                  {settings.address}
-                </span>
-              ) : null}
-              {!settings.email && !settings.address ? (
-                <span className="text-white/70">Enterprise IT hardware specialists</span>
-              ) : null}
+              <a
+                href={`mailto:${settings.email || "homegoodsgalaxy@gmail.com"}`}
+                className="inline-flex items-center gap-1.5 text-white/90 hover:text-white"
+              >
+                <Mail size={12} />
+                {settings.email || "homegoodsgalaxy@gmail.com"}
+              </a>
+              <span className="inline-flex items-center gap-1.5 text-white/80">
+                <MapPin size={12} />
+                {settings.address || "Address Big Ben Street, E17 US, CANADA"}
+              </span>
             </div>
           </div>
         </div>
