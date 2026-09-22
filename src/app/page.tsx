@@ -79,7 +79,7 @@ export default function HomePage() {
         <LatestDealsWeek products={deals} />
       )}
 
-      <PartsPromoBanner products={[...featured, ...topFallback].slice(0, 3)} />
+      <PartsPromoBanner />
 
       <FeatureProducts categories={homepageCats} fallbackProducts={featured} />
 

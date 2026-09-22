@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Contact, Network, Rocket } from "lucide-react";
 import type { Banner, Brand, Product } from "@/types/store";
 import ProductVisual from "@/components/ProductVisual";
@@ -170,18 +171,27 @@ export default function AfterHeroBand({
                     Shop Now
                   </span>
                 </div>
-                <div className="relative hidden w-[42%] shrink-0 sm:block">
+                <div className="relative hidden w-[42%] shrink-0 p-4 sm:flex sm:items-center sm:justify-center">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(37,99,235,0.22),transparent_65%)]" />
-                  {promo.product ? (
-                    <div className="absolute inset-3 overflow-hidden rounded-lg sm:inset-4">
+                  {i === 0 ? (
+                    <div className="relative h-40 w-full overflow-hidden">
+                      <Image
+                        src="/images/home/printer-promo.png"
+                        alt="Brother Printer"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  ) : promo.product ? (
+                    <div className="relative h-40 w-full overflow-hidden rounded-lg">
                       <ProductVisual
                         product={promo.product}
-                        icon={promo.product.category?.slug?.includes("drive") ? "hdd" : "network"}
+                        icon="network"
                         className="h-full"
                       />
                     </div>
                   ) : (
-                    <div className="absolute inset-6 rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent" />
+                    <div className="relative h-36 w-full rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-transparent" />
                   )}
                 </div>
               </Link>

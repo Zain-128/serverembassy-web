@@ -44,8 +44,8 @@ export default function LatestNews() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
-          {posts.map((post) => (
-            <article key={post.title}>
+          {posts.map((post, index) => (
+            <article key={`${post.title}-${index}`}>
               <Link
                 href={post.href}
                 className={`block aspect-[16/10] overflow-hidden rounded-xl bg-gradient-to-br ${post.tone} transition hover:ring-2 hover:ring-brand/50`}

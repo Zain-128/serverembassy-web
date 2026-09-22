@@ -10,8 +10,10 @@ import {
   Mail,
   MapPin,
   Menu,
+  Moon,
   Search,
   ShoppingCart,
+  Sun,
   User,
   X,
 } from "lucide-react";
@@ -21,6 +23,7 @@ import ProductVisual from "@/components/ProductVisual";
 import { formatMoney } from "@/lib/format";
 import { navCategories } from "@/lib/nav";
 import { useStoreSettings } from "@/context/StoreContext";
+import { useTheme } from "@/context/ThemeContext";
 import { useGetCategoryTreeQuery } from "@/store/storeApi";
 import { useCart } from "@/lib/cart";
 
@@ -38,6 +41,8 @@ const staticLinks = [
 ];
 
 export default function Header() {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
   const { settings } = useStoreSettings();
   const { data: tree = [] } = useGetCategoryTreeQuery();
   const links = navCategories(tree);
@@ -141,10 +146,10 @@ export default function Header() {
         </div>
 
         {/* Main nav */}
-        <div className="border-b border-line bg-white">
+        <div className={`transition-colors duration-300 ${isDark ? "border-b border-line bg-white text-navy" : "border-b border-white/10 bg-[#05070c] text-white"}`}>
           <div className="container-se flex items-center justify-between gap-4 py-3.5">
             <Link href="/" aria-label="Power Line Devices home" className="shrink-0">
-              <Logo />
+              <Logo light={!isDark} />
             </Link>
 
             <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
@@ -163,20 +168,24 @@ export default function Header() {
                       className={`inline-flex items-center gap-1 px-3 py-2 text-[13px] font-semibold transition ${
                         pathname === `/shop/${cat.slug}`
                           ? "text-brand"
-                          : "text-navy hover:text-brand"
+                          : isDark ? "text-navy hover:text-brand" : "text-white/80 hover:text-white"
                       }`}
                     >
                       {cat.name}
                       {hasKids ? <ChevronDown size={14} className="opacity-60" /> : null}
                     </Link>
                     {hasKids && openMega === cat.id ? (
-                      <div className="anim-dropdown absolute left-0 top-full z-50 min-w-[220px] rounded-xl border border-line bg-white p-3 shadow-lift">
-                        <ul className="space-y-1 text-sm text-muted">
+                      <div className={`anim-dropdown absolute left-0 top-full z-50 min-w-[220px] rounded-xl border p-3 shadow-lift ${
+                        isDark ? "border-line bg-white text-muted" : "border-white/10 bg-[#0c1018] text-white/70"
+                      }`}>
+                        <ul className="space-y-1 text-sm">
                           {children.map((child) => (
                             <li key={child.id}>
                               <Link
                                 href={`/shop/${child.slug}`}
-                                className="block rounded-lg px-3 py-2 hover:bg-brand-soft hover:text-brand"
+                                className={`block rounded-lg px-3 py-2 ${
+                                  isDark ? "hover:bg-brand-soft hover:text-brand" : "hover:bg-white/10 hover:text-white"
+                                }`}
                                 onClick={() => setOpenMega(null)}
                               >
                                 {child.name}
@@ -191,10 +200,10 @@ export default function Header() {
               })}
               {staticLinks.map((link) => (
                 <Link
-                  key={link.href}
+                  key={link.label}
                   href={link.href}
                   className={`px-3 py-2 text-[13px] font-semibold transition ${
-                    pathname === link.href ? "text-brand" : "text-navy hover:text-brand"
+                    pathname === link.href ? "text-brand" : isDark ? "text-navy hover:text-brand" : "text-white/80 hover:text-white"
                   }`}
                 >
                   {link.label}
@@ -205,7 +214,20 @@ export default function Header() {
             <div className="flex items-center gap-1 sm:gap-2">
               <button
                 type="button"
-                className="grid h-10 w-10 place-items-center rounded-full text-navy transition hover:bg-brand-soft hover:text-brand"
+                className={`grid h-10 w-10 place-items-center rounded-full transition ${
+                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+                aria-label="Toggle theme"
+                title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+                onClick={toggleTheme}
+              >
+                {isDark ? <Moon size={18} /> : <Sun size={18} className="text-amber-400" />}
+              </button>
+              <button
+                type="button"
+                className={`grid h-10 w-10 place-items-center rounded-full transition ${
+                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
               >
@@ -213,7 +235,9 @@ export default function Header() {
               </button>
               <Link
                 href="/account"
-                className="relative grid h-10 w-10 place-items-center rounded-full text-navy transition hover:bg-brand-soft hover:text-brand"
+                className={`relative grid h-10 w-10 place-items-center rounded-full transition ${
+                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
                 aria-label="Wishlist"
               >
                 <Heart size={18} />
@@ -223,7 +247,9 @@ export default function Header() {
               </Link>
               <button
                 type="button"
-                className="relative grid h-10 w-10 place-items-center rounded-full text-navy transition hover:bg-brand-soft hover:text-brand"
+                className={`relative grid h-10 w-10 place-items-center rounded-full transition ${
+                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
                 aria-label="Open cart"
                 onClick={() => setCartOpen(true)}
               >
@@ -234,14 +260,18 @@ export default function Header() {
               </button>
               <Link
                 href="/login"
-                className="hidden h-10 w-10 place-items-center rounded-full text-navy transition hover:bg-brand-soft hover:text-brand sm:grid"
+                className={`hidden h-10 w-10 place-items-center rounded-full transition sm:grid ${
+                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
                 aria-label="Account"
               >
                 <User size={18} />
               </Link>
               <button
                 type="button"
-                className="grid h-10 w-10 place-items-center rounded-full border border-line text-navy xl:hidden"
+                className={`grid h-10 w-10 place-items-center rounded-full border xl:hidden ${
+                  isDark ? "border-line text-navy" : "border-white/20 text-white"
+                }`}
                 onClick={() => setMenuOpen(true)}
                 aria-label="Open menu"
               >
@@ -328,7 +358,7 @@ export default function Header() {
                 </div>
               ))}
               {staticLinks.map((link) => (
-                <Link key={link.href} href={link.href} className="block py-2" onClick={() => setMenuOpen(false)}>
+                <Link key={link.label} href={link.href} className="block py-2" onClick={() => setMenuOpen(false)}>
                   {link.label}
                 </Link>
               ))}
