@@ -4,44 +4,68 @@ import Link from "next/link";
 import Image from "next/image";
 import Reveal from "@/components/Reveal";
 
-export default function PartsPromoBanner() {
+export default function PartsPromoBanner({
+  theme = "dark",
+}: {
+  theme?: "dark" | "light";
+}) {
+  const isLight = theme === "light";
+
   return (
-    <section className="bg-[#05070c]">
-      <div className="container-se py-10 md:py-12">
+    <section
+      className={`overflow-visible ${isLight
+        ? "bg-white pt-16 pb-16 sm:pt-20 sm:pb-20"
+        : "bg-black pt-16 pb-16 sm:pt-20 sm:pb-24"
+        }`}
+    >
+      <div className="container-se overflow-visible">
         <Reveal>
-          <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#0066ff] via-[#0055e0] to-[#0040c0] md:rounded-[2.5rem]">
+          {/* Blue Banner Card */}
+          <div className="relative rounded-2xl sm:rounded-[26px] bg-gradient-to-r from-[#0066ff] via-[#0055e6] to-[#0038a8] pl-6 sm:pl-10 md:pl-12 lg:pl-14 pr-6 sm:pr-8 lg:pr-4 py-8 sm:py-10 lg:py-6 shadow-[0_16px_48px_rgba(0,102,255,0.28)]">
+            {/* Subtle background dot-mesh pattern */}
             <div
-              className="pointer-events-none absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.4)_1px,transparent_0)] [background-size:20px_20px]"
+              className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-[26px] opacity-15 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.5)_1px,transparent_0)] [background-size:24px_24px]"
               aria-hidden
             />
 
-            <div className="relative grid items-center gap-8 px-7 py-10 sm:px-10 md:grid-cols-[1.05fr_0.95fr] md:px-12 md:py-12 lg:px-14">
+            <div className="relative grid items-center gap-6 lg:grid-cols-[1fr_1.15fr]">
+              {/* Left Content Column */}
               <div className="relative z-10 max-w-xl text-white">
-                <span className="inline-flex rounded-full bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#0066ff]">
+                {/* On Sale This Week Pill Badge */}
+                <span className="inline-flex items-center rounded-full bg-white px-3.5 py-1 text-[11px] sm:text-xs font-semibold text-[#0066ff] shadow-sm">
                   On Sale This Week
                 </span>
-                <h2 className="mt-5 font-display text-[clamp(1.65rem,3.4vw,2.75rem)] font-bold leading-[1.12] tracking-tight text-white">
+
+                {/* Main Heading */}
+                <h2 className="mt-4 sm:mt-5 font-display text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] font-bold leading-[1.16] tracking-tight text-white">
                   Search And order All Your device Parts In One Location
                 </h2>
-                <p className="mt-4 max-w-md text-sm leading-relaxed text-white/85 sm:text-base">
+
+                {/* Subtitle Description */}
+                <p className="mt-3 sm:mt-3.5 max-w-sm text-xs sm:text-sm font-normal leading-relaxed text-white/80">
                   Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                 </p>
+
+                {/* Shop Now Link */}
                 <Link
                   href="/shop"
-                  className="mt-7 inline-flex text-base font-bold text-white transition hover:translate-x-1"
+                  className="mt-5 sm:mt-6 inline-block text-xs sm:text-sm font-semibold text-white transition hover:underline"
                 >
                   Shop Now
                 </Link>
               </div>
 
-              <div className="relative mx-auto flex h-[240px] w-full max-w-md items-center justify-center md:h-[300px] md:max-w-none lg:h-[320px]">
-                <Image
-                  src="/images/home/pc-towers-banner.png"
-                  alt="Search and order device parts"
-                  width={600}
-                  height={400}
-                  className="h-full w-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.4)]"
-                />
+              {/* Right Visual Column: PC Towers protruding on top, bottom, and right edge */}
+              <div className="relative z-20 flex items-center justify-center lg:justify-end mt-6 lg:mt-0">
+                <div className="relative w-full max-w-[420px] sm:max-w-[480px] lg:max-w-none lg:w-[560px] xl:w-[640px] 2xl:w-[690px] aspect-[16/10] -mt-8 sm:-mt-12 lg:-mt-22 xl:-mt-26 lg:-mb-10 xl:-mb-14 lg:-mr-12 xl:-mr-16 2xl:-mr-20">
+                  <Image
+                    src="/images/home/pc-towers-banner.png"
+                    alt="Search and order device parts"
+                    fill
+                    priority
+                    className="object-contain object-bottom drop-shadow-[0_24px_50px_rgba(0,0,0,0.7)]"
+                  />
+                </div>
               </div>
             </div>
           </div>

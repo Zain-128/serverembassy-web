@@ -685,6 +685,27 @@ button {
   background: linear-gradient(180deg, transparent, rgba(37, 99, 235, 0.8), transparent);
 }
 
+/* Infinite Brand Marquee Slider */
+@keyframes brand-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-brand-marquee {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: brand-marquee 28s linear infinite;
+}
+
+.animate-brand-marquee:hover {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

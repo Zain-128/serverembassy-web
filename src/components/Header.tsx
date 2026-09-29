@@ -8,8 +8,10 @@ import {
   ChevronDown,
   Heart,
   Menu,
+  Moon,
   Search,
   ShoppingCart,
+  Sun,
   User,
   X,
 } from "lucide-react";
@@ -17,6 +19,7 @@ import Logo from "@/components/Logo";
 import { useStoreSettings } from "@/context/StoreContext";
 import { useGetCategoryTreeQuery } from "@/store/storeApi";
 import { useCart } from "@/lib/cart";
+import { useTheme } from "@/context/ThemeContext";
 
 const serviceTabs = [
   { label: "HARDWARE", href: "/shop" },
@@ -38,6 +41,7 @@ export default function Header() {
   const { settings } = useStoreSettings();
   const { data: tree = [] } = useGetCategoryTreeQuery();
   const { count } = useCart();
+  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
   const [query, setQuery] = useState("");
@@ -80,20 +84,62 @@ export default function Header() {
     setSearchOpen(false);
   }
 
+  const isLight = theme === "light";
+
   return (
     <>
       <header
-        className={`sticky top-0 z-40 bg-white transition-shadow duration-300 ${
-          scrolled ? "shadow-md" : ""
-        }`}
+        className={`sticky top-0 z-40 transition-all duration-300 ${
+          isLight ? "bg-white" : "bg-[#000000]"
+        } ${scrolled ? "shadow-md" : ""}`}
       >
         {/* Top Announcement Bar - Pure Black (#000000) */}
         <div className="bg-[#000000] text-center text-[11px] sm:text-[12px] tracking-wide text-white">
-          <div className="container-se py-1.5">
-            the market is changing daily. Stay on top of changes with our{" "}
-            <Link href="/shop" className="font-bold text-white underline underline-offset-2 hover:opacity-90">
-              January market update
-            </Link>
+          <div className="container-se flex items-center justify-between py-1.5 gap-2">
+            <span className="hidden sm:inline-block w-24" />
+            <div className="flex-1 text-center truncate">
+              the market is changing daily. Stay on top of changes with our{" "}
+              <Link href="/shop" className="font-bold text-white underline underline-offset-2 hover:opacity-90">
+                January market update
+              </Link>
+            </div>
+            {/* ON / OFF Style Theme Switcher */}
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[11px] font-semibold text-white/80 hidden sm:inline select-none">
+                {isLight ? "White Theme" : "Black Theme"}
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={!isLight}
+                onClick={toggleTheme}
+                title={`Click to switch to ${isLight ? "Black" : "White"} theme`}
+                className={`relative inline-flex h-5 w-11 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-300 ease-in-out focus:outline-none ring-1 ${
+                  isLight ? "bg-emerald-500 ring-emerald-400/60" : "bg-[#0066ff] ring-blue-400/60"
+                }`}
+              >
+                {/* Background track indicator icons */}
+                <span className="absolute left-1 text-white select-none pointer-events-none flex items-center justify-center">
+                  <Sun size={10} className={`transition-opacity duration-200 ${isLight ? "opacity-100" : "opacity-30"}`} />
+                </span>
+                <span className="absolute right-1 text-white select-none pointer-events-none flex items-center justify-center">
+                  <Moon size={10} className={`transition-opacity duration-200 ${!isLight ? "opacity-100" : "opacity-30"}`} />
+                </span>
+
+                {/* Sliding Switch Knob */}
+                <span
+                  className={`pointer-events-none z-10 flex h-4 w-4 transform items-center justify-center rounded-full bg-white shadow transition-transform duration-300 ease-in-out ${
+                    isLight ? "translate-x-0" : "translate-x-6"
+                  }`}
+                >
+                  {isLight ? (
+                    <Sun size={9} className="text-emerald-600 fill-emerald-600" />
+                  ) : (
+                    <Moon size={9} className="text-[#0066ff] fill-[#0066ff]" />
+                  )}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -111,7 +157,9 @@ export default function Header() {
                     onClick={() => setActiveTab(tab.label)}
                     className={`flex items-center px-4 py-2.5 text-[11px] uppercase tracking-[0.14em] transition sm:px-6 ${
                       active
-                        ? "!bg-white !text-[#0b1220] font-extrabold shadow-sm"
+                        ? !isLight
+                          ? "!bg-[#000000] !text-white font-extrabold shadow-sm"
+                          : "!bg-white !text-[#0b1220] font-extrabold shadow-sm"
                         : "font-bold text-white hover:bg-white/10"
                     }`}
                   >
@@ -136,12 +184,18 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Main Header / Navigation Bar - Clean White (#ffffff) */}
-        <div className="border-b border-gray-100 bg-white text-[#0b1220]">
+        {/* Main Header / Navigation Bar */}
+        <div
+          className={`transition-colors duration-300 ${
+            !isLight
+              ? "border-b border-white/10 bg-[#000000] text-white"
+              : "border-b border-gray-100 bg-white text-[#0b1220]"
+          }`}
+        >
           <div className="container-se flex items-center justify-between gap-6 py-3.5">
             {/* Logo */}
             <Link href="/" aria-label="Powerline Devices home" className="shrink-0">
-              <Logo light={false} />
+              <Logo light={!isLight} />
             </Link>
 
             {/* Desktop Center Navigation Links */}
@@ -162,22 +216,39 @@ export default function Header() {
                   >
                     <Link
                       href={item.href}
-                      className="inline-flex items-center gap-1 text-[14.5px] font-semibold text-[#0b1220] transition hover:text-[#0066ff]"
+                      className={`inline-flex items-center gap-1 text-[14.5px] font-semibold transition ${
+                        !isLight
+                          ? "text-white/90 hover:text-[#0066ff]"
+                          : "text-[#0b1220] hover:text-[#0066ff]"
+                      }`}
                     >
                       {item.label}
                       {item.hasDropdown ? (
-                        <ChevronDown size={14} className="text-[#0b1220]/70 stroke-[2.5]" />
+                        <ChevronDown
+                          size={14}
+                          className={`stroke-[2.5] ${!isLight ? "text-white/70" : "text-[#0b1220]/70"}`}
+                        />
                       ) : null}
                     </Link>
 
                     {hasChildren && openMega === item.label ? (
-                      <div className="absolute left-0 top-full z-50 min-w-[220px] rounded-xl border border-gray-100 bg-white p-3 shadow-lg text-gray-700">
+                      <div
+                        className={`absolute left-0 top-full z-50 min-w-[220px] rounded-xl p-3 shadow-xl ${
+                          !isLight
+                            ? "border border-white/15 bg-[#141414] text-white"
+                            : "border border-gray-100 bg-white text-gray-700"
+                        }`}
+                      >
                         <ul className="space-y-1 text-sm">
                           {children.map((child) => (
                             <li key={child.id}>
                               <Link
                                 href={`/shop/${child.slug}`}
-                                className="block rounded-lg px-3 py-2 text-[#0b1220] hover:bg-gray-50 hover:text-[#0066ff]"
+                                className={`block rounded-lg px-3 py-2 ${
+                                  !isLight
+                                    ? "text-white hover:bg-white/10 hover:text-[#0066ff]"
+                                    : "text-[#0b1220] hover:bg-gray-50 hover:text-[#0066ff]"
+                                }`}
                                 onClick={() => setOpenMega(null)}
                               >
                                 {child.name}
@@ -197,7 +268,9 @@ export default function Header() {
               {/* Search Icon */}
               <button
                 type="button"
-                className="grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
+                className={`grid h-9 w-9 place-items-center transition ${
+                  !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
+                }`}
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
               >
@@ -207,7 +280,9 @@ export default function Header() {
               {/* Wishlist Icon */}
               <Link
                 href="/account"
-                className="relative grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
+                className={`relative grid h-9 w-9 place-items-center transition ${
+                  !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
+                }`}
                 aria-label="Wishlist"
               >
                 <Heart size={20} className="stroke-[2.2]" />
@@ -219,7 +294,9 @@ export default function Header() {
               {/* Shopping Cart Icon */}
               <button
                 type="button"
-                className="relative grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
+                className={`relative grid h-9 w-9 place-items-center transition ${
+                  !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
+                }`}
                 aria-label="Open cart"
                 onClick={() => setCartOpen(true)}
               >
@@ -232,7 +309,9 @@ export default function Header() {
               {/* Account Icon */}
               <Link
                 href="/login"
-                className="grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
+                className={`grid h-9 w-9 place-items-center transition ${
+                  !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
+                }`}
                 aria-label="Account"
               >
                 <User size={20} className="stroke-[2.2]" />
@@ -241,7 +320,11 @@ export default function Header() {
               {/* Mobile Hamburger Button */}
               <button
                 type="button"
-                className="grid h-9 w-9 place-items-center rounded-lg border border-gray-200 text-[#0b1220] lg:hidden"
+                className={`grid h-9 w-9 place-items-center rounded-lg border lg:hidden ${
+                  !isLight
+                    ? "border-white/20 text-white hover:bg-white/10"
+                    : "border-gray-200 text-[#0b1220] hover:bg-gray-100"
+                }`}
                 onClick={() => setMenuOpen(true)}
                 aria-label="Open menu"
               >
@@ -257,7 +340,11 @@ export default function Header() {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="overflow-hidden border-t border-gray-100 bg-gray-50"
+                className={`overflow-hidden border-t ${
+                  !isLight
+                    ? "border-white/10 bg-[#121212]"
+                    : "border-gray-100 bg-gray-50"
+                }`}
               >
                 <form onSubmit={onSearch} className="container-se flex items-center gap-3 py-3">
                   <Search size={18} className="text-gray-400" />
@@ -266,7 +353,9 @@ export default function Header() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search SKU, brand, or product..."
-                    className="min-w-0 flex-1 bg-transparent py-2 text-sm text-[#0b1220] outline-none"
+                    className={`min-w-0 flex-1 bg-transparent py-2 text-sm outline-none ${
+                      !isLight ? "text-white placeholder-gray-400" : "text-[#0b1220] placeholder-gray-500"
+                    }`}
                   />
                   <button type="submit" className="rounded-lg bg-[#0066ff] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0052cc]">
                     Search
@@ -289,6 +378,40 @@ export default function Header() {
               <Logo />
               <button type="button" onClick={() => setMenuOpen(false)} aria-label="Close">
                 <X size={20} />
+              </button>
+            </div>
+
+            {/* Mobile ON/OFF Theme Switch Row */}
+            <div className="mb-4 flex items-center justify-between rounded-xl bg-gray-50 p-3 border border-gray-100">
+              <span className="text-xs font-semibold text-gray-700">
+                Theme: {isLight ? "White (Light)" : "Black (Dark)"}
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={!isLight}
+                onClick={toggleTheme}
+                className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-300 ease-in-out focus:outline-none ring-1 ${
+                  isLight ? "bg-emerald-500 ring-emerald-400/60" : "bg-[#0066ff] ring-blue-400/60"
+                }`}
+              >
+                <span className="absolute left-1.5 text-white select-none pointer-events-none flex items-center justify-center">
+                  <Sun size={11} className={`transition-opacity duration-200 ${isLight ? "opacity-100" : "opacity-30"}`} />
+                </span>
+                <span className="absolute right-1.5 text-white select-none pointer-events-none flex items-center justify-center">
+                  <Moon size={11} className={`transition-opacity duration-200 ${!isLight ? "opacity-100" : "opacity-30"}`} />
+                </span>
+                <span
+                  className={`pointer-events-none z-10 flex h-5 w-5 transform items-center justify-center rounded-full bg-white shadow transition-transform duration-300 ease-in-out ${
+                    isLight ? "translate-x-0" : "translate-x-6"
+                  }`}
+                >
+                  {isLight ? (
+                    <Sun size={10} className="text-emerald-600 fill-emerald-600" />
+                  ) : (
+                    <Moon size={10} className="text-[#0066ff] fill-[#0066ff]" />
+                  )}
+                </span>
               </button>
             </div>
             <form onSubmit={onSearch} className="mb-5 flex items-center rounded-full border border-gray-200 bg-gray-50 pl-4">

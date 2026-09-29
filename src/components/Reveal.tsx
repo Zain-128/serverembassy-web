@@ -20,20 +20,11 @@ export default function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            el.classList.add("in-view");
-            observer.unobserve(el);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -48px 0px" }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    const t = setTimeout(() => {
+      el.classList.add("in-view");
+    }, delay || 40);
+    return () => clearTimeout(t);
+  }, [delay]);
 
   const Tag = as as "div";
 

@@ -1,31 +1,28 @@
 "use client";
 
-import BrandShowcase from "@/components/BrandShowcase";
-import ProductSection from "@/components/ProductSection";
-import ProductFeatureScene from "@/components/showcase/ProductFeatureScene";
-import QuoteForm from "@/components/QuoteForm";
-import Reveal from "@/components/Reveal";
 import HeroCarousel from "@/components/HeroCarousel";
 import AfterHeroBand from "@/components/home/AfterHeroBand";
+import LatestDealsWeek from "@/components/home/LatestDealsWeek";
+import PartsPromoBanner from "@/components/home/PartsPromoBanner";
 import FeatureProducts from "@/components/home/FeatureProducts";
 import GoodCategories from "@/components/home/GoodCategories";
-import LatestDealsWeek from "@/components/home/LatestDealsWeek";
-import LatestNews from "@/components/home/LatestNews";
-import NewsletterCta from "@/components/home/NewsletterCta";
-import PartsPromoBanner from "@/components/home/PartsPromoBanner";
-import StartCtaBand from "@/components/home/StartCtaBand";
 import Testimonials from "@/components/home/Testimonials";
-import ValueProp from "@/components/home/ValueProp";
-import { MarqueeSkeleton, SectionSkeleton } from "@/components/Skeleton";
+import LatestNews from "@/components/home/LatestNews";
+import StartCtaBand from "@/components/home/StartCtaBand";
 import {
   useGetBannersQuery,
   useGetBrandsQuery,
   useGetHomepageCategoriesQuery,
   useGetProductsQuery,
 } from "@/store/storeApi";
+import { useTheme } from "@/context/ThemeContext";
+
+import { FIGMA_MOCK_PRODUCTS } from "@/data/mockProducts";
 
 export default function HomePage() {
-  const { data: brands = [], isLoading: brandLoading } = useGetBrandsQuery();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+  const { data: brands = [] } = useGetBrandsQuery();
   const { data: homepageCats = [] } = useGetHomepageCategoriesQuery();
   const { data: banners = [] } = useGetBannersQuery();
   const { data: featuredRes } = useGetProductsQuery({
@@ -37,108 +34,64 @@ export default function HomePage() {
     inStock: true,
     limit: 6,
   });
-  const { data: topRes, isLoading: topLoading } = useGetProductsQuery({
+  const { data: topRes } = useGetProductsQuery({
     sort: "newest",
     inStock: true,
     limit: 12,
   });
-  const { data: ratedRes, isLoading: ratedLoading } = useGetProductsQuery({
-    sort: "rating",
-    inStock: true,
-    limit: 8,
-  });
 
-  const featured = featuredRes?.items ?? [];
-  const featuredIds = new Set(featured.map((p) => p.id));
-  const topProducts = (topRes?.items ?? []).filter((p) => !featuredIds.has(p.id)).slice(0, 8);
-  const topFallback = topProducts.length ? topProducts : (topRes?.items ?? []).slice(0, 8);
-  const topRated = (ratedRes?.items ?? []).filter((p) => !featuredIds.has(p.id)).slice(0, 8);
-  const deals = dealsRes?.items?.length
-    ? dealsRes.items
-    : [...featured, ...topFallback].slice(0, 6);
+  const rawFeatured = featuredRes?.items?.length ? featuredRes.items : FIGMA_MOCK_PRODUCTS;
+  const rawTop = topRes?.items?.length ? topRes.items : FIGMA_MOCK_PRODUCTS;
+  const featured = rawFeatured;
+  const deals = dealsRes?.items?.length ? dealsRes.items : FIGMA_MOCK_PRODUCTS.slice(0, 6);
 
   return (
-    <>
+    <div className={`transition-colors duration-300 ${isLight ? "bg-white text-[#0b1220]" : "bg-[#05070c] text-white"}`}>
+      {/* 1. Hero Carousel */}
       <HeroCarousel
         banners={banners}
         featured={featured[0]}
-        products={[...featured, ...topFallback].slice(0, 6)}
+        products={[...featured, ...rawTop].slice(0, 6)}
       />
 
+      {/* 2. Brand Strip, Feature Trio, Mid Headline, Promo Pair */}
       <AfterHeroBand
         brands={brands}
         banners={banners}
-        products={[...featured, ...topFallback].slice(0, 4)}
+        products={[...featured, ...rawTop].slice(0, 4)}
+        theme={theme}
       />
 
+      {/* 3. Latest Deals For This Week */}
       {dealsLoading ? (
-        <section className="bg-[#05070c] py-14">
-          <div className="container-se h-64 animate-pulse rounded-xl bg-white/5" />
+        <section className={isLight ? "bg-white py-14" : "bg-[#05070c] py-14"}>
+          <div className="container-se h-64 animate-pulse rounded-xl bg-gray-200/50 dark:bg-white/5" />
         </section>
       ) : (
-        <LatestDealsWeek products={deals} />
+        <LatestDealsWeek products={deals} theme={theme} />
       )}
 
-      <PartsPromoBanner />
+      {/* 4. Parts Promo Banner */}
+      <PartsPromoBanner theme={theme} />
 
-      <FeatureProducts categories={homepageCats} fallbackProducts={featured} />
+      {/* 5. Feature Products */}
+      <FeatureProducts
+        categories={homepageCats}
+        fallbackProducts={featured}
+        theme={theme}
+      />
 
-      <GoodCategories categories={homepageCats} />
+      {/* 6. Good Categories */}
+      <GoodCategories categories={homepageCats} theme={theme} />
 
-      <Testimonials />
+      {/* 7. Customer Reviews */}
+      <Testimonials theme={theme} />
 
-      <LatestNews />
+      {/* 8. Latest News */}
+      <LatestNews theme={theme} />
 
-      <StartCtaBand />
-
-      {featured[1] ? <ProductFeatureScene product={featured[1]} /> : null}
-
-      {ratedLoading ? (
-        <SectionSkeleton id="top-rated" />
-      ) : (
-        <ProductSection
-          id="top-rated"
-          eyebrow="Top rated"
-          title="Customer favorites"
-          description="Highest-rated hardware our customers reorder most."
-          href="/shop"
-          products={topRated}
-        />
-      )}
-
-      {topLoading ? (
-        <SectionSkeleton id="new-arrivals" />
-      ) : (
-        <ProductSection
-          id="new-arrivals"
-          eyebrow="New arrivals"
-          title="Fresh in stock"
-          description="Recently added enterprise SKUs, tested and ready to ship."
-          href="/shop"
-          products={topFallback}
-        />
-      )}
-
-      <ValueProp />
-
-      {brandLoading ? <MarqueeSkeleton /> : <BrandShowcase brands={brands} />}
-
-      <NewsletterCta />
-
-      <section id="quote" className="container-se py-16">
-        <Reveal>
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="section-label">B2B</p>
-              <h2 className="mt-2 font-display text-3xl font-bold text-navy">Need a volume quote?</h2>
-              <p className="mt-3 max-w-md text-muted">
-                Send the part number and quantity. We reply with availability, lead time, and pricing.
-              </p>
-            </div>
-            <QuoteForm />
-          </div>
-        </Reveal>
-      </section>
-    </>
+      {/* 9. Don't Know Where To Start ? CTA Band */}
+      <StartCtaBand theme={theme} />
+    </div>
   );
 }
