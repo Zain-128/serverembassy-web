@@ -7,23 +7,14 @@ import { AnimatePresence, motion } from "motion/react";
 import {
   ChevronDown,
   Heart,
-  Mail,
-  MapPin,
   Menu,
-  Moon,
   Search,
   ShoppingCart,
-  Sun,
   User,
   X,
 } from "lucide-react";
 import Logo from "@/components/Logo";
-import FreeShippingBar from "@/components/FreeShippingBar";
-import ProductVisual from "@/components/ProductVisual";
-import { formatMoney } from "@/lib/format";
-import { navCategories } from "@/lib/nav";
 import { useStoreSettings } from "@/context/StoreContext";
-import { useTheme } from "@/context/ThemeContext";
 import { useGetCategoryTreeQuery } from "@/store/storeApi";
 import { useCart } from "@/lib/cart";
 
@@ -34,19 +25,19 @@ const serviceTabs = [
   { label: "BUY BACK", href: "/contact" },
 ];
 
-const staticLinks = [
-  { href: "/shop?q=components", label: "Components" },
-  { href: "/contact", label: "Maintenance" },
-  { href: "/contact", label: "Contact" },
+const mainNavItems = [
+  { label: "Servers", href: "/shop?q=servers", hasDropdown: true, catSlug: "servers" },
+  { label: "Storage", href: "/shop?q=storage", hasDropdown: true, catSlug: "storage" },
+  { label: "Networking", href: "/shop?q=networking", hasDropdown: true, catSlug: "networking" },
+  { label: "Components", href: "/shop?q=components", hasDropdown: true, catSlug: "components" },
+  { label: "Maintenance", href: "/contact", hasDropdown: true, catSlug: "maintenance" },
+  { label: "Contact", href: "/contact", hasDropdown: false, catSlug: "" },
 ];
 
 export default function Header() {
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
   const { settings } = useStoreSettings();
   const { data: tree = [] } = useGetCategoryTreeQuery();
-  const links = navCategories(tree);
-  const { count, lines, subtotal, setQty, remove } = useCart();
+  const { count } = useCart();
   const router = useRouter();
   const pathname = usePathname();
   const [query, setQuery] = useState("");
@@ -92,24 +83,25 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 transition-shadow duration-300 ${
-          scrolled ? "shadow-lift" : ""
+        className={`sticky top-0 z-40 bg-white transition-shadow duration-300 ${
+          scrolled ? "shadow-md" : ""
         }`}
       >
-        {/* Announcement */}
-        <div className="bg-[#0b1220] text-center text-[11px] tracking-wide text-white/75">
-          <div className="container-se py-2">
+        {/* Top Announcement Bar - Pure Black (#000000) */}
+        <div className="bg-[#000000] text-center text-[11px] sm:text-[12px] tracking-wide text-white">
+          <div className="container-se py-1.5">
             the market is changing daily. Stay on top of changes with our{" "}
-            <Link href="/shop" className="font-semibold text-white underline underline-offset-2">
+            <Link href="/shop" className="font-bold text-white underline underline-offset-2 hover:opacity-90">
               January market update
             </Link>
           </div>
         </div>
 
-        {/* Service tabs + contact */}
+        {/* Service Tabs + Contact Info Bar - Electric Blue (#0066ff) */}
         <div className="bg-[#0066ff] text-white">
           <div className="container-se flex flex-wrap items-stretch justify-between gap-y-0">
-            <nav className="flex flex-wrap items-stretch" aria-label="Services">
+            {/* Service Tabs */}
+            <nav className="flex items-stretch" aria-label="Services">
               {serviceTabs.map((tab) => {
                 const active = activeTab === tab.label;
                 return (
@@ -117,11 +109,10 @@ export default function Header() {
                     key={tab.label}
                     href={tab.href}
                     onClick={() => setActiveTab(tab.label)}
-                    style={{ color: active ? "#0066ff" : "#ffffff" }}
-                    className={`flex items-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] transition sm:px-6 ${
+                    className={`flex items-center px-4 py-2.5 text-[11px] uppercase tracking-[0.14em] transition sm:px-6 ${
                       active
-                        ? "bg-white text-[#0066ff] shadow-sm font-extrabold"
-                        : "text-white hover:bg-white/10"
+                        ? "!bg-white !text-[#0b1220] font-extrabold shadow-sm"
+                        : "font-bold text-white hover:bg-white/10"
                     }`}
                   >
                     {tab.label}
@@ -129,63 +120,64 @@ export default function Header() {
                 );
               })}
             </nav>
-            <div className="hidden items-center gap-5 bg-brand-dark/40 px-4 text-[11px] sm:flex lg:px-5">
+
+            {/* Contact Info (Clean Text without Icons) */}
+            <div className="hidden items-center gap-6 text-[11px] font-medium sm:flex">
               <a
                 href={`mailto:${settings.email || "homegoodsgalaxy@gmail.com"}`}
-                className="inline-flex items-center gap-1.5 text-white/90 hover:text-white"
+                className="text-white hover:underline"
               >
-                <Mail size={12} />
                 {settings.email || "homegoodsgalaxy@gmail.com"}
               </a>
-              <span className="inline-flex items-center gap-1.5 text-white/80">
-                <MapPin size={12} />
+              <span className="text-white">
                 {settings.address || "Address Big Ben Street, E17 US, CANADA"}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Main nav */}
-        <div className={`transition-colors duration-300 ${isDark ? "border-b border-line bg-white text-navy" : "border-b border-white/10 bg-[#05070c] text-white"}`}>
-          <div className="container-se flex items-center justify-between gap-4 py-3.5">
-            <Link href="/" aria-label="Power Line Devices home" className="shrink-0">
-              <Logo light={!isDark} />
+        {/* Main Header / Navigation Bar - Clean White (#ffffff) */}
+        <div className="border-b border-gray-100 bg-white text-[#0b1220]">
+          <div className="container-se flex items-center justify-between gap-6 py-3.5">
+            {/* Logo */}
+            <Link href="/" aria-label="Powerline Devices home" className="shrink-0">
+              <Logo light={false} />
             </Link>
 
-            <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
-              {links.map((cat) => {
-                const children = tree.find((t) => t.id === cat.id)?.children ?? [];
-                const hasKids = children.length > 0;
+            {/* Desktop Center Navigation Links */}
+            <nav className="hidden items-center gap-6 xl:gap-8 lg:flex" aria-label="Primary">
+              {mainNavItems.map((item) => {
+                const categoryMatch = tree.find(
+                  (t) => t.slug.toLowerCase() === item.catSlug || t.name.toLowerCase() === item.label.toLowerCase()
+                );
+                const children = categoryMatch?.children ?? [];
+                const hasChildren = item.hasDropdown && children.length > 0;
+
                 return (
                   <div
-                    key={cat.id}
+                    key={item.label}
                     className="relative"
-                    onMouseEnter={() => setOpenMega(cat.id)}
+                    onMouseEnter={() => setOpenMega(item.label)}
                     onMouseLeave={() => setOpenMega(null)}
                   >
                     <Link
-                      href={`/shop/${cat.slug}`}
-                      className={`inline-flex items-center gap-1 px-3 py-2 text-[13px] font-semibold transition ${
-                        pathname === `/shop/${cat.slug}`
-                          ? "text-brand"
-                          : isDark ? "text-navy hover:text-brand" : "text-white/80 hover:text-white"
-                      }`}
+                      href={item.href}
+                      className="inline-flex items-center gap-1 text-[14.5px] font-semibold text-[#0b1220] transition hover:text-[#0066ff]"
                     >
-                      {cat.name}
-                      {hasKids ? <ChevronDown size={14} className="opacity-60" /> : null}
+                      {item.label}
+                      {item.hasDropdown ? (
+                        <ChevronDown size={14} className="text-[#0b1220]/70 stroke-[2.5]" />
+                      ) : null}
                     </Link>
-                    {hasKids && openMega === cat.id ? (
-                      <div className={`anim-dropdown absolute left-0 top-full z-50 min-w-[220px] rounded-xl border p-3 shadow-lift ${
-                        isDark ? "border-line bg-white text-muted" : "border-white/10 bg-[#0c1018] text-white/70"
-                      }`}>
+
+                    {hasChildren && openMega === item.label ? (
+                      <div className="absolute left-0 top-full z-50 min-w-[220px] rounded-xl border border-gray-100 bg-white p-3 shadow-lg text-gray-700">
                         <ul className="space-y-1 text-sm">
                           {children.map((child) => (
                             <li key={child.id}>
                               <Link
                                 href={`/shop/${child.slug}`}
-                                className={`block rounded-lg px-3 py-2 ${
-                                  isDark ? "hover:bg-brand-soft hover:text-brand" : "hover:bg-white/10 hover:text-white"
-                                }`}
+                                className="block rounded-lg px-3 py-2 text-[#0b1220] hover:bg-gray-50 hover:text-[#0066ff]"
                                 onClick={() => setOpenMega(null)}
                               >
                                 {child.name}
@@ -198,106 +190,85 @@ export default function Header() {
                   </div>
                 );
               })}
-              {staticLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={`px-3 py-2 text-[13px] font-semibold transition ${
-                    pathname === link.href ? "text-brand" : isDark ? "text-navy hover:text-brand" : "text-white/80 hover:text-white"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
             </nav>
 
-            <div className="flex items-center gap-1 sm:gap-2">
+            {/* Action Icons Right */}
+            <div className="flex items-center gap-4">
+              {/* Search Icon */}
               <button
                 type="button"
-                className={`grid h-10 w-10 place-items-center rounded-full transition ${
-                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
-                aria-label="Toggle theme"
-                title={isDark ? "Switch to light theme" : "Switch to dark theme"}
-                onClick={toggleTheme}
-              >
-                {isDark ? <Moon size={18} /> : <Sun size={18} className="text-amber-400" />}
-              </button>
-              <button
-                type="button"
-                className={`grid h-10 w-10 place-items-center rounded-full transition ${
-                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                className="grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
               >
-                <Search size={18} />
+                <Search size={20} className="stroke-[2.2]" />
               </button>
+
+              {/* Wishlist Icon */}
               <Link
                 href="/account"
-                className={`relative grid h-10 w-10 place-items-center rounded-full transition ${
-                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                className="relative grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
                 aria-label="Wishlist"
               >
-                <Heart size={18} />
-                <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-sale px-1 text-[10px] font-bold text-white">
+                <Heart size={20} className="stroke-[2.2]" />
+                <span className="absolute -right-1.5 -top-1.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-[#e52e2e] px-1 text-[10px] font-bold text-white">
                   0
                 </span>
               </Link>
+
+              {/* Shopping Cart Icon */}
               <button
                 type="button"
-                className={`relative grid h-10 w-10 place-items-center rounded-full transition ${
-                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                className="relative grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
                 aria-label="Open cart"
                 onClick={() => setCartOpen(true)}
               >
-                <ShoppingCart size={18} />
-                <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-sale px-1 text-[10px] font-bold text-white">
+                <ShoppingCart size={20} className="stroke-[2.2]" />
+                <span className="absolute -right-1.5 -top-1.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-[#e52e2e] px-1 text-[10px] font-bold text-white">
                   {count}
                 </span>
               </button>
+
+              {/* Account Icon */}
               <Link
                 href="/login"
-                className={`hidden h-10 w-10 place-items-center rounded-full transition sm:grid ${
-                  isDark ? "text-navy hover:bg-brand-soft hover:text-brand" : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                className="grid h-9 w-9 place-items-center text-[#0b1220] transition hover:text-[#0066ff]"
                 aria-label="Account"
               >
-                <User size={18} />
+                <User size={20} className="stroke-[2.2]" />
               </Link>
+
+              {/* Mobile Hamburger Button */}
               <button
                 type="button"
-                className={`grid h-10 w-10 place-items-center rounded-full border xl:hidden ${
-                  isDark ? "border-line text-navy" : "border-white/20 text-white"
-                }`}
+                className="grid h-9 w-9 place-items-center rounded-lg border border-gray-200 text-[#0b1220] lg:hidden"
                 onClick={() => setMenuOpen(true)}
                 aria-label="Open menu"
               >
-                <Menu size={18} />
+                <Menu size={20} />
               </button>
             </div>
           </div>
 
+          {/* Expandable Search Bar */}
           <AnimatePresence>
             {searchOpen ? (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="overflow-hidden border-t border-line bg-page/80"
+                className="overflow-hidden border-t border-gray-100 bg-gray-50"
               >
                 <form onSubmit={onSearch} className="container-se flex items-center gap-3 py-3">
-                  <Search size={16} className="text-muted" />
+                  <Search size={18} className="text-gray-400" />
                   <input
                     autoFocus
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search SKU, brand, or product"
-                    className="min-w-0 flex-1 bg-transparent py-2 outline-none"
+                    placeholder="Search SKU, brand, or product..."
+                    className="min-w-0 flex-1 bg-transparent py-2 text-sm text-[#0b1220] outline-none"
                   />
-                  <button type="submit" className="btn btn-primary px-4 py-2 text-sm">
+                  <button type="submit" className="rounded-lg bg-[#0066ff] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0052cc]">
                     Search
                   </button>
                 </form>
@@ -307,27 +278,28 @@ export default function Header() {
         </div>
       </header>
 
+      {/* Mobile Drawer */}
       {menuOpen ? (
-        <div className="anim-fade fixed inset-0 z-[60] bg-navy/50 backdrop-blur-sm xl:hidden" onClick={() => setMenuOpen(false)}>
+        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm lg:hidden" onClick={() => setMenuOpen(false)}>
           <div
-            className="anim-drawer-left absolute right-0 top-0 h-full w-[min(100%,360px)] overflow-y-auto bg-white p-5"
+            className="absolute right-0 top-0 h-full w-[min(100%,360px)] overflow-y-auto bg-white p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
               <Logo />
               <button type="button" onClick={() => setMenuOpen(false)} aria-label="Close">
-                <X />
+                <X size={20} />
               </button>
             </div>
-            <form onSubmit={onSearch} className="mb-5 flex items-center rounded-full border border-line bg-page/60 pl-4">
+            <form onSubmit={onSearch} className="mb-5 flex items-center rounded-full border border-gray-200 bg-gray-50 pl-4">
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="min-w-0 flex-1 bg-transparent py-2"
+                className="min-w-0 flex-1 bg-transparent py-2 text-sm"
                 placeholder="Search SKU…"
               />
-              <button type="submit" className="m-1 grid h-9 w-9 place-items-center rounded-full bg-navy text-white">
-                <Search size={16} />
+              <button type="submit" className="m-1 grid h-8 w-8 place-items-center rounded-full bg-[#0066ff] text-white">
+                <Search size={14} />
               </button>
             </form>
             <div className="mb-4 flex flex-wrap gap-2">
@@ -336,114 +308,22 @@ export default function Header() {
                   key={tab.label}
                   href={tab.href}
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-full bg-brand-soft px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-brand"
+                  className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#0066ff]"
                 >
                   {tab.label}
                 </Link>
               ))}
             </div>
-            <div className="space-y-1 text-sm">
-              {tree.map((parent) => (
-                <div key={parent.id} className="border-b border-line py-3">
-                  <Link href={`/shop/${parent.slug}`} className="font-semibold" onClick={() => setMenuOpen(false)}>
-                    {parent.name}
+            <div className="space-y-1 text-sm border-t border-gray-100 pt-3">
+              {mainNavItems.map((item) => (
+                <div key={item.label} className="border-b border-gray-100 py-2.5">
+                  <Link href={item.href} className="font-semibold text-[#0b1220]" onClick={() => setMenuOpen(false)}>
+                    {item.label}
                   </Link>
-                  <div className="mt-1 flex flex-col gap-1 pl-3 text-muted">
-                    {parent.children?.map((child) => (
-                      <Link key={child.id} href={`/shop/${child.slug}`} onClick={() => setMenuOpen(false)}>
-                        {child.name}
-                      </Link>
-                    ))}
-                  </div>
                 </div>
               ))}
-              {staticLinks.map((link) => (
-                <Link key={link.label} href={link.href} className="block py-2" onClick={() => setMenuOpen(false)}>
-                  {link.label}
-                </Link>
-              ))}
-              <Link href="/login" className="block py-2" onClick={() => setMenuOpen(false)}>
-                Account
-              </Link>
             </div>
           </div>
-        </div>
-      ) : null}
-
-      {cartOpen ? (
-        <div className="anim-fade fixed inset-0 z-[60] bg-navy/50 backdrop-blur-sm" onClick={() => setCartOpen(false)}>
-          <aside
-            className="anim-drawer-right absolute right-0 top-0 flex h-full w-[min(100%,400px)] flex-col bg-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-line px-5 py-4">
-              <h2 className="font-display">Shopping cart</h2>
-              <button type="button" onClick={() => setCartOpen(false)} aria-label="Close cart">
-                <X />
-              </button>
-            </div>
-            <div className="border-b border-line bg-gradient-to-br from-brand-soft/30 to-transparent p-4">
-              <FreeShippingBar compact />
-            </div>
-            <div className="flex-1 overflow-y-auto p-4">
-              {lines.length === 0 ? (
-                <p className="rounded-2xl bg-page/60 p-6 text-center text-sm text-muted">Your cart is empty.</p>
-              ) : (
-                <ul className="space-y-4">
-                  {lines.map(({ product, qty }) => {
-                    const icon = product.category?.slug?.includes("drive") ? "hdd" : "network";
-                    return (
-                      <li key={product.id} className="flex gap-3 rounded-2xl border border-line bg-white p-2.5">
-                        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-page/60 ring-1 ring-line">
-                          <ProductVisual product={product} icon={icon} className="h-16" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="line-clamp-2 text-sm font-medium text-navy">{product.title}</p>
-                          <p className="text-sm font-semibold text-navy">{formatMoney(product.price)}</p>
-                          <div className="mt-1.5 inline-flex items-center overflow-hidden rounded-full border border-line">
-                            <button
-                              type="button"
-                              className="grid h-7 w-7 place-items-center text-muted transition hover:text-brand"
-                              onClick={() => setQty(product.id, qty - 1)}
-                            >
-                              −
-                            </button>
-                            <span className="w-7 text-center text-sm font-semibold">{qty}</span>
-                            <button
-                              type="button"
-                              className="grid h-7 w-7 place-items-center text-muted transition hover:text-brand"
-                              onClick={() => setQty(product.id, qty + 1)}
-                            >
-                              +
-                            </button>
-                          </div>
-                          <button
-                            type="button"
-                            className="ml-auto mt-1.5 block text-xs text-sale hover:underline"
-                            onClick={() => remove(product.id)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-            <div className="border-t border-line p-4">
-              <div className="mb-3 flex justify-between font-semibold">
-                <span>Subtotal</span>
-                <span>{formatMoney(subtotal)}</span>
-              </div>
-              <Link href="/cart" className="btn btn-outline mb-2 w-full" onClick={() => setCartOpen(false)}>
-                View cart
-              </Link>
-              <Link href="/checkout" className="btn btn-primary w-full" onClick={() => setCartOpen(false)}>
-                Checkout
-              </Link>
-            </div>
-          </aside>
         </div>
       ) : null}
     </>
