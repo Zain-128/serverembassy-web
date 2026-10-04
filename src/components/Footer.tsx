@@ -22,6 +22,8 @@ const FALLBACK_NAV = [
   { href: "/contact", label: "Contact" },
 ];
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function Footer() {
   const { theme } = useTheme();
   const isLight = theme === "light";
@@ -37,8 +39,12 @@ export default function Footer() {
 
   async function onSubscribe(event: FormEvent) {
     event.preventDefault();
+    if (!EMAIL_REGEX.test(email.trim())) {
+      toast("Please enter a valid email address (e.g. name@domain.com)", "error");
+      return;
+    }
     try {
-      await subscribe(email).unwrap();
+      await subscribe(email.trim()).unwrap();
       setEmail("");
       toast("Subscribed! Welcome on board.", "success");
     } catch {
@@ -132,7 +138,7 @@ export default function Footer() {
                 placeholder="Email Address....."
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`min-w-0 flex-1 bg-transparent px-4 py-2 text-sm outline-none ${
+                className={`min-w-0 flex-1 bg-transparent px-4 py-2 text-sm outline-none rounded-l-full ${
                   !isLight
                     ? "text-white placeholder:text-white/40"
                     : "text-[#0b1220] placeholder:text-gray-400"

@@ -3,14 +3,25 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Provider } from "react-redux";
 import { hydrateCart, type CartLine } from "./cartSlice";
+import { hydrateWishlist, toggleWishlist } from "./wishlistSlice";
 import { makeStore, useAppDispatch, useAppSelector } from "./index";
 
 const KEY = "se-cart";
+const WISHLIST_KEY = "se-wishlist";
 
 function readCart(): CartLine[] {
   try {
     const raw = localStorage.getItem(KEY);
     return raw ? (JSON.parse(raw) as CartLine[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function readWishlist(): string[] {
+  try {
+    const raw = localStorage.getItem(WISHLIST_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
   } catch {
     return [];
   }
@@ -32,12 +43,29 @@ function CartPersist() {
   return null;
 }
 
+function WishlistPersist() {
+  const dispatch = useAppDispatch();
+  const items = useAppSelector((s) => s.wishlist.items);
+  const hydrated = useAppSelector((s) => s.wishlist.hydrated);
+
+  useEffect(() => {
+    dispatch(hydrateWishlist(readWishlist()));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (hydrated) localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
+  }, [hydrated, items]);
+
+  return null;
+}
+
 export default function ReduxProvider({ children }: { children: ReactNode }) {
   const [store] = useState(makeStore);
 
   return (
     <Provider store={store}>
       <CartPersist />
+      <WishlistPersist />
       {children}
     </Provider>
   );

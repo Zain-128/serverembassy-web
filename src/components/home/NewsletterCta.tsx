@@ -7,6 +7,8 @@ import { useSubscribeNewsletterMutation } from "@/store/storeApi";
 import { useToast } from "@/components/Toast";
 import { EASE, VIEWPORT } from "@/lib/motion";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function NewsletterCta() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
@@ -15,8 +17,12 @@ export default function NewsletterCta() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!EMAIL_REGEX.test(email.trim())) {
+      toast("Please enter a valid email address (e.g. name@domain.com)", "error");
+      return;
+    }
     try {
-      await subscribe(email).unwrap();
+      await subscribe(email.trim()).unwrap();
       setEmail("");
       setSubscribed(true);
       toast("You're on the list!", "success");
@@ -58,7 +64,7 @@ export default function NewsletterCta() {
                 placeholder="you@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm outline-none placeholder:text-muted/60"
+                className="min-w-0 flex-1 bg-transparent px-4 py-2.5 text-sm outline-none rounded-l-full placeholder:text-muted/60"
               />
               <button type="submit" className="btn btn-primary shrink-0 px-5! py-2.5!">
                 Join now

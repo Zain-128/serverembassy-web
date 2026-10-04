@@ -2,24 +2,10 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { RotateCw } from "lucide-react";
+import { Cpu, HardDrive, Server } from "lucide-react";
 import type { Product } from "@/types/store";
-import DeviceScene from "@/components/3d/DeviceScene";
 import { EASE } from "@/lib/motion";
 
-type View = { id: string; label: string; angle: number; altitude: number };
-
-const views: View[] = [
-  { id: "front", label: "Front", angle: 0, altitude: 0 },
-  { id: "iso", label: "3/4", angle: 22, altitude: -6 },
-  { id: "top", label: "Top", angle: 0, altitude: 48 },
-];
-
-/**
- * Interactive product gallery for the detail page — the device is presented
- * in pseudo-3D with a set of camera views, floating motion and a live cursor
- * tilt. Smoothly cross-fades between views.
- */
 export default function ProductGallery({
   product,
   icon,
@@ -27,68 +13,70 @@ export default function ProductGallery({
   product: Product;
   icon: string;
 }) {
-  const [view, setView] = useState(views[0]);
+  const imageUrls =
+    product.images && product.images.length > 0
+      ? product.images.map((img) => img.url)
+      : product.image
+        ? [product.image]
+        : [];
+
+  const [selectedImage, setSelectedImage] = useState<string>(imageUrls[0] || "");
+
+  const categorySlug = product.category?.slug?.toLowerCase() ?? "";
+  const isDrive = categorySlug.includes("drive") || categorySlug.includes("hdd") || categorySlug.includes("ssd");
+  const isCpu = categorySlug.includes("cpu") || categorySlug.includes("processor") || categorySlug.includes("memory");
+  const HardwareIcon = isDrive ? HardDrive : isCpu ? Cpu : Server;
 
   return (
     <div className="relative">
-      <div className="relative aspect-square w-full">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={view.id}
-            className="h-full w-full"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.97 }}
-            transition={{ duration: 0.45, ease: EASE }}
-          >
-            {/* translucent showroom plinth */}
-            <div
-              className="absolute inset-x-[6%] top-[6%] bottom-[12%] rounded-[1.6rem] border border-line/80 opacity-80"
-              aria-hidden
+      <div className="relative aspect-square w-full rounded-3xl border border-line bg-white p-6 shadow-card flex items-center justify-center overflow-hidden">
+        {selectedImage || imageUrls.length > 0 ? (
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={selectedImage || imageUrls[0]}
+              src={selectedImage || imageUrls[0]}
+              alt={product.title}
+              className="h-full w-full object-contain"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.3, ease: EASE }}
+              onError={(e) => {
+                // If image fails to load
+                e.currentTarget.style.display = "none";
+              }}
             />
-            <DeviceScene
-              product={product}
-              icon={icon}
-              className="h-full w-full"
-              angle={view.angle}
-              altitude={view.altitude}
-              showSku
-            />
-          </motion.div>
-        </AnimatePresence>
-
-        <button
-          type="button"
-          className="absolute right-3 top-3 z-20 grid h-10 w-10 place-items-center rounded-full border border-line bg-white/85 text-muted backdrop-blur transition-colors hover:border-brand/40 hover:text-brand active:rotate-45"
-          aria-label="Rotate view"
-          title="Rotate view"
-          onClick={() => setView(views[(views.findIndex((v) => v.id === view.id) + 1) % views.length])}
-        >
-          <RotateCw size={16} />
-        </button>
+          </AnimatePresence>
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center text-center p-8 bg-slate-50/80 rounded-2xl border border-dashed border-line">
+            <div className="grid h-20 w-20 place-items-center rounded-3xl bg-white shadow-sm ring-1 ring-line">
+              <HardwareIcon size={40} className="text-brand" />
+            </div>
+            <p className="mt-4 font-mono text-sm font-bold text-navy">{product.sku}</p>
+            <p className="mt-1 text-xs text-muted uppercase tracking-wider">
+              {product.brand?.name ?? "Hardware Product"}
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* view selector */}
-      <div className="mt-4 flex justify-center gap-2">
-        {views.map((v) => (
-          <button
-            key={v.id}
-            type="button"
-            onClick={() => setView(v)}
-            className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-300 ${
-              view.id === v.id
-                ? "bg-navy text-white shadow-card"
-                : "bg-white text-muted ring-1 ring-line hover:text-navy"
-            }`}
-          >
-            {v.label}
-          </button>
-        ))}
-      </div>
-
-      <p className="mt-3 text-center text-xs text-muted">
-        Interactive 3D presentation · drag-free cursor tilt · image may not exactly match the product.
-      </p>
+      {/* thumbnail gallery if multiple images */}
+      {imageUrls.length > 1 && (
+        <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
+          {imageUrls.map((url, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => setSelectedImage(url)}
+              className={`relative h-20 w-20 shrink-0 rounded-2xl border-2 bg-white p-2 overflow-hidden transition-all ${
+                selectedImage === url ? "border-brand ring-2 ring-brand/20" : "border-line hover:border-brand/40"
+              }`}
+            >
+              <img src={url} alt={`${product.title} ${idx + 1}`} className="h-full w-full object-contain" />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

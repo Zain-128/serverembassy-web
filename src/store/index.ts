@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import cartReducer from "./cartSlice";
 import authReducer from "./authSlice";
+import wishlistReducer from "./wishlistSlice";
 import { storeApi } from "./storeApi";
 import { authApi } from "./authApi";
 
@@ -10,6 +11,7 @@ export function makeStore() {
     reducer: {
       cart: cartReducer,
       auth: authReducer,
+      wishlist: wishlistReducer,
       [storeApi.reducerPath]: storeApi.reducer,
       [authApi.reducerPath]: authApi.reducer,
     },

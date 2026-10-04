@@ -39,7 +39,8 @@ export type ProductQuery = {
 export type CheckoutPayload = {
   email: string;
   customerId?: string;
-  paymentMethod: "card" | "paypal" | "wire" | "purchase_order" | "net_terms";
+  paymentMethod: "stripe" | "cod" | "card" | "paypal" | "wire" | "purchase_order" | "net_terms";
+  paymentIntentId?: string;
   billingAddress: Record<string, unknown>;
   shippingAddress: Record<string, unknown>;
   items: Array<{ productId: string; qty: number }>;
@@ -143,6 +144,12 @@ export const storeApi = createApi({
     >({
       query: (body) => ({ url: "/checkout", method: "POST", body }),
     }),
+    createPaymentIntent: builder.mutation<
+      { clientSecret: string; paymentIntentId: string; publishableKey?: string },
+      { amount: number; currency?: string; metadata?: Record<string, string> }
+    >({
+      query: (body) => ({ url: "/create-payment-intent", method: "POST", body }),
+    }),
     createQuote: builder.mutation<
       unknown,
       {
@@ -192,6 +199,7 @@ export const {
   useGetCmsPageBySlugQuery,
   useGetMyOrdersQuery,
   useCreateOrderMutation,
+  useCreatePaymentIntentMutation,
   useCreateQuoteMutation,
   useSubscribeNewsletterMutation,
   useCreateContactMutation,

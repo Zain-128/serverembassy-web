@@ -6,6 +6,8 @@ import { useCreateQuoteMutation } from "@/store/storeApi";
 import { useToast } from "@/components/Toast";
 import { TextField, TextareaField } from "@/components/ui/fields";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function QuoteForm() {
   const toast = useToast().toast;
   const [createQuote] = useCreateQuoteMutation();
@@ -13,10 +15,17 @@ export default function QuoteForm() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const fd = new FormData(event.currentTarget);
+    const email = String(fd.get("email") ?? "").trim();
+
+    if (!EMAIL_REGEX.test(email)) {
+      toast("Please enter a valid email address (e.g. name@domain.com)", "error");
+      return;
+    }
+
     try {
       await createQuote({
         name: String(fd.get("name") ?? ""),
-        email: String(fd.get("email") ?? ""),
+        email,
         phone: String(fd.get("phone") ?? "") || undefined,
         company: String(fd.get("company") ?? "") || undefined,
         partNumber: String(fd.get("partNumber") ?? "") || undefined,

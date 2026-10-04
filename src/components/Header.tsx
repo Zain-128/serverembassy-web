@@ -19,7 +19,9 @@ import Logo from "@/components/Logo";
 import { useStoreSettings } from "@/context/StoreContext";
 import { useGetCategoryTreeQuery } from "@/store/storeApi";
 import { useCart } from "@/lib/cart";
+import { useWishlist } from "@/lib/wishlist";
 import { useTheme } from "@/context/ThemeContext";
+import { useAppSelector } from "@/store";
 
 const serviceTabs = [
   { label: "HARDWARE", href: "/shop" },
@@ -41,7 +43,9 @@ export default function Header() {
   const { settings } = useStoreSettings();
   const { data: tree = [] } = useGetCategoryTreeQuery();
   const { count } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const { theme, toggleTheme } = useTheme();
+  const token = useAppSelector((s) => s.auth.token);
   const router = useRouter();
   const pathname = usePathname();
   const [query, setQuery] = useState("");
@@ -51,6 +55,15 @@ export default function Header() {
   const [openMega, setOpenMega] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState("HARDWARE");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const hasLocalToken = typeof window !== "undefined" ? Boolean(localStorage.getItem("se-customer-token")) : false;
+  const isLoggedIn = mounted && (Boolean(token) || hasLocalToken);
+  const accountHref = isLoggedIn ? "/account" : "/login";
 
   useEffect(() => {
     function onScroll() {
@@ -287,7 +300,7 @@ export default function Header() {
               >
                 <Heart size={20} className="stroke-[2.2]" />
                 <span className="absolute -right-1.5 -top-1.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-[#e52e2e] px-1 text-[10px] font-bold text-white">
-                  0
+                  {wishlistCount}
                 </span>
               </Link>
 
@@ -308,13 +321,17 @@ export default function Header() {
 
               {/* Account Icon */}
               <Link
-                href="/login"
-                className={`grid h-9 w-9 place-items-center transition ${
+                href={accountHref}
+                className={`relative grid h-9 w-9 place-items-center transition ${
                   !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                 }`}
-                aria-label="Account"
+                aria-label={isLoggedIn ? "My Account" : "Account Login"}
+                title={isLoggedIn ? "My Account" : "Login"}
               >
                 <User size={20} className="stroke-[2.2]" />
+                {isLoggedIn ? (
+                  <span className="absolute bottom-0.5 right-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white" />
+                ) : null}
               </Link>
 
               {/* Mobile Hamburger Button */}
@@ -418,7 +435,7 @@ export default function Header() {
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="min-w-0 flex-1 bg-transparent py-2 text-sm"
+                className="min-w-0 flex-1 bg-transparent py-2 text-sm rounded-l-full outline-none"
                 placeholder="Search SKU…"
               />
               <button type="submit" className="m-1 grid h-8 w-8 place-items-center rounded-full bg-[#0066ff] text-white">
@@ -438,6 +455,16 @@ export default function Header() {
               ))}
             </div>
             <div className="space-y-1 text-sm border-t border-gray-100 pt-3">
+              <div className="border-b border-gray-100 py-2.5">
+                <Link
+                  href={accountHref}
+                  className="flex items-center gap-2 font-semibold text-[#0066ff]"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <User size={16} />
+                  {isLoggedIn ? "My Account" : "Login / Register"}
+                </Link>
+              </div>
               {mainNavItems.map((item) => (
                 <div key={item.label} className="border-b border-gray-100 py-2.5">
                   <Link href={item.href} className="font-semibold text-[#0b1220]" onClick={() => setMenuOpen(false)}>

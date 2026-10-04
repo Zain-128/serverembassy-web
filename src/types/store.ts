@@ -23,6 +23,12 @@ export type Brand = {
   featured: boolean;
 };
 
+export type ProductImage = {
+  url: string;
+  altText?: string;
+  isPrimary?: boolean;
+};
+
 export type Product = {
   id: string;
   sku: string;
@@ -47,6 +53,8 @@ export type Product = {
   deal: boolean;
   dealEndsAt: string | null;
   published: boolean;
+  images?: ProductImage[];
+  image?: string;
 };
 
 export type Banner = {

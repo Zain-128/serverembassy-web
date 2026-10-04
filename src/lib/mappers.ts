@@ -23,6 +23,9 @@ type ApiProduct = {
   dealEndsAt?: string | null;
   status?: string;
   published?: boolean;
+  images?: Array<{ url: string; altText?: string; isPrimary?: boolean }>;
+  image?: string;
+  imageLink?: string;
 };
 
 const conditionMap: Record<string, Product["condition"]> = {
@@ -32,6 +35,13 @@ const conditionMap: Record<string, Product["condition"]> = {
 };
 
 export function mapProduct(p: ApiProduct): Product {
+  const images = p.images ?? [];
+  const primaryImg =
+    images.find((img) => img.isPrimary)?.url ||
+    images[0]?.url ||
+    p.image ||
+    p.imageLink;
+
   return {
     id: p.id,
     sku: p.sku,
@@ -56,6 +66,8 @@ export function mapProduct(p: ApiProduct): Product {
     deal: p.isDeal ?? false,
     dealEndsAt: p.dealEndsAt ?? null,
     published: p.published ?? p.status === "published",
+    images,
+    image: primaryImg || undefined,
   };
 }
 
