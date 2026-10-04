@@ -165,8 +165,8 @@ export default function Footer() {
             !isLight ? "text-white/50" : "text-gray-500"
           }`}
         >
-          <p>Contrary to popular belief, Lorem Ipsum is not</p>
-          <p>Contrary to popular belief, Lorem Ipsum is not</p>
+          <p>© {new Date().getFullYear()} Power Line Devices. All rights reserved.</p>
+          <p>Enterprise Server Hardware, Storage & Networking Solutions</p>
         </div>
       </div>
     </footer>

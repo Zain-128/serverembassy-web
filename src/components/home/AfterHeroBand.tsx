@@ -11,18 +11,18 @@ import BrandLogoSlider from "./BrandLogoSlider";
 const features = [
   {
     icon: Network,
-    title: "International shipment",
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    title: "International Shipment",
+    text: "Fast, fully tracked global shipping for enterprise servers, networking gear, and replacement components.",
   },
   {
     icon: Rocket,
-    title: "Re Shipment",
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    title: "Express Replacement",
+    text: "Rapid advance replacement and hassle-free RMA processing on warranty coverage.",
   },
   {
     icon: Contact,
-    title: "Contact Us",
-    text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    title: "Dedicated Support",
+    text: "Connect with our hardware specialists for custom configurations, bulk pricing, and technical help.",
     href: "/contact",
   },
 ];
@@ -47,7 +47,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
       key: b.id,
       badge: "On Sale This Week",
       title: b.title || "Better Quality Better Service for Your",
-      text: b.subtitle || "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem",
+      text: b.subtitle || "Browse certified enterprise servers, storage arrays, and high-performance networking equipment.",
       href: b.href || "/shop",
       product: products[i],
     }));
@@ -58,7 +58,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
       key: "promo-1",
       badge: "On Sale This Week",
       title: "Better Quality Better Service for Your",
-      text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem",
+      text: "Browse certified enterprise servers, storage arrays, and high-performance networking equipment.",
       href: "/shop",
       product: products[0],
     },
@@ -66,7 +66,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
       key: "promo-2",
       badge: "On Sale This Week",
       title: "Better Quality Better Service for Your",
-      text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem",
+      text: "Browse certified enterprise servers, storage arrays, and high-performance networking equipment.",
       href: "/shop?sort=newest",
       product: products[1],
     },

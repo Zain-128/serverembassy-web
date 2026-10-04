@@ -23,7 +23,7 @@ export default function StartCtaBand({ theme = "dark" }: { theme?: "dark" | "lig
                 Don&apos;t Know Where To Start ?
               </h2>
               <p className={`mt-2 max-w-lg text-sm leading-relaxed sm:text-base ${isLight ? "text-slate-500" : "text-white/60"}`}>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Our IT hardware engineers are ready to assist you in designing, upgrading, or scaling your infrastructure.
               </p>
             </div>
           </div>

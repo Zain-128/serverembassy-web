@@ -13,7 +13,8 @@ import { formatMoney } from "@/lib/format";
 import { EASE } from "@/lib/motion";
 import type { Product } from "@/types/store";
 import { useCart } from "@/lib/cart";
-import { ShieldCheck, Star, Truck, RefreshCcw, Minus, Plus } from "lucide-react";
+import { useWishlist } from "@/lib/wishlist";
+import { ShieldCheck, Star, Truck, RefreshCcw, Minus, Plus, Heart } from "lucide-react";
 
 export default function ProductDetail({
   product,
@@ -26,6 +27,8 @@ export default function ProductDetail({
   const category = product.category;
   const icon = category?.icon ?? "network";
   const { add } = useCart();
+  const { isWishlisted, toggle: toggleWishlist } = useWishlist();
+  const favorited = isWishlisted(product.id);
   const router = useRouter();
   const [tab, setTab] = useState("description");
   const [qty, setQty] = useState(1);
@@ -129,6 +132,19 @@ export default function ProductDetail({
             <AddToCartButton productId={product.id} label="Add to Cart" className="btn btn-primary" onAdd={() => {}} qty={qty} />
             <button type="button" className="btn btn-dark" onClick={handleBuyNow}>
               Buy Now
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleWishlist(product.id, product.title)}
+              className={`grid h-11 w-11 place-items-center rounded-full border transition-all ${
+                favorited
+                  ? "border-red-200 bg-red-50 text-red-500 shadow-sm"
+                  : "border-line bg-white text-slate-700 hover:border-red-300 hover:text-red-500"
+              }`}
+              title={favorited ? "Remove from wishlist" : "Add to wishlist"}
+              aria-label={favorited ? "Remove from wishlist" : "Add to wishlist"}
+            >
+              <Heart size={18} className={favorited ? "fill-red-500 text-red-500" : ""} />
             </button>
           </div>
 

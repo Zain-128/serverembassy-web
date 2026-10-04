@@ -6,26 +6,26 @@ import Image from "next/image";
 
 const posts = [
   {
-    date: "27,Jun 2023",
-    title: "BUYING CHEAP USED TRANSMISSIONS ISN'T AS RISKY AS YOU THINK",
+    date: "27, Jun 2023",
+    title: "MAXIMIZED ROI: THE CASE FOR CERTIFIED REFURBISHED ENTERPRISE SERVERS",
     excerpt:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "Discover how data centers save up to 60% on infrastructure by upgrading with fully tested, OEM-certified server hardware.",
     href: "/shop",
     image: "/images/home/news-circuit.png",
   },
   {
-    date: "27,Jun 2023",
-    title: "BUYING CHEAP USED TRANSMISSIONS ISN'T AS RISKY AS YOU THINK",
+    date: "14, Aug 2023",
+    title: "UNDERSTANDING SAS VS. SATA DRIVES FOR ENTERPRISE STORAGE ARRAYS",
     excerpt:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "Compare throughput, reliability, and cost factors to choose the right storage technology for your mission-critical deployment.",
     href: "/shop",
     image: "/images/home/news-table.png",
   },
   {
-    date: "27,Jun 2023",
-    title: "BUYING CHEAP USED TRANSMISSIONS ISN'T AS RISKY AS YOU THINK",
+    date: "05, Oct 2023",
+    title: "TOP HARDWARE UPGRADES TO BOOST DATA CENTER PERFORMANCE IN 2026",
     excerpt:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "Explore key memory, network adapter, and power redundancy upgrades to optimize uptime and workload capacity.",
     href: "/shop",
     image: "/images/home/news-motherboard.png",
   },

@@ -4,19 +4,22 @@ import { Star } from "lucide-react";
 
 const reviews = [
   {
-    name: "Judy D, Customer",
+    name: "Marcus Vance",
+    role: "IT Infrastructure Manager, CloudNode",
     quote:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's",
+      "Powerline Devices sourced 20 custom server nodes with exact SKU specs in under 48 hours. Excellent service and pristine hardware condition.",
   },
   {
-    name: "Judy D, Customer",
+    name: "Sarah Jenkins",
+    role: "Lead Network Engineer, TechCore",
     quote:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's",
+      "Fast shipping, genuine enterprise components, and flawless testing. Their technical team helped us configure our entire rack setup effortlessly.",
   },
   {
-    name: "Judy D, Customer",
+    name: "David Miller",
+    role: "Operations Director, DataVault",
     quote:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's",
+      "Extremely reliable source for hard-to-find replacement parts. Outstanding support, prompt warranty handling, and competitive pricing.",
   },
 ];
 
@@ -48,8 +51,8 @@ export default function Testimonials({ theme = "dark" }: { theme?: "dark" | "lig
                 </div>
               ) : null}
               <figcaption className="mt-4 text-sm font-medium">
-                <span className="text-[#d97706] font-semibold block">-Judy D,</span>
-                <span className={`text-xs block ${isLight ? "text-slate-500" : "text-white/60"}`}>Customer</span>
+                <span className="text-[#d97706] font-semibold block">-{r.name}</span>
+                <span className={`text-xs block ${isLight ? "text-slate-500" : "text-white/60"}`}>{r.role}</span>
               </figcaption>
             </figure>
           ))}

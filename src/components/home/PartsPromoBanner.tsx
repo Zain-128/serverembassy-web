@@ -38,12 +38,12 @@ export default function PartsPromoBanner({
 
                 {/* Main Heading */}
                 <h2 className="mt-4 sm:mt-5 font-display text-2xl sm:text-3xl lg:text-[34px] xl:text-[38px] font-bold leading-[1.16] tracking-tight text-white">
-                  Search And order All Your device Parts In One Location
+                  Search and Order All Your Device Parts in One Location
                 </h2>
 
                 {/* Subtitle Description */}
                 <p className="mt-3 sm:mt-3.5 max-w-sm text-xs sm:text-sm font-normal leading-relaxed text-white/80">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                  Find genuine replacement parts, memory modules, system boards, and power supplies with guaranteed compatibility.
                 </p>
 
                 {/* Shop Now Link */}

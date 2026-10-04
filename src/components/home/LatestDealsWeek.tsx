@@ -7,6 +7,7 @@ import ProductVisual from "@/components/ProductVisual";
 import AddToCartButton from "@/components/AddToCartButton";
 import { formatMoney } from "@/lib/format";
 import { Heart } from "lucide-react";
+import { useWishlist } from "@/lib/wishlist";
 
 function endOfWeekUtc(): Date {
   const now = new Date();
@@ -76,6 +77,9 @@ function DealCard({
   const inStock = product.stock > 0;
   const dealImg = DEAL_IMAGES[index % DEAL_IMAGES.length];
 
+  const { isWishlisted, toggle } = useWishlist();
+  const favorited = isWishlisted(product.id);
+
   return (
     <article className="group relative flex min-w-[180px] flex-1 flex-col sm:min-w-0">
       <div className="mb-2 flex items-center justify-between">
@@ -84,10 +88,12 @@ function DealCard({
         </p>
         <button
           type="button"
-          aria-label="Add to wishlist"
-          className="text-slate-400 transition hover:text-red-500"
+          onClick={() => toggle(product.id, product.title)}
+          aria-label={favorited ? "Remove from wishlist" : "Add to wishlist"}
+          title={favorited ? "Remove from wishlist" : "Add to wishlist"}
+          className="text-slate-400 transition hover:scale-110 hover:text-red-500"
         >
-          <Heart size={16} strokeWidth={2} />
+          <Heart size={16} strokeWidth={2} className={favorited ? "fill-red-500 text-red-500" : ""} />
         </button>
       </div>
       <Link
