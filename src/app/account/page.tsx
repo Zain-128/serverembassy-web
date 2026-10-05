@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import {
-  AlertTriangle, ArrowRight, ChevronRight, LayoutDashboard, LogOut, MessageSquareQuote,
+  AlertTriangle, ArrowRight, ChevronRight, Heart, LayoutDashboard, LogOut, MessageSquareQuote,
   Package, ShoppingBag, UserPlus, Users, X,
 } from "lucide-react";
 import { formatMoney } from "@/lib/format";
@@ -119,6 +119,7 @@ function DeleteAccountModal({ onClose }: { onClose: () => void }) {
 
 const navItems = [
   { href: "/account", label: "Dashboard", icon: LayoutDashboard, active: true },
+  { href: "/wishlist", label: "Favorites & Wishlist", icon: Heart },
   { href: "/account#orders", label: "Orders", icon: Package },
   { href: "/invite", label: "Invite friends", icon: Users },
   { href: "/contact", label: "Request a quote", icon: MessageSquareQuote },

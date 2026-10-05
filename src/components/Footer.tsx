@@ -30,8 +30,13 @@ export default function Footer() {
   const { settings: store } = useStoreSettings();
   const { data: tree = [] } = useGetCategoryTreeQuery();
   const navLinks = useMemo(() => {
-    return FALLBACK_NAV;
-  }, []);
+    const cats = navCategories(tree, 6);
+    if (!cats.length) return FALLBACK_NAV;
+    return [
+      ...cats.map((c) => ({ href: `/shop/${c.slug}`, label: c.name })),
+      { href: "/contact", label: "Contact" },
+    ];
+  }, [tree]);
 
   const [email, setEmail] = useState("");
   const [subscribe] = useSubscribeNewsletterMutation();
@@ -53,7 +58,7 @@ export default function Footer() {
   }
 
   const phone = store.phone || "(303) 847-0120";
-  const mail = store.email || "info@dummy.com";
+  const mail = store.email || "info@powerlinedevices.com";
 
   return (
     <footer

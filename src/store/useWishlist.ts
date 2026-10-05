@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { toggleWishlist } from "./wishlistSlice";
+import { toggleWishlist, clearWishlist } from "./wishlistSlice";
 import { useAppDispatch, useAppSelector } from "./index";
 import { useToast } from "@/components/Toast";
 
@@ -28,10 +28,15 @@ export function useWishlist() {
     [dispatch, items, toast],
   );
 
+  const clear = useCallback(() => {
+    dispatch(clearWishlist());
+  }, [dispatch]);
+
   return {
     items,
     count: items.length,
     isWishlisted,
     toggle,
+    clear,
   };
 }

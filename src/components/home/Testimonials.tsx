@@ -42,15 +42,13 @@ export default function Testimonials({ theme = "dark" }: { theme?: "dark" | "lig
               <blockquote className={`text-sm leading-relaxed ${isLight ? "text-slate-600" : "text-white/80"}`}>
                 {r.quote}
               </blockquote>
-              {/* Stars are present in black theme in Figma */}
-              {!isLight ? (
-                <div className="mt-4 flex items-center gap-1 text-amber-400" aria-label="5 out of 5 stars">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={14} className="fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-              ) : null}
-              <figcaption className="mt-4 text-sm font-medium">
+              {/* 5 Star Rating */}
+              <div className="mt-3 flex items-center gap-1 text-amber-400" aria-label="5 out of 5 stars">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={14} className="fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <figcaption className="mt-3 text-sm font-medium">
                 <span className="text-[#d97706] font-semibold block">-{r.name}</span>
                 <span className={`text-xs block ${isLight ? "text-slate-500" : "text-white/60"}`}>{r.role}</span>
               </figcaption>

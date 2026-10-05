@@ -5,13 +5,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
+  ArrowRight,
   ChevronDown,
   Heart,
   Menu,
+  Minus,
   Moon,
+  Plus,
   Search,
+  ShoppingBag,
   ShoppingCart,
   Sun,
+  Trash2,
   User,
   X,
 } from "lucide-react";
@@ -22,6 +27,7 @@ import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { useTheme } from "@/context/ThemeContext";
 import { useAppSelector } from "@/store";
+import { formatMoney } from "@/lib/format";
 
 const serviceTabs = [
   { label: "HARDWARE", href: "/shop" },
@@ -42,7 +48,16 @@ const mainNavItems = [
 export default function Header() {
   const { settings } = useStoreSettings();
   const { data: tree = [] } = useGetCategoryTreeQuery();
-  const { count } = useCart();
+  const {
+    count,
+    lines,
+    subtotal,
+    remainingForFreeShipping,
+    freeShippingUnlocked,
+    progress,
+    remove,
+    setQty,
+  } = useCart();
   const { count: wishlistCount } = useWishlist();
   const { theme, toggleTheme } = useTheme();
   const token = useAppSelector((s) => s.auth.token);
@@ -54,14 +69,20 @@ export default function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [openMega, setOpenMega] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const [activeTab, setActiveTab] = useState("HARDWARE");
+  const activeTab =
+    pathname.startsWith("/shop") || pathname.startsWith("/product") || pathname === "/"
+      ? "HARDWARE"
+      : pathname.startsWith("/contact")
+        ? "COLOCATION"
+        : "HARDWARE";
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const hasLocalToken = typeof window !== "undefined" ? Boolean(localStorage.getItem("se-customer-token")) : false;
+  const hasLocalToken =
+    typeof window !== "undefined" ? Boolean(localStorage.getItem("se-customer-token")) : false;
   const isLoggedIn = mounted && (Boolean(token) || hasLocalToken);
   const accountHref = isLoggedIn ? "/account" : "/login";
 
@@ -81,14 +102,6 @@ export default function Header() {
     };
   }, [menuOpen, cartOpen]);
 
-  useEffect(() => {
-    if (pathname.startsWith("/shop") || pathname.startsWith("/product") || pathname === "/") {
-      setActiveTab("HARDWARE");
-    } else if (pathname.startsWith("/contact")) {
-      setActiveTab("COLOCATION");
-    }
-  }, [pathname]);
-
   function onSearch(event: FormEvent) {
     event.preventDefault();
     const next = query.trim();
@@ -106,17 +119,20 @@ export default function Header() {
           isLight ? "bg-white" : "bg-[#000000]"
         } ${scrolled ? "shadow-md" : ""}`}
       >
-        {/* Top Announcement Bar - Pure Black (#000000) */}
+        {/* Top Announcement Bar */}
         <div className="bg-[#000000] text-center text-[11px] sm:text-[12px] tracking-wide text-white">
           <div className="container-se flex items-center justify-between py-1.5 gap-2">
             <span className="hidden sm:inline-block w-24" />
             <div className="flex-1 text-center truncate">
-              the market is changing daily. Stay on top of changes with our{" "}
-              <Link href="/shop" className="font-bold text-white underline underline-offset-2 hover:opacity-90">
-                January market update
+              The market is changing daily. Stay on top of changes with our{" "}
+              <Link
+                href="/shop"
+                className="font-bold text-white underline underline-offset-2 hover:opacity-90"
+              >
+                market update
               </Link>
             </div>
-            {/* ON / OFF Style Theme Switcher */}
+            {/* Theme Switcher */}
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-[11px] font-semibold text-white/80 hidden sm:inline select-none">
                 {isLight ? "White Theme" : "Black Theme"}
@@ -131,7 +147,6 @@ export default function Header() {
                   isLight ? "bg-emerald-500 ring-emerald-400/60" : "bg-[#0066ff] ring-blue-400/60"
                 }`}
               >
-                {/* Background track indicator icons */}
                 <span className="absolute left-1 text-white select-none pointer-events-none flex items-center justify-center">
                   <Sun size={10} className={`transition-opacity duration-200 ${isLight ? "opacity-100" : "opacity-30"}`} />
                 </span>
@@ -139,7 +154,6 @@ export default function Header() {
                   <Moon size={10} className={`transition-opacity duration-200 ${!isLight ? "opacity-100" : "opacity-30"}`} />
                 </span>
 
-                {/* Sliding Switch Knob */}
                 <span
                   className={`pointer-events-none z-10 flex h-4 w-4 transform items-center justify-center rounded-full bg-white shadow transition-transform duration-300 ease-in-out ${
                     isLight ? "translate-x-0" : "translate-x-6"
@@ -156,10 +170,9 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Service Tabs + Contact Info Bar - Electric Blue (#0066ff) */}
+        {/* Service Tabs Bar */}
         <div className="bg-[#0066ff] text-white">
           <div className="container-se flex flex-wrap items-stretch justify-between gap-y-0">
-            {/* Service Tabs */}
             <nav className="flex items-stretch" aria-label="Services">
               {serviceTabs.map((tab) => {
                 const active = activeTab === tab.label;
@@ -182,7 +195,6 @@ export default function Header() {
               })}
             </nav>
 
-            {/* Contact Info (Clean Text without Icons) */}
             <div className="hidden items-center gap-6 text-[11px] font-medium sm:flex">
               <a
                 href={`mailto:${settings.email || "homegoodsgalaxy@gmail.com"}`}
@@ -197,7 +209,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Main Header / Navigation Bar */}
+        {/* Main Navigation Bar */}
         <div
           className={`transition-colors duration-300 ${
             !isLight
@@ -206,16 +218,16 @@ export default function Header() {
           }`}
         >
           <div className="container-se flex items-center justify-between gap-6 py-3.5">
-            {/* Logo */}
             <Link href="/" aria-label="Powerline Devices home" className="shrink-0">
               <Logo light={!isLight} />
             </Link>
 
-            {/* Desktop Center Navigation Links */}
             <nav className="hidden items-center gap-6 xl:gap-8 lg:flex" aria-label="Primary">
               {mainNavItems.map((item) => {
                 const categoryMatch = tree.find(
-                  (t) => t.slug.toLowerCase() === item.catSlug || t.name.toLowerCase() === item.label.toLowerCase()
+                  (t) =>
+                    t.slug.toLowerCase() === item.catSlug ||
+                    t.name.toLowerCase() === item.label.toLowerCase(),
                 );
                 const children = categoryMatch?.children ?? [];
                 const hasChildren = item.hasDropdown && children.length > 0;
@@ -278,7 +290,6 @@ export default function Header() {
 
             {/* Action Icons Right */}
             <div className="flex items-center gap-4">
-              {/* Search Icon */}
               <button
                 type="button"
                 className={`grid h-9 w-9 place-items-center transition ${
@@ -290,9 +301,8 @@ export default function Header() {
                 <Search size={20} className="stroke-[2.2]" />
               </button>
 
-              {/* Wishlist Icon */}
               <Link
-                href="/account"
+                href="/wishlist"
                 className={`relative grid h-9 w-9 place-items-center transition ${
                   !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                 }`}
@@ -304,10 +314,10 @@ export default function Header() {
                 </span>
               </Link>
 
-              {/* Shopping Cart Icon */}
+              {/* Shopping Cart Button */}
               <button
                 type="button"
-                className={`relative grid h-9 w-9 place-items-center transition ${
+                className={`relative grid h-9 w-9 place-items-center transition cursor-pointer ${
                   !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                 }`}
                 aria-label="Open cart"
@@ -319,7 +329,6 @@ export default function Header() {
                 </span>
               </button>
 
-              {/* Account Icon */}
               <Link
                 href={accountHref}
                 className={`relative grid h-9 w-9 place-items-center transition ${
@@ -334,7 +343,6 @@ export default function Header() {
                 ) : null}
               </Link>
 
-              {/* Mobile Hamburger Button */}
               <button
                 type="button"
                 className={`grid h-9 w-9 place-items-center rounded-lg border lg:hidden ${
@@ -358,9 +366,7 @@ export default function Header() {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 className={`overflow-hidden border-t ${
-                  !isLight
-                    ? "border-white/10 bg-[#121212]"
-                    : "border-gray-100 bg-gray-50"
+                  !isLight ? "border-white/10 bg-[#121212]" : "border-gray-100 bg-gray-50"
                 }`}
               >
                 <form onSubmit={onSearch} className="container-se flex items-center gap-3 py-3">
@@ -374,7 +380,10 @@ export default function Header() {
                       !isLight ? "text-white placeholder-gray-400" : "text-[#0b1220] placeholder-gray-500"
                     }`}
                   />
-                  <button type="submit" className="rounded-lg bg-[#0066ff] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0052cc]">
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-[#0066ff] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0052cc]"
+                  >
                     Search
                   </button>
                 </form>
@@ -384,9 +393,189 @@ export default function Header() {
         </div>
       </header>
 
+      {/* Cart Slide-Over Drawer */}
+      <AnimatePresence>
+        {cartOpen ? (
+          <div
+            className="fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm"
+            onClick={() => setCartOpen(false)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 220 }}
+              className="absolute right-0 top-0 flex h-full w-[min(100%,420px)] flex-col bg-white text-[#0b1220] shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+                <div className="flex items-center gap-2">
+                  <ShoppingBag size={20} className="text-[#0066ff]" />
+                  <h2 className="font-display text-lg font-bold text-navy">Your Cart</h2>
+                  <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-bold text-[#0066ff]">
+                    {count} {count === 1 ? "item" : "items"}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCartOpen(false)}
+                  className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-navy transition-colors"
+                  aria-label="Close cart"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Free Shipping Bar */}
+              {subtotal > 0 && (
+                <div className="border-b border-gray-100 bg-gray-50/70 px-6 py-3 text-xs">
+                  {freeShippingUnlocked ? (
+                    <p className="font-semibold text-emerald-600">🎉 You unlocked FREE Shipping!</p>
+                  ) : (
+                    <p className="text-gray-600">
+                      Add <strong className="text-navy">{formatMoney(remainingForFreeShipping)}</strong>{" "}
+                      more to get <strong className="text-[#0066ff]">FREE Shipping</strong>
+                    </p>
+                  )}
+                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
+                    <div
+                      className="h-full bg-[#0066ff] transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Drawer Body - Items List */}
+              <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+                {lines.length === 0 ? (
+                  <div className="flex h-full flex-col items-center justify-center text-center py-12">
+                    <div className="grid h-16 w-16 place-items-center rounded-2xl bg-blue-50 text-[#0066ff]">
+                      <ShoppingCart size={30} />
+                    </div>
+                    <h3 className="mt-4 font-display text-lg font-bold text-navy">Your cart is empty</h3>
+                    <p className="mt-1 text-xs text-gray-500 max-w-xs">
+                      Explore our hardware catalog to add items to your order.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCartOpen(false);
+                        router.push("/shop");
+                      }}
+                      className="mt-5 rounded-xl bg-[#0066ff] px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-[#0052cc]"
+                    >
+                      Start Shopping
+                    </button>
+                  </div>
+                ) : (
+                  lines.map(({ product, qty }) => (
+                    <div key={product.id} className="flex gap-3 border-b border-gray-100 pb-4">
+                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-1 flex items-center justify-center">
+                        {product.image || product.images?.[0]?.url ? (
+                          <img
+                            src={product.image || product.images?.[0]?.url}
+                            alt={product.title}
+                            className="h-full w-full object-contain"
+                          />
+                        ) : (
+                          <span className="font-mono text-[10px] font-bold text-gray-500">
+                            {product.sku}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-1 flex-col justify-between">
+                        <div>
+                          <div className="flex justify-between items-start gap-2">
+                            <Link
+                              href={`/product/${product.slug}`}
+                              onClick={() => setCartOpen(false)}
+                              className="line-clamp-1 text-sm font-semibold text-navy hover:text-[#0066ff]"
+                            >
+                              {product.title}
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => remove(product.id)}
+                              className="text-gray-400 hover:text-red-500 transition-colors"
+                              title="Remove item"
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          </div>
+                          <p className="font-mono text-xs text-gray-400">SKU: {product.sku}</p>
+                        </div>
+
+                        <div className="mt-2 flex items-center justify-between">
+                          <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50">
+                            <button
+                              type="button"
+                              onClick={() => setQty(product.id, Math.max(1, qty - 1))}
+                              className="px-2 py-0.5 text-gray-600 hover:text-navy"
+                            >
+                              <Minus size={12} />
+                            </button>
+                            <span className="px-2 text-xs font-bold text-navy">{qty}</span>
+                            <button
+                              type="button"
+                              onClick={() => setQty(product.id, qty + 1)}
+                              className="px-2 py-0.5 text-gray-600 hover:text-navy"
+                            >
+                              <Plus size={12} />
+                            </button>
+                          </div>
+                          <span className="font-semibold text-sm text-navy">
+                            {formatMoney(product.price * qty)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Drawer Footer */}
+              {lines.length > 0 && (
+                <div className="border-t border-gray-100 bg-white px-6 py-4 space-y-3">
+                  <div className="flex justify-between text-base font-bold text-navy">
+                    <span>Subtotal</span>
+                    <span className="text-[#0066ff]">{formatMoney(subtotal)}</span>
+                  </div>
+                  <p className="text-[11px] text-gray-500">Shipping & taxes calculated at checkout.</p>
+                  <div className="flex flex-col gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCartOpen(false);
+                        router.push("/checkout");
+                      }}
+                      className="flex items-center justify-center gap-2 rounded-xl bg-[#0066ff] px-5 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-[#0052cc] active:scale-[0.99]"
+                    >
+                      Proceed to Checkout <ArrowRight size={16} />
+                    </button>
+                    <Link
+                      href="/cart"
+                      onClick={() => setCartOpen(false)}
+                      className="block text-center text-xs font-semibold text-gray-500 hover:text-navy py-1"
+                    >
+                      View Full Shopping Cart
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        ) : null}
+      </AnimatePresence>
+
       {/* Mobile Drawer */}
       {menuOpen ? (
-        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm lg:hidden" onClick={() => setMenuOpen(false)}>
+        <div
+          className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm lg:hidden"
+          onClick={() => setMenuOpen(false)}
+        >
           <div
             className="absolute right-0 top-0 h-full w-[min(100%,360px)] overflow-y-auto bg-white p-5"
             onClick={(e) => e.stopPropagation()}
@@ -398,7 +587,6 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Mobile ON/OFF Theme Switch Row */}
             <div className="mb-4 flex items-center justify-between rounded-xl bg-gray-50 p-3 border border-gray-100">
               <span className="text-xs font-semibold text-gray-700">
                 Theme: {isLight ? "White (Light)" : "Black (Dark)"}
@@ -431,6 +619,7 @@ export default function Header() {
                 </span>
               </button>
             </div>
+
             <form onSubmit={onSearch} className="mb-5 flex items-center rounded-full border border-gray-200 bg-gray-50 pl-4">
               <input
                 value={query}

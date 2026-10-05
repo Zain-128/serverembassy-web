@@ -27,7 +27,7 @@ function useCountdown(targetIso: string | null) {
   const target = useMemo(() => {
     if (targetIso) {
       const d = new Date(targetIso);
-      if (!Number.isNaN(d.getTime()) && d.getTime() > Date.now()) return d;
+      if (!Number.isNaN(d.getTime())) return d;
     }
     return endOfWeekUtc();
   }, [targetIso]);
@@ -48,7 +48,7 @@ function useCountdown(targetIso: string | null) {
   return `${pad(days)} : ${pad(hours)} : ${pad(minutes)} : ${pad(seconds)}`;
 }
 
-import Image from "next/image";
+import { useGetProductsQuery } from "@/store/storeApi";
 
 const DEAL_IMAGES = [
   "/images/home/deal-speakers.png",
@@ -73,9 +73,14 @@ function DealCard({
   const compare =
     product.compareAtPrice && product.compareAtPrice > product.price
       ? product.compareAtPrice
-      : 139.00;
+      : null;
   const inStock = product.stock > 0;
-  const dealImg = DEAL_IMAGES[index % DEAL_IMAGES.length];
+  
+  const imageUrl =
+    product.image ||
+    product.images?.find((img) => img.isPrimary)?.url ||
+    product.images?.[0]?.url ||
+    DEAL_IMAGES[index % DEAL_IMAGES.length];
 
   const { isWishlisted, toggle } = useWishlist();
   const favorited = isWishlisted(product.id);
@@ -103,13 +108,12 @@ function DealCard({
         }`}
       >
         <div className="aspect-[4/3] relative overflow-hidden rounded-lg flex items-center justify-center">
-          {dealImg ? (
-            <Image
-              src={dealImg}
+          {imageUrl ? (
+            <img
+              src={imageUrl}
               alt={product.title}
-              width={410}
-              height={410}
               className="h-full w-full object-contain p-1"
+              loading="lazy"
             />
           ) : (
             <ProductVisual product={product} icon={icon} className="h-full" />
@@ -131,7 +135,7 @@ function DealCard({
           </span>
         ) : null}
         <span className={`text-base font-bold ${isLight ? "text-emerald-600" : "text-[#00d632]"}`}>
-          {formatMoney(product.price || 109.00)}
+          {formatMoney(product.price)}
         </span>
       </div>
       <AddToCartButton
@@ -144,14 +148,20 @@ function DealCard({
 }
 
 export default function LatestDealsWeek({
-  products,
+  products = [],
   theme = "dark",
 }: {
-  products: Product[];
+  products?: Product[];
   theme?: "dark" | "light";
 }) {
   const isLight = theme === "light";
-  const list = products.slice(0, 6);
+  
+  const { data: dealsRes } = useGetProductsQuery({ deal: true, limit: 6 });
+  const { data: fallbackRes } = useGetProductsQuery({ limit: 6 }, { skip: Boolean(dealsRes?.items?.length) });
+
+  const apiDeals = dealsRes?.items?.length ? dealsRes.items : fallbackRes?.items ?? [];
+  const list = apiDeals.length > 0 ? apiDeals.slice(0, 6) : products.slice(0, 6);
+
   const endsAt =
     list
       .map((p) => p.dealEndsAt)
@@ -162,15 +172,15 @@ export default function LatestDealsWeek({
   if (!list.length) return null;
 
   return (
-    <section id="deals" className={isLight ? "bg-white text-[#0b1220]" : "bg-[#05070c] text-white"}>
+    <section id="deals" className={isLight ? "bg-[#f8fafc] text-[#0b1220]" : "bg-[#05070c] text-white"}>
       <div className="container-se py-12 md:py-14">
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <h2
-            className={`font-display text-xl font-semibold tracking-tight sm:text-2xl ${
-              isLight ? "text-[#0b1220]" : "text-white"
+            className={`font-display text-xl font-bold uppercase tracking-[0.04em] sm:text-2xl ${
+              isLight ? "text-[#0066ff]" : "text-white"
             }`}
           >
-            Latest Deals for THis Week
+            Latest Deals for This Week
           </h2>
           <div
             className="rounded-full bg-brand px-4 py-2 font-mono text-sm font-semibold tracking-wide text-white tabular-nums shadow-[0_8px_24px_rgba(37,99,235,0.35)]"
