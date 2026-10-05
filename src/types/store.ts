@@ -64,6 +64,7 @@ export type Banner = {
   cta?: string;
   ctaLabel?: string;
   href: string;
+  imageUrl?: string;
   size: "hero" | "half" | "third";
   sortOrder: number;
   active: boolean;

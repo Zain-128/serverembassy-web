@@ -107,6 +107,7 @@ export function mapBanner(b: Record<string, unknown>): Banner {
     cta: ctaVal,
     ctaLabel: ctaVal,
     href: String(b.href ?? "/shop"),
+    imageUrl: b.imageUrl ? String(b.imageUrl) : undefined,
     size: (b.size as Banner["size"]) ?? "half",
     sortOrder: Number(b.sortOrder ?? 0),
     active: Boolean(b.active ?? true),
