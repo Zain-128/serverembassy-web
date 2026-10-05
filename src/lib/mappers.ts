@@ -99,11 +99,13 @@ export function mapBrand(b: Record<string, unknown>): Brand {
 }
 
 export function mapBanner(b: Record<string, unknown>): Banner {
+  const ctaVal = String(b.ctaLabel ?? b.cta ?? "Shop Now");
   return {
     id: String(b.id),
     title: String(b.title ?? ""),
     subtitle: String(b.subtitle ?? ""),
-    cta: String(b.ctaLabel ?? "Shop Now"),
+    cta: ctaVal,
+    ctaLabel: ctaVal,
     href: String(b.href ?? "/shop"),
     size: (b.size as Banner["size"]) ?? "half",
     sortOrder: Number(b.sortOrder ?? 0),
