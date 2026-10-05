@@ -39,6 +39,8 @@ export type ProductQuery = {
 export type CheckoutPayload = {
   email: string;
   customerId?: string;
+  createAccount?: boolean;
+  password?: string;
   paymentMethod: "stripe" | "cod" | "card" | "paypal" | "wire" | "purchase_order" | "net_terms";
   paymentIntentId?: string;
   billingAddress: Record<string, unknown>;
