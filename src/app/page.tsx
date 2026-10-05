@@ -2,6 +2,7 @@
 
 import HeroCarousel from "@/components/HeroCarousel";
 import AfterHeroBand from "@/components/home/AfterHeroBand";
+import PromoBanners from "@/components/PromoBanners";
 import LatestDealsWeek from "@/components/home/LatestDealsWeek";
 import PartsPromoBanner from "@/components/home/PartsPromoBanner";
 import FeatureProducts from "@/components/home/FeatureProducts";
@@ -61,6 +62,9 @@ export default function HomePage() {
         products={[...featured, ...rawTop].slice(0, 4)}
         theme={theme}
       />
+
+      {/* 2.5 Promotional Grid Banners */}
+      <PromoBanners banners={banners} />
 
       {/* 3. Latest Deals For This Week */}
       {dealsLoading ? (

@@ -36,7 +36,7 @@ export default function PromoBanners({ banners }: { banners: Banner[] }) {
                 <h3 className="font-display text-2xl">{banner.title}</h3>
                 <p className="mt-2 text-sm text-white/70">{banner.subtitle}</p>
                 <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white/90">
-                  {banner.cta}
+                  {banner.ctaLabel || banner.cta || "Shop Now"}
                   <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1.5" />
                 </span>
               </div>

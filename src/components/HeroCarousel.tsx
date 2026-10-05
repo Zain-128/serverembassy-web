@@ -44,16 +44,20 @@ const fallbackSlides: Slide[] = [
 ];
 
 function buildSlides(banners: Banner[]): Slide[] {
-  const custom = banners
-    .filter((b) => b.active && b.size === "hero")
+  const activeBanners = banners.filter((b) => b.active);
+  if (!activeBanners.length) return fallbackSlides;
+
+  const heroBanners = activeBanners.filter((b) => b.size === "hero");
+  const list = heroBanners.length ? heroBanners : activeBanners;
+
+  return list
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map<Slide>((b) => ({
       eyebrow: b.subtitle || fallbackSlides[0].eyebrow,
       title: b.title,
-      subtitle: b.cta || fallbackSlides[0].subtitle,
+      subtitle: b.ctaLabel || b.cta || fallbackSlides[0].subtitle,
       categories: defaultCategories,
     }));
-  return (custom.length ? custom : fallbackSlides).slice(0, 3);
 }
 
 export default function HeroCarousel({
