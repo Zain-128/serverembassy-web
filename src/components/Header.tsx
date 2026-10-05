@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -180,7 +181,6 @@ export default function Header() {
                   <Link
                     key={tab.label}
                     href={tab.href}
-                    onClick={() => setActiveTab(tab.label)}
                     className={`flex items-center px-4 py-2.5 text-[11px] uppercase tracking-[0.14em] transition sm:px-6 ${
                       active
                         ? !isLight
@@ -470,14 +470,18 @@ export default function Header() {
                     </button>
                   </div>
                 ) : (
-                  lines.map(({ product, qty }) => (
+                  lines.map(({ product, qty }) => {
+                    const thumbUrl = product.image || product.images?.[0]?.url;
+                    return (
                     <div key={product.id} className="flex gap-3 border-b border-gray-100 pb-4">
                       <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50 p-1 flex items-center justify-center">
-                        {product.image || product.images?.[0]?.url ? (
-                          <img
-                            src={product.image || product.images?.[0]?.url}
+                        {thumbUrl ? (
+                          <Image
+                            src={thumbUrl}
                             alt={product.title}
-                            className="h-full w-full object-contain"
+                            fill
+                            sizes="64px"
+                            className="object-contain"
                           />
                         ) : (
                           <span className="font-mono text-[10px] font-bold text-gray-500">
@@ -532,7 +536,8 @@ export default function Header() {
                         </div>
                       </div>
                     </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
 

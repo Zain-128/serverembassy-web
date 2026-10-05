@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import ShopCatalog from "@/components/ShopCatalog";
@@ -5,6 +6,27 @@ import { ProductGridSkeleton } from "@/components/Skeleton";
 import { getCategoryBySlug } from "@/lib/api/store";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { category } = await params;
+  const cat = await getCategoryBySlug(category).catch(() => null);
+  if (!cat) return {};
+
+  const description =
+    cat.description?.trim() ||
+    `Shop ${cat.name} — new, used & certified refurbished enterprise IT hardware in stock and ready to ship.`;
+
+  return {
+    title: cat.name,
+    description,
+    alternates: { canonical: `/shop/${cat.slug}` },
+    openGraph: { type: "website", title: cat.name, description },
+  };
+}
 
 export default async function CategoryPage({
   params,

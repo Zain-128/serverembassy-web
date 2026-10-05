@@ -1,7 +1,12 @@
 import type { MetadataRoute } from "next";
-import { getSiteUrl } from "@/lib/seo";
+import { absoluteUrl, getProductSitemapChunks } from "@/lib/seo";
 
-export default function robots(): MetadataRoute.Robots {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const productSitemaps = await getProductSitemapChunks();
+  const sitemaps = Array.from({ length: productSitemaps + 1 }, (_, id) =>
+    absoluteUrl(`/sitemap/${id}.xml`),
+  );
+
   return {
     rules: [
       {
@@ -10,6 +15,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/account", "/checkout", "/cart", "/login"],
       },
     ],
-    sitemap: `${getSiteUrl()}/sitemap.xml`,
+    sitemap: sitemaps,
   };
 }

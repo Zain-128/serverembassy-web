@@ -2,17 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 import { Cpu, HardDrive, Server } from "lucide-react";
 import type { Product } from "@/types/store";
 import { EASE } from "@/lib/motion";
 
-export default function ProductGallery({
-  product,
-  icon,
-}: {
-  product: Product;
-  icon: string;
-}) {
+export default function ProductGallery({ product }: { product: Product }) {
   const imageUrls =
     product.images && product.images.length > 0
       ? product.images.map((img) => img.url)
@@ -72,7 +67,13 @@ export default function ProductGallery({
                 selectedImage === url ? "border-brand ring-2 ring-brand/20" : "border-line hover:border-brand/40"
               }`}
             >
-              <img src={url} alt={`${product.title} ${idx + 1}`} className="h-full w-full object-contain" />
+              <Image
+                src={url}
+                alt={`${product.title} ${idx + 1}`}
+                fill
+                sizes="80px"
+                className="object-contain"
+              />
             </button>
           ))}
         </div>

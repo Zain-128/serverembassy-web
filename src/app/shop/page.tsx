@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import ShopCatalog from "@/components/ShopCatalog";
 import { ProductGridSkeleton } from "@/components/Skeleton";
+
+export const metadata: Metadata = {
+  title: "Shop",
+  description:
+    "Browse enterprise IT hardware by SKU, brand, and category — servers, storage, networking, and components. New, used & certified refurbished.",
+  alternates: { canonical: "/shop" },
+};
 
 export default function ShopPage() {
   return (

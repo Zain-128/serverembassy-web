@@ -1,4 +1,18 @@
 import type { Product } from "@/types/store";
+import { getProducts } from "@/lib/api/store";
+
+export const PRODUCTS_PER_SITEMAP = 5000;
+
+export async function getProductSitemapChunks(): Promise<number> {
+  const { total } = await getProducts({ limit: 1 }).catch(() => ({
+    total: 0,
+    items: [],
+    page: 1,
+    limit: 1,
+    totalPages: 0,
+  }));
+  return Math.max(1, Math.ceil(total / PRODUCTS_PER_SITEMAP));
+}
 
 export function getSiteUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://serverembassy-web.vercel.app").replace(/\/$/, "");

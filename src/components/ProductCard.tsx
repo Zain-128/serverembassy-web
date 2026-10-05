@@ -2,7 +2,8 @@
 
 import { useRef, type MouseEvent } from "react";
 import Link from "next/link";
-import { Star, ArrowUpRight, Cpu, HardDrive, Server, ShieldCheck, Heart } from "lucide-react";
+import Image from "next/image";
+import { Star, ArrowUpRight, Cpu, HardDrive, Server, Heart } from "lucide-react";
 import { discountPercent, formatMoney } from "@/lib/format";
 import type { Product } from "@/types/store";
 import Tilt3D from "@/components/3d/Tilt3D";
@@ -114,11 +115,12 @@ export default function ProductCard({ product }: { product: Product }) {
           <Link href={href} className="block">
             <div className="relative aspect-[4/3] w-full overflow-hidden p-3 flex items-center justify-center">
             {imageUrl ? (
-              <img
+              <Image
                 src={imageUrl}
                 alt={product.title}
-                className="h-full w-full object-contain transition-transform duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-105"
-                loading="lazy"
+                fill
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                className="object-contain transition-transform duration-500 ease-[cubic-bezier(0.22,0.61,0.36,1)] group-hover:scale-105"
                 onError={(e) => {
                   // Fallback to hardware badge if image link breaks
                   const target = e.currentTarget;

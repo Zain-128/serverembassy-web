@@ -25,7 +25,6 @@ export default function ProductDetail({
 }) {
   const brand = product.brand;
   const category = product.category;
-  const icon = category?.icon ?? "network";
   const { add } = useCart();
   const { isWishlisted, toggle: toggleWishlist } = useWishlist();
   const favorited = isWishlisted(product.id);
@@ -63,7 +62,7 @@ export default function ProductDetail({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE }}
         >
-          <ProductGallery product={product} icon={icon} />
+          <ProductGallery product={product} />
         </motion.div>
 
         <motion.div

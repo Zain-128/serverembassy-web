@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/types/store";
 import ProductVisual from "@/components/ProductVisual";
 import AddToCartButton from "@/components/AddToCartButton";
@@ -109,11 +110,12 @@ function DealCard({
       >
         <div className="aspect-[4/3] relative overflow-hidden rounded-lg flex items-center justify-center">
           {imageUrl ? (
-            <img
+            <Image
               src={imageUrl}
               alt={product.title}
-              className="h-full w-full object-contain p-1"
-              loading="lazy"
+              fill
+              sizes="(min-width: 1024px) 16vw, 33vw"
+              className="object-contain p-1"
             />
           ) : (
             <ProductVisual product={product} icon={icon} className="h-full" />
