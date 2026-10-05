@@ -186,19 +186,19 @@ export default function AfterHeroBand({
                   {i === 0 ? (
                     <div className="relative h-44 w-full">
                       <Image
-                        src="/images/home/promo-printer.png"
-                        alt="Brother Printer"
+                        src="/images/home/hero-left-tower.png"
+                        alt="Enterprise Server Hardware"
                         fill
-                        className="object-contain"
+                        className="object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   ) : (
                     <div className="relative h-44 w-full">
                       <Image
-                        src="/images/home/promo-speakers.png"
-                        alt="Logitech Speaker System"
+                        src="/images/home/deal-network-1.png"
+                        alt="Enterprise Networking Equipment"
                         fill
-                        className="object-contain"
+                        className="object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   )}
