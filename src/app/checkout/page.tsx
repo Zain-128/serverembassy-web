@@ -23,6 +23,7 @@ import {
   useValidateCouponMutation,
 } from "@/store/storeApi";
 import { useAppSelector } from "@/store";
+import type { CustomerOrder } from "@/types/store";
 import { useCart } from "@/lib/cart";
 import { useToast } from "@/components/Toast";
 import { TextField } from "@/components/ui/fields";
@@ -62,6 +63,7 @@ export default function CheckoutPage() {
   const toast = useToast().toast;
   const [method, setMethod] = useState<PaymentMethodId>("stripe");
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [bookedOrder, setBookedOrder] = useState<CustomerOrder | null>(null);
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   const [createOrder, { isLoading: loading }] = useCreateOrderMutation();
@@ -133,6 +135,7 @@ export default function CheckoutPage() {
         items: lines.map(({ product, qty }) => ({ productId: product.id, qty })),
       }).unwrap();
 
+      setBookedOrder(order);
       setOrderNumber(order.orderNumber);
       clear();
       toast(
@@ -150,7 +153,7 @@ export default function CheckoutPage() {
     }
   }
 
-  if (lines.length === 0 && !orderNumber) {
+  if (lines.length === 0 && !orderNumber && !bookedOrder) {
     return (
       <div className="container-se py-16">
         <h1 className="text-center font-display text-3xl font-bold tracking-tight text-navy">
@@ -168,7 +171,11 @@ export default function CheckoutPage() {
     );
   }
 
-  if (orderNumber) {
+  if (orderNumber || bookedOrder) {
+    const displayTotal = bookedOrder ? bookedOrder.total : Math.max(0, total - discount);
+    const displayMethod = bookedOrder ? bookedOrder.paymentMethod : method;
+    const displayStatus = bookedOrder ? bookedOrder.paymentStatus : (method === "cod" ? "pending" : "paid");
+
     return (
       <div className="container-se py-16">
         <motion.div
@@ -182,19 +189,27 @@ export default function CheckoutPage() {
           </div>
           <h1 className="mt-5 font-display text-2xl font-bold text-navy">Order confirmed!</h1>
           <p className="mt-2 text-sm text-muted">
-            Order <strong className="text-navy">{orderNumber}</strong> has been booked. A confirmation
+            Order <strong className="text-navy">{orderNumber || bookedOrder?.orderNumber}</strong> has been booked. A confirmation
             email will be sent with tracking information.
           </p>
           <div className="mt-6 space-y-2.5 rounded-2xl bg-page/60 p-4 text-left text-sm">
             <div className="flex justify-between">
               <span className="text-muted">Total amount</span>
-              <span className="font-semibold">{formatMoney(Math.max(0, total - discount))}</span>
+              <span className="font-semibold text-navy">{formatMoney(displayTotal)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted">Payment method</span>
-              <span className="font-semibold uppercase">{method === "cod" ? "Cash on Delivery (COD)" : method}</span>
+              <span className="font-semibold uppercase text-navy">
+                {displayMethod === "cod" ? "Cash on Delivery (COD)" : displayMethod}
+              </span>
             </div>
-            {method === "cod" && (
+            <div className="flex justify-between">
+              <span className="text-muted">Payment status</span>
+              <span className="font-semibold capitalize text-green-700">
+                {displayStatus}
+              </span>
+            </div>
+            {displayMethod === "cod" && (
               <div className="mt-2 rounded-xl bg-amber-50 p-2.5 text-xs text-amber-800">
                 💵 Please keep exact cash ready upon delivery.
               </div>

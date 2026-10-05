@@ -139,7 +139,7 @@ export const storeApi = createApi({
       providesTags: ["Catalog"],
     }),
     createOrder: builder.mutation<
-      { id: string; orderNumber: string; total: number; discount?: number },
+      CustomerOrder,
       CheckoutPayload
     >({
       query: (body) => ({ url: "/checkout", method: "POST", body }),
