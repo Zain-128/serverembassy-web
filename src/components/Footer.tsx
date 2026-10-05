@@ -166,11 +166,26 @@ export default function Footer() {
 
         {/* Bottom blurbs */}
         <div
-          className={`flex flex-wrap justify-between gap-4 px-6 py-6 text-xs sm:px-8 lg:px-10 ${
+          className={`flex flex-wrap items-center justify-between gap-4 px-6 py-6 text-xs sm:px-8 lg:px-10 ${
             !isLight ? "text-white/50" : "text-gray-500"
           }`}
         >
           <p>© {new Date().getFullYear()} Power Line Devices. All rights reserved.</p>
+          <nav
+            className="flex flex-wrap items-center gap-x-4 gap-y-1"
+            aria-label="Legal"
+          >
+            {[
+              { href: "/policies/privacy-policy", label: "Privacy Policy" },
+              { href: "/policies/terms-of-service", label: "Terms of Service" },
+              { href: "/policies/shipping", label: "Shipping" },
+              { href: "/policies/returns", label: "Returns" },
+            ].map((link) => (
+              <Link key={link.href} href={link.href} className="transition hover:text-[#0066ff]">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
           <p>Enterprise Server Hardware, Storage & Networking Solutions</p>
         </div>
       </div>

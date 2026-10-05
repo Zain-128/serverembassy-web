@@ -28,10 +28,21 @@ export default async function sitemap({
       { path: "/contact", priority: 0.5 },
       { path: "/faq", priority: 0.4 },
     ];
+    const policyEntries: { path: string; priority: number }[] = [
+      { path: "/policies/privacy-policy", priority: 0.3 },
+      { path: "/policies/terms-of-service", priority: 0.3 },
+      { path: "/policies/shipping", priority: 0.3 },
+      { path: "/policies/returns", priority: 0.3 },
+    ];
     return [
       ...staticEntries.map(({ path, priority }) => ({
         url: absoluteUrl(path),
         changeFrequency: "daily" as const,
+        priority,
+      })),
+      ...policyEntries.map(({ path, priority }) => ({
+        url: absoluteUrl(path),
+        changeFrequency: "yearly" as const,
         priority,
       })),
       ...categories.map((c) => ({

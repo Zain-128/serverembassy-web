@@ -29,7 +29,7 @@ import { TextField } from "@/components/ui/fields";
 import { StateBox } from "@/components/ui/States";
 
 type PaymentOption = {
-  id: "stripe" | "cod" | "wire" | "paypal";
+  id: "stripe" | "cod";
   label: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
   badge?: string;
@@ -51,40 +51,9 @@ const paymentOptions: readonly PaymentOption[] = [
     badge: "Popular",
     desc: "Pay cash upon delivery at your doorstep",
   },
-  {
-    id: "wire",
-    label: "Bank Transfer",
-    icon: Landmark,
-    desc: "Direct bank wire transfer",
-  },
-  {
-    id: "paypal",
-    label: "PayPal",
-    icon: ShieldCheck,
-    desc: "Pay via your PayPal account",
-  },
 ];
 
 type PaymentMethodId = PaymentOption["id"];
-
-function Landmark(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M3 21h18M17 21v-8m-4 8v-8m-4 8v-8M3 17l.5-11L12 3l8.5 3L21 17" />
-      <path d="M12 3v0" />
-    </svg>
-  );
-}
 
 export default function CheckoutPage() {
   const { lines, subtotal, shipping, tax, total, clear } = useCart();
@@ -357,18 +326,6 @@ export default function CheckoutPage() {
                   <p className="mt-2 text-xs text-amber-800 leading-relaxed">
                     Pay with cash when your parcel arrives at your delivery location. No online credit card or bank transfer required up front.
                   </p>
-                </div>
-              )}
-
-              {method === "wire" && (
-                <div className="rounded-2xl border border-line bg-page/50 p-4 text-xs text-muted">
-                  🏦 Direct bank transfer instructions will be emailed to your address upon order placement.
-                </div>
-              )}
-
-              {method === "paypal" && (
-                <div className="rounded-2xl border border-line bg-page/50 p-4 text-xs text-muted">
-                  🅿️ You will receive a PayPal invoice link in your order confirmation email.
                 </div>
               )}
             </div>

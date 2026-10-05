@@ -16,6 +16,8 @@ import { useAppSelector, useAppDispatch } from "@/store";
 import { logout } from "@/store/authSlice";
 import { useGetMeQuery, useLogoutMutation, useDeleteAccountMutation, useGetMyInvitesQuery } from "@/store/authApi";
 import { useGetMyOrdersQuery } from "@/store/storeApi";
+import OrderDetailModal from "@/components/account/OrderDetailModal";
+import type { CustomerOrder } from "@/types/store";
 
 function DeleteAccountModal({ onClose }: { onClose: () => void }) {
   const [password, setPassword] = useState("");
@@ -132,6 +134,7 @@ export default function AccountPage() {
   const [doLogout] = useLogoutMutation();
   const [page, setPage] = useState(1);
   const [showDelete, setShowDelete] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<CustomerOrder | null>(null);
   const { data: customer, isLoading: loadingCustomer } = useGetMeQuery(undefined, { skip: !token });
   const { data: ordersResult, isLoading: loadingOrders } = useGetMyOrdersQuery(
     { page },
@@ -286,26 +289,42 @@ export default function AccountPage() {
             <>
               <div className="divide-y divide-line">
                 {ordersResult.items.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between gap-3 px-6 py-4 transition hover:bg-page/50">
+                  <div
+                    key={order.id}
+                    onClick={() => setSelectedOrder(order)}
+                    className="group flex cursor-pointer items-center justify-between gap-3 px-6 py-4 transition hover:bg-brand-soft/30"
+                    role="button"
+                    tabIndex={0}
+                  >
                     <div className="min-w-0">
-                      <p className="truncate font-medium text-navy">{order.orderNumber}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="truncate font-semibold text-navy group-hover:text-brand">{order.orderNumber}</p>
+                        <span className="text-[11px] text-brand font-medium group-hover:underline">
+                          View details →
+                        </span>
+                      </div>
                       <p className="text-xs text-muted">
                         {new Date(order.placedAt).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
                         })}
+                        {order.items?.length ? ` · ${order.items.length} item(s)` : ""}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-navy">{formatMoney(order.total)}</p>
                       <span
-                        className={`mt-0.5 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize ${
+                        className={`mt-0.5 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold capitalize ${
                           order.status === "delivered"
                             ? "bg-green-50 text-green-700"
                             : order.status === "processing"
                               ? "bg-amber-50 text-amber-700"
-                              : "bg-sky-50 text-sky-700"
+                              : order.status === "shipped"
+                                ? "bg-blue-50 text-blue-700"
+                                : order.status === "cancelled"
+                                  ? "bg-red-50 text-red-700"
+                                  : "bg-sky-50 text-sky-700"
                         }`}
                       >
                         {order.status}
@@ -347,6 +366,7 @@ export default function AccountPage() {
       </div>
 
       {showDelete && <DeleteAccountModal onClose={() => setShowDelete(false)} />}
+      <OrderDetailModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Category, Product } from "@/types/store";
 import AddToCartButton from "@/components/AddToCartButton";
 import { formatMoney } from "@/lib/format";
@@ -70,12 +71,15 @@ function FeatureCard({
           href={`/product/${product.slug}`}
           className="absolute inset-x-3.5 sm:inset-x-4 top-9 bottom-3.5 sm:bottom-4 z-10 flex items-center justify-center pointer-events-auto"
         >
-          <img
-            src={imageUrl}
-            alt={product.title || "Product Image"}
-            className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-            loading="lazy"
-          />
+          <div className="relative h-full w-full">
+            <Image
+              src={imageUrl}
+              alt={product.title || "Product Image"}
+              fill
+              sizes="(min-width: 1024px) 25vw, 50vw"
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
         </Link>
       </div>
 

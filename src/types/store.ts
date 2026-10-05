@@ -101,10 +101,25 @@ export type CustomerOrder = {
   paymentStatus: string;
   paymentMethod: string;
   subtotal: number;
+  discount?: number;
+  couponCode?: string;
   shippingCost: number;
   tax: number;
   total: number;
   placedAt: string;
+  shippingAddress?: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    company?: string;
+  };
+  shipments?: Array<{
+    carrier: string;
+    trackingNumber: string;
+    shippedAt?: string;
+  }>;
   items: Array<{
     productId: string;
     sku: string;
