@@ -57,6 +57,7 @@ const paymentOptions: readonly PaymentOption[] = [
 type PaymentMethodId = PaymentOption["id"];
 
 export default function CheckoutPage() {
+  const { lines, subtotal, shipping, tax, total, clear } = useCart();
   const loggedInCustomer = useAppSelector((s) => s.auth.customer);
   const customerId = loggedInCustomer?.id;
   const router = useRouter();
