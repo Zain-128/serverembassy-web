@@ -1,47 +1,43 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowRight, PhoneCall } from "lucide-react";
 
 export default function StartCtaBand({ theme = "dark" }: { theme?: "dark" | "light" }) {
-  const isLight = theme === "light";
   return (
-    <section className={isLight ? "bg-white text-[#0b1220]" : "bg-[#05070c] text-white"}>
-      <div className={`container-se py-12 md:py-14 ${isLight ? "border-t border-gray-200" : "border-t border-white/10"}`}>
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+    <section className="container-se py-10">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#030a1c] via-[#091a3e] to-[#0052cc] p-8 sm:p-10 md:p-12 text-white shadow-lift">
+        {/* Background Mesh/Glow Accent */}
+        <div className="pointer-events-none absolute inset-0 opacity-15 [background-image:radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.4)_1px,transparent_0)] [background-size:24px_24px]" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-brand/30 blur-3xl" />
+
+        <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex max-w-2xl items-center gap-4 sm:gap-6">
-            <div className="shrink-0 text-[#0066ff]">
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="currentColor">
-                <path d="M6 6L28 18L6 30V6Z" />
-              </svg>
+            <div className="shrink-0 grid h-14 w-14 place-items-center rounded-2xl bg-white/10 text-white border border-white/15 shadow-inner">
+              <PhoneCall size={26} className="text-white" />
             </div>
             <div>
-              <h2
-                className={`font-display text-2xl font-bold tracking-tight sm:text-3xl ${
-                  isLight ? "text-[#0b1220]" : "text-white"
-                }`}
-              >
+              <h2 className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Don&apos;t Know Where To Start ?
               </h2>
-              <p className={`mt-2 max-w-lg text-sm leading-relaxed sm:text-base ${isLight ? "text-slate-500" : "text-white/60"}`}>
-                Our IT hardware engineers are ready to assist you in designing, upgrading, or scaling your infrastructure.
+              <p className="mt-2 max-w-lg text-sm font-medium text-white/80 leading-relaxed sm:text-base">
+                Our IT hardware engineers are ready to assist you in designing, upgrading, or scaling your enterprise infrastructure.
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-5 sm:gap-6">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
             <Link
               href="/contact"
-              className={`text-sm font-semibold transition hover:text-brand ${
-                isLight ? "text-[#0b1220]" : "text-white"
-              }`}
+              className="text-sm font-semibold text-white hover:text-blue-200 transition-colors underline-offset-4 hover:underline"
             >
               Get In Touch
             </Link>
             <Link
-              href="/#quote"
-              className="rounded-lg bg-gradient-to-b from-[#3b82f6] to-[#1d4ed8] px-6 py-3 text-sm font-bold text-white shadow-[0_10px_28px_rgba(37,99,235,0.35)] transition hover:brightness-110"
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3 text-sm font-bold text-white shadow-lg shadow-brand/30 transition hover:bg-brand-hover hover:scale-105"
             >
-              Schedule A Call
+              Schedule A Call <ArrowRight size={16} className="text-white" />
             </Link>
           </div>
         </div>

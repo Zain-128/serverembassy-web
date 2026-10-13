@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --hostname localhost --port 3000",
     "build": "next build",
+    "build:vps": "node scripts/package-vps.js",
     "start": "next start",
     "lint": "eslint"
   },

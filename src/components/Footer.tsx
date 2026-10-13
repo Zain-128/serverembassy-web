@@ -57,29 +57,29 @@ export default function Footer() {
     }
   }
 
-  const phone = store.phone || "(303) 847-0120";
+  const phone = store.phone || "(321) 788-5899";
   const mail = store.email || "info@powerlinedevices.com";
 
   return (
     <footer
-      className={`px-4 pb-10 pt-6 sm:px-6 transition-colors duration-300 ${
+      className={`px-2 pb-8 pt-4 sm:px-6 sm:pb-10 sm:pt-6 transition-colors duration-300 ${
         !isLight ? "bg-[#05070c]" : "bg-white"
       }`}
     >
       <div
-        className={`container-se overflow-hidden rounded-[2rem] transition-colors duration-300 ${
+        className={`container-se overflow-hidden rounded-2xl sm:rounded-[2rem] transition-colors duration-300 ${
           !isLight
             ? "border border-white/10 bg-[#000000] text-white shadow-2xl"
             : "bg-white text-[#0b1220] shadow-lift border border-gray-100"
         }`}
       >
         {/* Logo + nav */}
-        <div className="flex flex-col gap-5 px-6 py-7 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
+        <div className="flex flex-col gap-4 px-4 py-5 sm:px-8 sm:py-7 md:flex-row md:items-center md:justify-between lg:px-10">
           <Link href="/" aria-label="Power Line Devices home" className="shrink-0">
             <Logo light={!isLight} />
           </Link>
           <nav
-            className={`flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold md:justify-end ${
+            className={`flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm font-semibold md:justify-end ${
               !isLight ? "text-white/80" : "text-[#0b1220]"
             }`}
             aria-label="Footer"
@@ -96,27 +96,27 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className={`mx-6 h-px sm:mx-8 lg:mx-10 ${!isLight ? "bg-white/10" : "bg-gray-200"}`} />
+        <div className={`mx-4 h-px sm:mx-8 lg:mx-10 ${!isLight ? "bg-white/10" : "bg-gray-200"}`} />
 
         {/* Contact + newsletter */}
-        <div className="grid items-center gap-8 px-6 py-8 sm:px-8 md:grid-cols-2 md:gap-0 lg:px-10">
-          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 md:pr-10">
+        <div className="grid items-center gap-6 px-4 py-6 sm:px-8 sm:py-8 md:grid-cols-2 md:gap-0 lg:px-10">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 sm:gap-x-8 sm:gap-y-4 md:pr-10">
             <a
               href={`tel:${phone.replace(/[^\d+]/g, "")}`}
-              className={`inline-flex items-center gap-2.5 text-base font-semibold transition hover:text-[#0066ff] ${
+              className={`inline-flex items-center gap-2 text-sm sm:text-base font-semibold transition hover:text-[#0066ff] ${
                 !isLight ? "text-white" : "text-[#0b1220]"
               }`}
             >
-              <Phone size={18} className="text-[#0066ff]" strokeWidth={2.2} />
+              <Phone size={16} className="text-[#0066ff] sm:w-[18px] sm:h-[18px]" strokeWidth={2.2} />
               {phone}
             </a>
             <a
               href={`mailto:${mail}`}
-              className={`inline-flex items-center gap-2.5 text-base font-semibold transition hover:text-[#0066ff] ${
+              className={`inline-flex items-center gap-2 text-sm sm:text-base font-semibold transition hover:text-[#0066ff] ${
                 !isLight ? "text-white" : "text-[#0b1220]"
               }`}
             >
-              <Mail size={18} className="text-[#0066ff]" strokeWidth={2.2} />
+              <Mail size={16} className="text-[#0066ff] sm:w-[18px] sm:h-[18px]" strokeWidth={2.2} />
               {mail}
             </a>
           </div>
@@ -126,15 +126,15 @@ export default function Footer() {
               !isLight ? "md:border-white/10" : "md:border-gray-200"
             }`}
           >
-            <p className={`shrink-0 text-base font-semibold ${!isLight ? "text-white" : "text-[#0b1220]"}`}>
+            <p className={`shrink-0 text-sm sm:text-base font-semibold ${!isLight ? "text-white" : "text-[#0b1220]"}`}>
               Stay In Touch
             </p>
             <form
               onSubmit={onSubscribe}
-              className={`flex min-w-0 flex-1 items-center overflow-hidden rounded-full p-1 border ${
+              className={`flex w-full min-w-0 items-center overflow-hidden rounded-full p-1 border ${
                 !isLight
-                  ? "bg-black text-white border-transparent"
-                  : "bg-gray-100 text-black border-transparent"
+                  ? "bg-black text-white border-white/10"
+                  : "bg-gray-100 text-black border-gray-200"
               }`}
             >
               <input
@@ -143,7 +143,7 @@ export default function Footer() {
                 placeholder="Email Address....."
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`min-w-0 flex-1 bg-transparent px-4 py-2 text-sm outline-none rounded-l-full ${
+                className={`min-w-0 flex-1 bg-transparent px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm outline-none rounded-l-full ${
                   !isLight
                     ? "text-white placeholder:text-white/40"
                     : "text-[#0b1220] placeholder:text-gray-400"
@@ -151,28 +151,28 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#0066ff] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#0066ff] px-3.5 py-1.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition hover:bg-blue-700"
               >
-                Submit
-                <span className="grid h-5 w-5 place-items-center rounded-full bg-white text-[#0066ff]">
-                  <ArrowRight size={12} strokeWidth={2.5} />
+                <span>Submit</span>
+                <span className="grid h-4.5 w-4.5 sm:h-5 sm:w-5 place-items-center rounded-full bg-white text-[#0066ff]">
+                  <ArrowRight size={11} strokeWidth={2.5} className="sm:w-[12px] sm:h-[12px]" />
                 </span>
               </button>
             </form>
           </div>
         </div>
 
-        <div className={`mx-6 h-px sm:mx-8 lg:mx-10 ${!isLight ? "bg-white/10" : "bg-gray-100"}`} />
+        <div className={`mx-4 h-px sm:mx-8 lg:mx-10 ${!isLight ? "bg-white/10" : "bg-gray-100"}`} />
 
         {/* Bottom blurbs */}
         <div
-          className={`flex flex-wrap items-center justify-between gap-4 px-6 py-6 text-xs sm:px-8 lg:px-10 ${
+          className={`flex flex-col sm:flex-row flex-wrap items-center justify-between gap-3 px-4 py-5 text-[11px] sm:text-xs sm:px-8 lg:px-10 text-center sm:text-left ${
             !isLight ? "text-white/50" : "text-gray-500"
           }`}
         >
           <p>© {new Date().getFullYear()} Power Line Devices. All rights reserved.</p>
           <nav
-            className="flex flex-wrap items-center gap-x-4 gap-y-1"
+            className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:gap-x-4"
             aria-label="Legal"
           >
             {[

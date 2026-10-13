@@ -122,9 +122,9 @@ export default function Header() {
       >
         {/* Top Announcement Bar */}
         <div className="bg-[#000000] text-center text-[11px] sm:text-[12px] tracking-wide text-white">
-          <div className="container-se flex items-center justify-between py-1.5 gap-2">
-            <span className="hidden sm:inline-block w-24" />
-            <div className="flex-1 text-center truncate">
+          <div className="container-se flex items-center justify-between py-1.5 gap-2 px-3 sm:px-4">
+            <span className="hidden sm:inline-block w-20" />
+            <div className="flex-1 text-center truncate text-[10px] sm:text-[12px]">
               The market is changing daily. Stay on top of changes with our{" "}
               <Link
                 href="/shop"
@@ -134,7 +134,7 @@ export default function Header() {
               </Link>
             </div>
             {/* Theme Switcher */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <span className="text-[11px] font-semibold text-white/80 hidden sm:inline select-none">
                 {isLight ? "White Theme" : "Black Theme"}
               </span>
@@ -173,15 +173,15 @@ export default function Header() {
 
         {/* Service Tabs Bar */}
         <div className="bg-[#0066ff] text-white">
-          <div className="container-se flex flex-wrap items-stretch justify-between gap-y-0">
-            <nav className="flex items-stretch" aria-label="Services">
+          <div className="container-se flex items-stretch justify-between px-1.5 sm:px-4">
+            <nav className="flex w-full items-stretch justify-between sm:w-auto sm:justify-start overflow-x-auto no-scrollbar" aria-label="Services">
               {serviceTabs.map((tab) => {
                 const active = activeTab === tab.label;
                 return (
                   <Link
                     key={tab.label}
                     href={tab.href}
-                    className={`flex items-center px-4 py-2.5 text-[11px] uppercase tracking-[0.14em] transition sm:px-6 ${
+                    className={`flex items-center px-2.5 sm:px-6 py-2 sm:py-2.5 text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.14em] transition whitespace-nowrap ${
                       active
                         ? !isLight
                           ? "!bg-[#000000] !text-white font-extrabold shadow-sm"
@@ -197,13 +197,13 @@ export default function Header() {
 
             <div className="hidden items-center gap-6 text-[11px] font-medium sm:flex">
               <a
-                href={`mailto:${settings.email || "homegoodsgalaxy@gmail.com"}`}
+                href={`mailto:${settings.email || "info@powerlinedevices.com"}`}
                 className="text-white hover:underline"
               >
-                {settings.email || "homegoodsgalaxy@gmail.com"}
+                {settings.email || "info@powerlinedevices.com"}
               </a>
               <span className="text-white">
-                {settings.address || "Address Big Ben Street, E17 US, CANADA"}
+                {settings.address || "1317 Edgewater Dr Suite #6089, Orlando, FL 32804"}
               </span>
             </div>
           </div>
@@ -217,7 +217,7 @@ export default function Header() {
               : "border-b border-gray-100 bg-white text-[#0b1220]"
           }`}
         >
-          <div className="container-se flex items-center justify-between gap-6 py-3.5">
+          <div className="container-se flex items-center justify-between gap-3 sm:gap-6 py-2.5 sm:py-3.5 px-3 sm:px-4">
             <Link href="/" aria-label="Powerline Devices home" className="shrink-0">
               <Logo light={!isLight} />
             </Link>
@@ -289,27 +289,27 @@ export default function Header() {
             </nav>
 
             {/* Action Icons Right */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2.5 sm:gap-4">
               <button
                 type="button"
-                className={`grid h-9 w-9 place-items-center transition ${
+                className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center transition ${
                   !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                 }`}
                 aria-label="Search"
                 onClick={() => setSearchOpen((v) => !v)}
               >
-                <Search size={20} className="stroke-[2.2]" />
+                <Search size={19} className="stroke-[2.2]" />
               </button>
 
               <Link
                 href="/wishlist"
-                className={`relative grid h-9 w-9 place-items-center transition ${
+                className={`relative grid h-8 w-8 sm:h-9 sm:w-9 place-items-center transition ${
                   !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                 }`}
                 aria-label="Wishlist"
               >
-                <Heart size={20} className="stroke-[2.2]" />
-                <span className="absolute -right-1.5 -top-1.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-[#e52e2e] px-1 text-[10px] font-bold text-white">
+                <Heart size={19} className="stroke-[2.2]" />
+                <span className="absolute -right-1 -top-1 grid h-4 min-w-4 sm:h-4.5 sm:min-w-4.5 place-items-center rounded-full bg-[#e52e2e] px-1 text-[9px] sm:text-[10px] font-bold text-white">
                   {wishlistCount}
                 </span>
               </Link>
@@ -317,27 +317,27 @@ export default function Header() {
               {/* Shopping Cart Button */}
               <button
                 type="button"
-                className={`relative grid h-9 w-9 place-items-center transition cursor-pointer ${
+                className={`relative grid h-8 w-8 sm:h-9 sm:w-9 place-items-center transition cursor-pointer ${
                   !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                 }`}
                 aria-label="Open cart"
                 onClick={() => setCartOpen(true)}
               >
-                <ShoppingCart size={20} className="stroke-[2.2]" />
-                <span className="absolute -right-1.5 -top-1.5 grid h-4.5 min-w-4.5 place-items-center rounded-full bg-[#e52e2e] px-1 text-[10px] font-bold text-white">
+                <ShoppingCart size={19} className="stroke-[2.2]" />
+                <span className="absolute -right-1 -top-1 grid h-4 min-w-4 sm:h-4.5 sm:min-w-4.5 place-items-center rounded-full bg-[#e52e2e] px-1 text-[9px] sm:text-[10px] font-bold text-white">
                   {count}
                 </span>
               </button>
 
               <Link
                 href={accountHref}
-                className={`relative grid h-9 w-9 place-items-center transition ${
+                className={`relative grid h-8 w-8 sm:h-9 sm:w-9 place-items-center transition ${
                   !isLight ? "text-white hover:text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                 }`}
                 aria-label={isLoggedIn ? "My Account" : "Account Login"}
                 title={isLoggedIn ? "My Account" : "Login"}
               >
-                <User size={20} className="stroke-[2.2]" />
+                <User size={19} className="stroke-[2.2]" />
                 {isLoggedIn ? (
                   <span className="absolute bottom-0.5 right-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white" />
                 ) : null}
@@ -345,7 +345,7 @@ export default function Header() {
 
               <button
                 type="button"
-                className={`grid h-9 w-9 place-items-center rounded-lg border lg:hidden ${
+                className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-lg border lg:hidden ${
                   !isLight
                     ? "border-white/20 text-white hover:bg-white/10"
                     : "border-gray-200 text-[#0b1220] hover:bg-gray-100"
@@ -353,7 +353,7 @@ export default function Header() {
                 onClick={() => setMenuOpen(true)}
                 aria-label="Open menu"
               >
-                <Menu size={20} />
+                <Menu size={19} />
               </button>
             </div>
           </div>
