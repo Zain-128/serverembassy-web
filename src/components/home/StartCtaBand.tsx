@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, PhoneCall } from "lucide-react";
+import { STORE_CONTACT } from "@/lib/constants/contact";
 
 export default function StartCtaBand({ theme = "dark" }: { theme?: "dark" | "light" }) {
   return (
@@ -27,17 +28,17 @@ export default function StartCtaBand({ theme = "dark" }: { theme?: "dark" | "lig
           </div>
 
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <Link
-              href="/contact"
+            <a
+              href={`tel:${STORE_CONTACT.phoneRaw}`}
               className="text-sm font-semibold text-white hover:text-blue-200 transition-colors underline-offset-4 hover:underline"
             >
-              Get In Touch
-            </Link>
+              Call: {STORE_CONTACT.phone}
+            </a>
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 rounded-xl bg-brand px-6 py-3 text-sm font-bold text-white shadow-lg shadow-brand/30 transition hover:bg-brand-hover hover:scale-105"
             >
-              Schedule A Call <ArrowRight size={16} className="text-white" />
+              Get In Touch <ArrowRight size={16} className="text-white" />
             </Link>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import type { Banner, Brand, Category, CmsPage, Product, StoreSettings } from "@/types/store";
+import { STORE_CONTACT } from "./constants/contact";
 
 type ApiProduct = {
   id: string;
@@ -116,12 +117,12 @@ export function mapBanner(b: Record<string, unknown>): Banner {
 
 export function mapSettings(s: Record<string, unknown>): StoreSettings {
   return {
-    name: String(s.storeName ?? "Power Line Devices"),
-    tagline: String(s.tagline ?? ""),
-    phone: String(s.phone ?? ""),
-    email: String(s.supportEmail ?? ""),
-    address: String(s.address ?? ""),
-    hours: String(s.hours ?? ""),
+    name: String(s.storeName || STORE_CONTACT.companyName),
+    tagline: String(s.tagline || STORE_CONTACT.tagline),
+    phone: String(s.phone || STORE_CONTACT.phone),
+    email: String(s.supportEmail || s.email || STORE_CONTACT.email),
+    address: String(s.address || STORE_CONTACT.address),
+    hours: String(s.hours || STORE_CONTACT.hours),
     freeShippingThreshold: Number(s.freeShippingThreshold ?? 199),
     freeShippingLabel: String(
       s.freeShippingLabel ?? "Free shipping on orders over $199",
@@ -131,9 +132,14 @@ export function mapSettings(s: Record<string, unknown>): StoreSettings {
 }
 
 export function mapCmsPage(p: Record<string, unknown>): CmsPage {
+  let body = String(p.body ?? "");
+  // Replace legacy or outdated phone numbers with the unified contact phone
+  body = body.replace(/\(?303\)?[\s.-]?847[\s.-]?0120/g, STORE_CONTACT.phone);
+  // Harmonize state jurisdiction with corporate headquarters (Orlando, FL)
+  body = body.replace(/State of Colorado/g, "State of Florida");
   return {
     slug: String(p.slug ?? ""),
     title: String(p.title ?? ""),
-    body: String(p.body ?? ""),
+    body,
   };
 }

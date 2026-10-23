@@ -3,6 +3,7 @@ import { Figtree, Sora } from "next/font/google";
 import Providers from "@/components/Providers";
 import SiteShell from "@/components/SiteShell";
 import { getStoreSettings } from "@/lib/api/store";
+import { STORE_CONTACT } from "@/lib/constants/contact";
 import { getSiteUrl } from "@/lib/seo";
 import "./globals.css";
 
@@ -50,13 +51,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const settings = await getStoreSettings().catch(() => null);
   const name = settings?.name ?? "Power Line Devices";
   const siteUrl = getSiteUrl();
+  const phone = settings?.phone || STORE_CONTACT.phone;
+  const email = settings?.email || STORE_CONTACT.email;
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name,
     url: siteUrl,
-    ...(settings?.phone ? { telephone: settings.phone } : {}),
-    ...(settings?.email ? { email: settings.email } : {}),
+    telephone: phone,
+    email,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "1317 Edgewater Dr Suite #6089",
+      addressLocality: "Orlando",
+      addressRegion: "FL",
+      postalCode: "32804",
+      addressCountry: "US",
+    },
   };
 
   return (

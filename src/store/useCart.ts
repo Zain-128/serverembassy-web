@@ -4,18 +4,19 @@ import { useCallback, useMemo } from "react";
 import { addItem, clearCart, removeItem, setItemQty } from "./cartSlice";
 import { useAppDispatch, useAppSelector } from "./index";
 import { useGetProductsByIdsQuery, useGetSettingsQuery } from "./storeApi";
+import { STORE_CONTACT } from "@/lib/constants/contact";
 import type { Product } from "@/types/store";
 
 const FALLBACK_SETTINGS = {
   freeShippingThreshold: 199,
   taxRate: 0.07,
   freeShippingLabel: "Free shipping on orders over $199",
-  name: "Power Line Devices",
-  tagline: "",
-  phone: "",
-  email: "",
-  address: "",
-  hours: "",
+  name: STORE_CONTACT.companyName,
+  tagline: STORE_CONTACT.tagline,
+  phone: STORE_CONTACT.phone,
+  email: STORE_CONTACT.email,
+  address: STORE_CONTACT.address,
+  hours: STORE_CONTACT.hours,
 };
 
 export function useCart() {

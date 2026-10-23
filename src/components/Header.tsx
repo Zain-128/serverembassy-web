@@ -9,9 +9,12 @@ import {
   ArrowRight,
   ChevronDown,
   Heart,
+  Mail,
+  MapPin,
   Menu,
   Minus,
   Moon,
+  Phone,
   Plus,
   Search,
   ShoppingBag,
@@ -22,6 +25,7 @@ import {
   X,
 } from "lucide-react";
 import Logo from "@/components/Logo";
+import { STORE_CONTACT } from "@/lib/constants/contact";
 import { useStoreSettings } from "@/context/StoreContext";
 import { useGetCategoryTreeQuery } from "@/store/storeApi";
 import { useCart } from "@/lib/cart";
@@ -86,6 +90,11 @@ export default function Header() {
     typeof window !== "undefined" ? Boolean(localStorage.getItem("se-customer-token")) : false;
   const isLoggedIn = mounted && (Boolean(token) || hasLocalToken);
   const accountHref = isLoggedIn ? "/account" : "/login";
+
+  const phone = settings.phone || STORE_CONTACT.phone;
+  const phoneRaw = phone.replace(/[^\d+]/g, "") || STORE_CONTACT.phoneRaw;
+  const email = settings.email || STORE_CONTACT.email;
+  const address = settings.address || STORE_CONTACT.address;
 
   useEffect(() => {
     function onScroll() {
@@ -195,15 +204,24 @@ export default function Header() {
               })}
             </nav>
 
-            <div className="hidden items-center gap-6 text-[11px] font-medium sm:flex">
+            <div className="hidden items-center gap-5 text-[11px] font-medium sm:flex">
               <a
-                href={`mailto:${settings.email || "info@powerlinedevices.com"}`}
-                className="text-white hover:underline"
+                href={`tel:${phoneRaw}`}
+                className="text-white hover:underline flex items-center gap-1.5"
               >
-                {settings.email || "info@powerlinedevices.com"}
+                <Phone size={12} className="text-white/80" />
+                {phone}
               </a>
-              <span className="text-white">
-                {settings.address || "1317 Edgewater Dr Suite #6089, Orlando, FL 32804"}
+              <a
+                href={`mailto:${email}`}
+                className="text-white hover:underline flex items-center gap-1.5"
+              >
+                <Mail size={12} className="text-white/80" />
+                {email}
+              </a>
+              <span className="text-white flex items-center gap-1.5">
+                <MapPin size={12} className="text-white/80" />
+                {address}
               </span>
             </div>
           </div>
@@ -666,6 +684,29 @@ export default function Header() {
                   </Link>
                 </div>
               ))}
+            </div>
+
+            {/* Mobile Contact Information */}
+            <div className="mt-6 border-t border-gray-100 pt-5 space-y-3 text-xs">
+              <p className="font-bold uppercase tracking-wider text-gray-400">Direct Support</p>
+              <a
+                href={`tel:${phoneRaw}`}
+                className="flex items-center gap-2.5 font-bold text-[#0066ff]"
+              >
+                <Phone size={15} />
+                {phone}
+              </a>
+              <a
+                href={`mailto:${email}`}
+                className="flex items-center gap-2.5 font-medium text-gray-700 break-all"
+              >
+                <Mail size={15} className="text-[#0066ff] shrink-0" />
+                {email}
+              </a>
+              <div className="flex items-start gap-2.5 text-gray-500">
+                <MapPin size={15} className="text-[#0066ff] shrink-0 mt-0.5" />
+                <span>{address}</span>
+              </div>
             </div>
           </div>
         </div>

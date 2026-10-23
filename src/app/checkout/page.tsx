@@ -232,6 +232,16 @@ export default function CheckoutPage() {
               Continue shopping <ArrowRight size={16} />
             </button>
           </div>
+          <p className="mt-5 text-xs text-muted">
+            Questions about your order? Call{" "}
+            <a href="tel:+13217885899" className="font-semibold text-navy hover:text-[#0066ff]">
+              (321) 788-5899
+            </a>{" "}
+            or email{" "}
+            <a href="mailto:info@powerlinedevices.com" className="font-semibold text-navy hover:text-[#0066ff]">
+              info@powerlinedevices.com
+            </a>
+          </p>
         </motion.div>
       </div>
     );

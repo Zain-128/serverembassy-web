@@ -2,7 +2,8 @@
 
 import { type FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Mail, Phone } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { STORE_CONTACT } from "@/lib/constants/contact";
 import {
   useGetCategoryTreeQuery,
   useSubscribeNewsletterMutation,
@@ -57,8 +58,9 @@ export default function Footer() {
     }
   }
 
-  const phone = store.phone || "(321) 788-5899";
-  const mail = store.email || "info@powerlinedevices.com";
+  const phone = store.phone || STORE_CONTACT.phone;
+  const mail = store.email || STORE_CONTACT.email;
+  const address = store.address || STORE_CONTACT.address;
 
   return (
     <footer
@@ -119,6 +121,14 @@ export default function Footer() {
               <Mail size={16} className="text-[#0066ff] sm:w-[18px] sm:h-[18px]" strokeWidth={2.2} />
               {mail}
             </a>
+            <span
+              className={`inline-flex items-center gap-2 text-xs sm:text-sm font-medium ${
+                !isLight ? "text-white/70" : "text-[#0b1220]/70"
+              }`}
+            >
+              <MapPin size={15} className="text-[#0066ff] shrink-0 sm:w-[16px] sm:h-[16px]" strokeWidth={2.2} />
+              {address}
+            </span>
           </div>
 
           <div

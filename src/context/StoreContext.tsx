@@ -1,15 +1,16 @@
 "use client";
 
+import { STORE_CONTACT } from "@/lib/constants/contact";
 import { useGetSettingsQuery } from "@/store/storeApi";
 import type { StoreSettings } from "@/types/store";
 
 export const DEFAULT_SETTINGS: StoreSettings = {
-  name: "Power Line Devices",
-  tagline: "",
-  phone: "",
-  email: "",
-  address: "",
-  hours: "",
+  name: STORE_CONTACT.companyName,
+  tagline: STORE_CONTACT.tagline,
+  phone: STORE_CONTACT.phone,
+  email: STORE_CONTACT.email,
+  address: STORE_CONTACT.address,
+  hours: STORE_CONTACT.hours,
   freeShippingThreshold: 199,
   freeShippingLabel: "Free shipping on orders over $199",
   taxRate: 0.07,

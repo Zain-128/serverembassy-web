@@ -163,7 +163,15 @@ export default function OrderDetailModal({ order, onClose }: OrderDetailModalPro
             <div>
               <p className="font-bold">Order Cancelled or Refunded</p>
               <p className="text-xs text-red-700 mt-0.5">
-                This order was cancelled. If you have questions regarding payment refund, please contact customer support.
+                This order was cancelled. If you have questions regarding payment refund, please contact customer support at{" "}
+                <a href="tel:+13217885899" className="font-semibold underline">
+                  (321) 788-5899
+                </a>{" "}
+                or{" "}
+                <a href="mailto:info@powerlinedevices.com" className="font-semibold underline">
+                  info@powerlinedevices.com
+                </a>
+                .
               </p>
             </div>
           </div>

@@ -10,8 +10,13 @@ const projectRoot = path.resolve(__dirname, "..");
 console.log("🚀 Preparing Next.js Web production build for VPS deployment...");
 
 // 1. Run Next.js production build
-console.log("📦 Running Next.js build (npm run build)...");
-execSync("npm run build", { cwd: projectRoot, stdio: "inherit" });
+console.log("📦 Running Next.js build (npx next build)...");
+const nodeBin = path.join(projectRoot, "node_modules", ".bin");
+const execEnv = {
+  ...process.env,
+  PATH: `${nodeBin}:${process.env.PATH || "/usr/local/bin:/usr/bin:/bin"}`,
+};
+execSync("npx next build", { cwd: projectRoot, stdio: "inherit", env: execEnv });
 
 // 2. Prepare standalone assets inside .next/standalone
 const standaloneDir = path.join(projectRoot, ".next", "standalone");
@@ -48,6 +53,29 @@ if (fs.existsSync(standaloneDir)) {
 };
 `;
   fs.writeFileSync(path.join(standaloneDir, "ecosystem.config.js"), pm2Config);
+  // Copy .env.local to standalone bundle as .env and .env.production
+  const envLocal = path.join(projectRoot, ".env.local");
+  if (fs.existsSync(envLocal)) {
+    fs.copyFileSync(envLocal, path.join(standaloneDir, ".env"));
+    fs.copyFileSync(envLocal, path.join(standaloneDir, ".env.production"));
+  }
+
+  // Include .htaccess for Apache / LiteSpeed / cPanel proxy to port 3000
+  const htaccessContent = `# Next.js Proxy for Apache / LiteSpeed / cPanel
+DirectoryIndex disabled
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP:Upgrade} =websocket [NC]
+  RewriteRule /(.*) ws://127.0.0.1:3000/$1 [P,L]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+</IfModule>
+`;
+  fs.writeFileSync(path.join(standaloneDir, ".htaccess"), htaccessContent);
 }
 
 // 3. Create Standalone Deployment Zip (Contains server.js, public, .next, ecosystem.config.js)
