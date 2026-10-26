@@ -15,6 +15,7 @@ import type { Product } from "@/types/store";
 import { useCart } from "@/lib/cart";
 import { useWishlist } from "@/lib/wishlist";
 import { ShieldCheck, Star, Truck, RefreshCcw, Minus, Plus, Heart } from "lucide-react";
+import BulkInquiryForm from "@/components/BulkInquiryForm";
 
 export default function ProductDetail({
   product,
@@ -172,6 +173,8 @@ export default function ProductDetail({
           </div>
         </motion.div>
       </div>
+
+      <BulkInquiryForm productTitle={product.title} sku={product.sku} />
 
       <motion.div
         className="mt-12 overflow-hidden rounded-3xl bg-white shadow-card ring-1 ring-line"

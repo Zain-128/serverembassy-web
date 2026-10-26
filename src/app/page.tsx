@@ -10,6 +10,7 @@ import GoodCategories from "@/components/home/GoodCategories";
 import Testimonials from "@/components/home/Testimonials";
 import LatestNews from "@/components/home/LatestNews";
 import StartCtaBand from "@/components/home/StartCtaBand";
+import ServerCinematicScrubber from "@/components/showcase/ServerCinematicScrubber";
 import {
   useGetBannersQuery,
   useGetBrandsQuery,
@@ -77,6 +78,9 @@ export default function HomePage() {
 
       {/* 4. Parts Promo Banner */}
       <PartsPromoBanner theme={theme} />
+
+      {/* 4.5 Cinematic 3D Exploded Server Architecture Spotlight */}
+      <ServerCinematicScrubber />
 
       {/* 5. Feature Products */}
       <FeatureProducts
