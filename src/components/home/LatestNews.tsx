@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const posts = [
   {
-    date: "27, Jun 2023",
+    date: "27, Jun 2026",
     title: "MAXIMIZED ROI: THE CASE FOR CERTIFIED REFURBISHED ENTERPRISE SERVERS",
     excerpt:
       "Discover how data centers save up to 60% on infrastructure by upgrading with fully tested, OEM-certified server hardware.",
@@ -14,7 +14,7 @@ const posts = [
     image: "/images/home/news-circuit.png",
   },
   {
-    date: "14, Aug 2023",
+    date: "14, Aug 2026",
     title: "UNDERSTANDING SAS VS. SATA DRIVES FOR ENTERPRISE STORAGE ARRAYS",
     excerpt:
       "Compare throughput, reliability, and cost factors to choose the right storage technology for your mission-critical deployment.",
@@ -22,7 +22,7 @@ const posts = [
     image: "/images/home/news-table.png",
   },
   {
-    date: "05, Oct 2023",
+    date: "05, Oct 2026",
     title: "TOP HARDWARE UPGRADES TO BOOST DATA CENTER PERFORMANCE IN 2026",
     excerpt:
       "Explore key memory, network adapter, and power redundancy upgrades to optimize uptime and workload capacity.",
