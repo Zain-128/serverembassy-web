@@ -77,12 +77,20 @@ export default function ProductDetail({
           <h1 className="mt-2 text-3xl font-bold text-navy md:text-4xl">{product.title}</h1>
 
           <div className="mt-3 flex items-center gap-2 text-sm text-muted">
-            <Star size={15} className="fill-amber-400 text-amber-400" />
-            <span className="font-medium text-navy">
-              {(product.rating ?? 0) > 0 ? product.rating : "5.0"}
-            </span>
-            <span>·</span>
-            <span>{product.reviewCount ?? 0} reviews</span>
+            {(product.reviewCount ?? 0) > 0 ? (
+              <>
+                <Star size={15} className="fill-amber-400 text-amber-400" />
+                <span className="font-medium text-navy">
+                  {(product.rating ?? 0) > 0 ? product.rating : "5.0"}
+                </span>
+                <span>·</span>
+                <span>{product.reviewCount} reviews</span>
+              </>
+            ) : (
+              <span className="text-xs text-muted font-medium">
+                Certified enterprise hardware · Bench-tested with {product.warranty || "30-day"} warranty
+              </span>
+            )}
           </div>
 
           <div className="mt-5 flex items-end gap-3">

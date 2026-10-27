@@ -31,9 +31,9 @@ export const FIGMA_BRANDS: BrandItem[] = [
   },
   {
     id: "veeam",
-    name: "VeeAM",
+    name: "Veeam",
     src: "/images/home/brand-veeam.png",
-    href: "/shop?q=VeeAM",
+    href: "/shop?q=Veeam",
     width: 140,
     height: 40,
   },

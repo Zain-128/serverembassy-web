@@ -45,7 +45,7 @@ export default function LatestNews({ theme = "dark" }: { theme?: "dark" | "light
             OUR LATEST NEWS
           </h2>
           <p className={`text-sm ${isLight ? "text-slate-500" : "text-white/50"}`}>
-            Dont miss out on this week deals
+            Don&apos;t miss out on this week&apos;s enterprise hardware deals
           </p>
         </div>
 

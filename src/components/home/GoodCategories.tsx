@@ -8,25 +8,25 @@ import { useGetProductsQuery } from "@/store/storeApi";
 import Image from "next/image";
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  accessories: "/images/home/category-accessories.png",
-  "phone-cases": "/images/home/category-phone-cases.png",
-  "phone-glasses": "/images/home/category-phone-glasses.png",
-  headphones: "/images/home/category-headphones.png",
-  "mobile-phones": "/images/home/category-mobile-phones.png",
-  chargers: "/images/home/category-chargers.png",
-  // Also map common variations
-  "server-hard-drives": "/images/home/category-accessories.png",
+  servers: "/images/home/hero-left-tower.png",
+  "rack-servers": "/images/home/hero-left-tower.png",
+  storage: "/images/home/category-accessories.png",
+  networking: "/images/home/deal-powerline.png",
+  processors: "/images/home/feature-gpu-evga.png",
+  memory: "/images/home/category-accessories.png",
   "power-supplies": "/images/home/category-chargers.png",
-  "solid-state-drives": "/images/home/category-phone-glasses.png",
+  accessories: "/images/home/category-accessories.png",
+  "server-hard-drives": "/images/home/category-accessories.png",
+  "solid-state-drives": "/images/home/category-accessories.png",
 };
 
 const FALLBACK_CATEGORIES: Category[] = [
-  { id: "cat-1", name: "ACCESSORIES", slug: "accessories", count: 5 } as unknown as Category,
-  { id: "cat-2", name: "phone cases", slug: "phone-cases", count: 8 } as unknown as Category,
-  { id: "cat-3", name: "phone glasses", slug: "phone-glasses", count: 50 } as unknown as Category,
-  { id: "cat-4", name: "headphones", slug: "headphones", count: 6 } as unknown as Category,
-  { id: "cat-5", name: "mobile phones", slug: "mobile-phones", count: 4 } as unknown as Category,
-  { id: "cat-6", name: "chargers", slug: "chargers", count: 9 } as unknown as Category,
+  { id: "cat-servers", name: "Rack Servers", slug: "servers", count: 18 } as unknown as Category,
+  { id: "cat-storage", name: "Storage & SAN", slug: "storage", count: 24 } as unknown as Category,
+  { id: "cat-networking", name: "Enterprise Switches", slug: "networking", count: 32 } as unknown as Category,
+  { id: "cat-processors", name: "Server Processors", slug: "processors", count: 45 } as unknown as Category,
+  { id: "cat-memory", name: "Server Memory", slug: "memory", count: 60 } as unknown as Category,
+  { id: "cat-power", name: "Power Supplies", slug: "power-supplies", count: 28 } as unknown as Category,
 ];
 
 function CategoryTile({ category, theme = "dark" }: { category: Category; theme?: "dark" | "light" }) {
@@ -122,10 +122,10 @@ export default function GoodCategories({
               isLight ? "text-[#0066ff]" : "text-white"
             }`}
           >
-            OUR GOOD CATEGORIES
+            Featured Hardware Categories
           </h2>
           <p className={`text-sm ${isLight ? "text-slate-500" : "text-white/50"}`}>
-            Dont miss out on this week deals
+            Don&apos;t miss out on this week&apos;s enterprise hardware deals
           </p>
         </div>
 

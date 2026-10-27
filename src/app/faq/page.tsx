@@ -28,8 +28,8 @@ const groups = [
   {
     title: "Payments",
     items: [
-      ["Which cards do you take?", "Visa, Mastercard, American Express, Discover, plus PayPal and wire for B2B."],
-      ["Can we use a purchase order?", "Authorized business accounts can check out with PO / net terms."],
+      ["Which payment methods do you accept?", "We accept all major credit cards (Visa, MasterCard, American Express, Discover) processed securely via Stripe, as well as ACH payments and bank wire transfers for enterprise orders."],
+      ["How do wire transfer and ACH payments work?", "For large volume or high-value enterprise hardware orders, wire and ACH transfer details are provided directly during checkout or by requesting an invoice through our sales desk."],
     ],
   },
 ];

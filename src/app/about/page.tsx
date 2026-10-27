@@ -33,10 +33,10 @@ export default async function AboutPage() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {[
-          ["Founded", "2012"],
-          ["Clients served", "2,000+"],
-          ["Inventory access", "$10M+ / 2,000+ brands"],
-          ["Orders processed", "2.3M+"],
+          ["Founded", "2024"],
+          ["B2B Clients Served", "500+"],
+          ["Inventory Access", "Enterprise Servers, Storage & SAN"],
+          ["Order Fulfillment", "Fast Nationwide Logistics"],
         ].map(([label, value]) => (
           <div key={label} className="rounded-2xl bg-white p-5 border border-line shadow-xs">
             <p className="text-xs font-bold uppercase tracking-wider text-muted">{label}</p>

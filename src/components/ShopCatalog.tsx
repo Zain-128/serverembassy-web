@@ -27,11 +27,13 @@ const sortLabels: Record<SortKey, string> = {
   latest: "Sort by SKU",
 };
 
+const MAX_CATALOG_PRICE = 25000;
+
 function activeFilterCount(props: { q?: string; categorySlug?: string; brandSlug?: string; maxPrice?: number; inStock?: boolean }) {
   let n = 0;
   if (props.brandSlug && props.brandSlug !== "all") n++;
   if (props.categorySlug && props.categorySlug !== "all") n++;
-  if (props.maxPrice && props.maxPrice < 900) n++;
+  if (props.maxPrice && props.maxPrice < MAX_CATALOG_PRICE) n++;
   if (props.inStock) n++;
   return n;
 }
@@ -55,7 +57,7 @@ export default function ShopCatalog({
     setPrevBrandFromUrl(brandFromUrl);
     setBrandSlug(brandFromUrl);
   }
-  const [maxPrice, setMaxPrice] = useState(900);
+  const [maxPrice, setMaxPrice] = useState(MAX_CATALOG_PRICE);
   const [inStock, setInStock] = useState(false);
   const [sort, setSort] = useState<SortKey>("featured");
   const [page, setPage] = useState(1);
@@ -73,7 +75,7 @@ export default function ShopCatalog({
     q: q || undefined,
     category: categorySlug,
     brand: brandSlug === "all" ? undefined : brandSlug,
-    maxPrice,
+    maxPrice: maxPrice >= MAX_CATALOG_PRICE ? undefined : maxPrice,
     inStock: inStock || undefined,
     sort: sortMap[sort],
     page,
@@ -152,7 +154,7 @@ export default function ShopCatalog({
                 onClick={(e) => {
                   e.stopPropagation();
                   setBrandSlug("all");
-                  setMaxPrice(900);
+                  setMaxPrice(MAX_CATALOG_PRICE);
                   setInStock(false);
                   const qs = new URLSearchParams(params.toString());
                   qs.delete("brand");
@@ -258,7 +260,7 @@ export default function ShopCatalog({
                   <div className="flex items-center gap-2 font-semibold">
                     <span>Max price</span>
                     <span className="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-bold text-brand">
-                      ${maxPrice}
+                      {maxPrice >= MAX_CATALOG_PRICE ? "Any Price" : `$${maxPrice.toLocaleString()}`}
                     </span>
                   </div>
                   <ChevronDown
@@ -270,15 +272,16 @@ export default function ShopCatalog({
                   <div className="mt-2.5">
                     <input
                       type="range"
-                      min={50}
-                      max={900}
+                      min={100}
+                      max={MAX_CATALOG_PRICE}
+                      step={100}
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(Number(e.target.value))}
                       className="w-full accent-brand"
                     />
                     <div className="mt-1 flex justify-between text-[11px] text-muted">
-                      <span>$50</span>
-                      <span>$900</span>
+                      <span>$100</span>
+                      <span>$25,000+</span>
                     </div>
                   </div>
                 )}

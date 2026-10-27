@@ -15,7 +15,7 @@ export async function getProductSitemapChunks(): Promise<number> {
 }
 
 export function getSiteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://serverembassy-web.vercel.app").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://powerlinedevices.com").replace(/\/$/, "");
 }
 
 export function absoluteUrl(path: string) {

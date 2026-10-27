@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Clock } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { useCreateQuoteMutation } from "@/store/storeApi";
 
 interface BulkInquiryProps {
   productTitle?: string;
@@ -17,17 +18,29 @@ export default function BulkInquiryForm({ productTitle, sku, className = "" }: B
     quantity: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [createQuote, { isLoading: isSubmitting }] = useCreateQuoteMutation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.email || !formData.quantity) return;
+    setErrorMessage(null);
+    if (!formData.fullName.trim() || !formData.email.trim() || !formData.quantity.trim()) return;
 
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await createQuote({
+        name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phoneNumber.trim() || undefined,
+        partNumber: sku || productTitle,
+        quantity: Math.max(1, parseInt(formData.quantity.replace(/\D/g, ""), 10) || 1),
+        message: `Bulk Quote Request for ${productTitle ?? "Product"} (SKU: ${sku ?? "N/A"}) - Quantity: ${formData.quantity}`,
+      }).unwrap();
+
       setSubmitted(true);
-    }, 600);
+    } catch (err: unknown) {
+      console.error("Bulk inquiry submission failed:", err);
+      setErrorMessage("Could not submit your quote request. Please try again or contact us directly.");
+    }
   };
 
   return (
@@ -40,8 +53,15 @@ export default function BulkInquiryForm({ productTitle, sku, className = "" }: B
 
         {/* Subtitle */}
         <p className="mt-2 text-sm sm:text-base text-neutral-500 italic max-w-2xl mx-auto">
-          Request a quote below and one of our sales representatives will reach out to you shortly.
+          Request an enterprise quote below and one of our dedicated hardware specialists will reach out to you shortly.
         </p>
+
+        {errorMessage && (
+          <div className="mt-4 p-3 bg-red-50 text-red-700 text-sm rounded-xl border border-red-200 flex items-center justify-center gap-2 max-w-xl mx-auto">
+            <AlertCircle size={16} className="shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
         {submitted ? (
           <div className="mt-8 py-8 px-6 rounded-2xl bg-blue-50/60 border border-blue-200 text-center max-w-xl mx-auto">
@@ -51,11 +71,12 @@ export default function BulkInquiryForm({ productTitle, sku, className = "" }: B
               Thank you, <strong className="text-navy">{formData.fullName}</strong>. We received your quote request for{" "}
               <strong>{formData.quantity} units</strong> {productTitle ? `of "${productTitle}"` : ""} {sku ? `(SKU: ${sku})` : ""}.
             </p>
-            <p className="mt-2 text-xs text-neutral-500 flex items-center justify-center gap-1.5">
+            <p className="mt-3 text-xs text-neutral-500 flex items-center justify-center gap-1.5">
               <Clock size={14} className="text-[#0066ff]" />
-              <span>Quotes are processed Monday through Friday, 6:00 AM – 6:00 PM (PST) with average response time of 5–10 minutes.</span>
+              <span>Quotes are processed Monday through Friday, 9:00 AM – 6:00 PM EST, typically within 1–2 business hours.</span>
             </p>
             <button
+              type="button"
               onClick={() => {
                 setSubmitted(false);
                 setFormData({ fullName: "", email: "", phoneNumber: "", quantity: "" });
@@ -107,21 +128,21 @@ export default function BulkInquiryForm({ productTitle, sku, className = "" }: B
               <input
                 type="text"
                 required
-                placeholder="Quantity"
+                placeholder="Quantity (e.g. 10, 50, 100+)"
                 value={formData.quantity}
                 onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                 className="w-full px-4 py-3 rounded-lg border border-neutral-300 text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0066ff]/20 focus:border-[#0066ff] transition-all bg-white text-center sm:text-left"
               />
             </div>
 
-            {/* Row 3: Submit Button (Full Width, Pink as requested in screenshot) */}
+            {/* Row 3: Submit Button */}
             <div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-6 rounded-lg bg-[#FCE0F0] hover:bg-[#F9CFE6] active:bg-[#F5BEDA] text-neutral-900 font-bold text-sm tracking-wide transition-colors border border-pink-200/80 shadow-xs flex items-center justify-center cursor-pointer"
+                className="w-full py-3.5 px-6 rounded-lg bg-[#0066ff] hover:bg-[#0052cc] active:bg-[#003d99] text-white font-bold text-sm tracking-wide transition-colors shadow-xs flex items-center justify-center cursor-pointer disabled:opacity-60"
               >
-                {isSubmitting ? "Submitting Request..." : "Submit"}
+                {isSubmitting ? "Submitting Request..." : "Request Bulk Quote"}
               </button>
             </div>
           </form>
@@ -130,10 +151,10 @@ export default function BulkInquiryForm({ productTitle, sku, className = "" }: B
         {/* Footer Disclaimer Text */}
         <div className="mt-6 text-xs text-neutral-500 leading-relaxed max-w-2xl mx-auto space-y-1">
           <p className="font-semibold text-neutral-600">
-            Quotes are processed Monday through Friday, 6:00 AM – 6:00 PM (PST), with an average response time of 5–10 minutes.
+            Quotes are processed Monday through Friday, 9:00 AM – 6:00 PM EST, typically within 1–2 business hours.
           </p>
           <p className="italic text-neutral-400">
-            Submissions made on holidays will be addressed on the next business day.
+            Volume pricing and tax exemption are available for qualifying enterprise accounts.
           </p>
         </div>
       </div>

@@ -119,7 +119,7 @@ export default function HeroCarousel({
         <div className="relative w-full h-full">
           <Image
             src="/images/home/hero-right.png"
-            alt="Gaming Headset & GPU"
+            alt="Enterprise Server Hardware & Infrastructure"
             fill
             sizes="(max-width: 1024px) 340px, 500px"
             className="object-contain object-right-bottom drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]"

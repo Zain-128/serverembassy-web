@@ -46,7 +46,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
     return half.map((b, i) => ({
       key: b.id,
       badge: "On Sale This Week",
-      title: b.title || "Better Quality Better Service for Your",
+      title: b.title || "Better Quality, Better Service for Your Enterprise",
       text: b.subtitle || "Browse certified enterprise servers, storage arrays, and high-performance networking equipment.",
       href: b.href || "/shop",
       product: products[i],
@@ -57,7 +57,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
     {
       key: "promo-1",
       badge: "On Sale This Week",
-      title: "Better Quality Better Service for Your",
+      title: "Better Quality, Better Service for Your Enterprise",
       text: "Browse certified enterprise servers, storage arrays, and high-performance networking equipment.",
       href: "/shop",
       product: products[0],
@@ -65,7 +65,7 @@ function buildPromos(banners: Banner[], products: Product[]): PromoCard[] {
     {
       key: "promo-2",
       badge: "On Sale This Week",
-      title: "Better Quality Better Service for Your",
+      title: "Better Quality, Better Service for Your Enterprise",
       text: "Browse certified enterprise servers, storage arrays, and high-performance networking equipment.",
       href: "/shop?sort=newest",
       product: products[1],

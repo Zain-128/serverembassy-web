@@ -37,7 +37,7 @@ import { formatMoney } from "@/lib/format";
 const serviceTabs = [
   { label: "HARDWARE", href: "/shop" },
   { label: "COLOCATION", href: "/contact" },
-  { label: "FINANCING", href: "/#quote" },
+  { label: "FINANCING", href: "/contact" },
   { label: "BUY BACK", href: "/contact" },
 ];
 
