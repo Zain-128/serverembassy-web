@@ -6,4 +6,8 @@ export const STORE_CONTACT = {
   email: "info@powerlinedevices.com",
   address: "1317 Edgewater Dr Suite #6089, Orlando, FL 32804",
   hours: "Mon – Fri: 9:00 AM – 6:00 PM EST",
+  social: {
+    facebook: "https://www.facebook.com/Powerlinedevices/",
+    instagram: "https://www.instagram.com/powerlinedevices/",
+  },
 } as const;

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Clock, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Clock, Facebook, Instagram, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { getStoreSettings } from "@/lib/api/store";
 import { STORE_CONTACT } from "@/lib/constants/contact";
 import ContactForm from "./ContactForm";
@@ -96,6 +96,35 @@ export default async function ContactPage() {
                     {hours}
                   </p>
                   <p className="text-xs text-muted">Online order processing 24/7</p>
+                </div>
+              </div>
+
+              {/* Social Channels */}
+              <div className="flex items-start gap-4 rounded-2xl bg-white p-4 border border-line shadow-xs transition hover:border-[#0066ff]/40">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-50 text-[#0066ff]">
+                  <ShieldCheck size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted">Follow Our Channels</p>
+                  <div className="mt-2 flex items-center gap-3">
+                    <a
+                      href={STORE_CONTACT.social.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-[#1877F2] transition hover:bg-[#1877F2] hover:text-white"
+                    >
+                      <Facebook size={14} /> Facebook
+                    </a>
+                    <a
+                      href={STORE_CONTACT.social.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-pink-50 px-3 py-1.5 text-xs font-bold text-[#E4405F] transition hover:bg-[#E4405F] hover:text-white"
+                    >
+                      <Instagram size={14} /> Instagram
+                    </a>
+                  </div>
+                  <p className="mt-1.5 text-xs text-muted">Latest hardware inventory drops & data center updates</p>
                 </div>
               </div>
             </div>

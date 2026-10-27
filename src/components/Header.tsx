@@ -8,7 +8,9 @@ import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowRight,
   ChevronDown,
+  Facebook,
   Heart,
+  Instagram,
   Mail,
   MapPin,
   Menu,
@@ -132,7 +134,28 @@ export default function Header() {
         {/* Top Announcement Bar */}
         <div className="bg-[#000000] text-center text-[11px] sm:text-[12px] tracking-wide text-white">
           <div className="container-se flex items-center justify-between py-1.5 gap-2 px-3 sm:px-4">
-            <span className="hidden sm:inline-block w-20" />
+            <div className="hidden sm:flex items-center gap-3 w-28">
+              <a
+                href={STORE_CONTACT.social.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Power Line Devices on Facebook"
+                title="Facebook"
+                className="text-white/70 hover:text-white transition"
+              >
+                <Facebook size={13} />
+              </a>
+              <a
+                href={STORE_CONTACT.social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Power Line Devices on Instagram"
+                title="Instagram"
+                className="text-white/70 hover:text-white transition"
+              >
+                <Instagram size={13} />
+              </a>
+            </div>
             <div className="flex-1 text-center truncate text-[10px] sm:text-[12px]">
               The market is changing daily. Stay on top of changes with our{" "}
               <Link
@@ -706,6 +729,31 @@ export default function Header() {
               <div className="flex items-start gap-2.5 text-gray-500">
                 <MapPin size={15} className="text-[#0066ff] shrink-0 mt-0.5" />
                 <span>{address}</span>
+              </div>
+
+              {/* Social Media Links */}
+              <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+                <span className="font-bold uppercase tracking-wider text-gray-400">Follow Us</span>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={STORE_CONTACT.social.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Power Line Devices on Facebook"
+                    className="grid h-8 w-8 place-items-center rounded-full bg-blue-50 text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition"
+                  >
+                    <Facebook size={15} />
+                  </a>
+                  <a
+                    href={STORE_CONTACT.social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Power Line Devices on Instagram"
+                    className="grid h-8 w-8 place-items-center rounded-full bg-pink-50 text-[#E4405F] hover:bg-[#E4405F] hover:text-white transition"
+                  >
+                    <Instagram size={15} />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { getStoreSettings } from "@/lib/api/store";
 import { STORE_CONTACT } from "@/lib/constants/contact";
 
@@ -95,7 +95,28 @@ export default async function AboutPage() {
           </div>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-line flex justify-end">
+        <div className="mt-6 pt-4 border-t border-line flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-muted">Follow us:</span>
+            <a
+              href={STORE_CONTACT.social.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Power Line Devices Facebook"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-bold text-[#1877F2] transition hover:bg-[#1877F2] hover:text-white"
+            >
+              <Facebook size={13} /> Facebook
+            </a>
+            <a
+              href={STORE_CONTACT.social.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Power Line Devices Instagram"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-pink-50 px-2.5 py-1 text-xs font-bold text-[#E4405F] transition hover:bg-[#E4405F] hover:text-white"
+            >
+              <Instagram size={13} /> Instagram
+            </a>
+          </div>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 rounded-xl bg-[#0066ff] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#0052cc]"

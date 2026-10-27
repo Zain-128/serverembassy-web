@@ -2,7 +2,7 @@
 
 import { type FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { STORE_CONTACT } from "@/lib/constants/contact";
 import {
   useGetCategoryTreeQuery,
@@ -129,6 +129,41 @@ export default function Footer() {
               <MapPin size={15} className="text-[#0066ff] shrink-0 sm:w-[16px] sm:h-[16px]" strokeWidth={2.2} />
               {address}
             </span>
+
+            {/* Social Links */}
+            <div className="inline-flex items-center gap-2 pt-1 sm:pt-0">
+              <span className={`text-xs font-semibold ${!isLight ? "text-white/60" : "text-gray-500"}`}>
+                Follow:
+              </span>
+              <a
+                href={STORE_CONTACT.social.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Power Line Devices on Facebook"
+                title="Facebook"
+                className={`grid h-7 w-7 place-items-center rounded-full transition hover:scale-110 ${
+                  !isLight
+                    ? "bg-white/10 text-white hover:bg-[#1877F2] hover:text-white"
+                    : "bg-gray-100 text-[#0b1220] hover:bg-[#1877F2] hover:text-white"
+                }`}
+              >
+                <Facebook size={14} />
+              </a>
+              <a
+                href={STORE_CONTACT.social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Power Line Devices on Instagram"
+                title="Instagram"
+                className={`grid h-7 w-7 place-items-center rounded-full transition hover:scale-110 ${
+                  !isLight
+                    ? "bg-white/10 text-white hover:bg-[#E4405F] hover:text-white"
+                    : "bg-gray-100 text-[#0b1220] hover:bg-[#E4405F] hover:text-white"
+                }`}
+              >
+                <Instagram size={14} />
+              </a>
+            </div>
           </div>
 
           <div
