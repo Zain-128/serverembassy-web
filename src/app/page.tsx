@@ -7,8 +7,6 @@ import LatestDealsWeek from "@/components/home/LatestDealsWeek";
 import PartsPromoBanner from "@/components/home/PartsPromoBanner";
 import FeatureProducts from "@/components/home/FeatureProducts";
 import GoodCategories from "@/components/home/GoodCategories";
-import Testimonials from "@/components/home/Testimonials";
-import LatestNews from "@/components/home/LatestNews";
 import StartCtaBand from "@/components/home/StartCtaBand";
 import ServerCinematicScrubber from "@/components/showcase/ServerCinematicScrubber";
 import {
@@ -92,13 +90,7 @@ export default function HomePage() {
       {/* 6. Good Categories */}
       <GoodCategories categories={homepageCats} theme={theme} />
 
-      {/* 7. Customer Reviews */}
-      <Testimonials theme={theme} />
-
-      {/* 8. Latest News */}
-      <LatestNews theme={theme} />
-
-      {/* 9. Don't Know Where To Start ? CTA Band */}
+      {/* 7. Don't Know Where To Start ? CTA Band */}
       <StartCtaBand theme={theme} />
     </div>
   );

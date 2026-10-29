@@ -15,7 +15,11 @@ export async function getProductSitemapChunks(): Promise<number> {
 }
 
 export function getSiteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? "https://powerlinedevices.com").replace(/\/$/, "");
+  const url = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!url || url.includes("vercel.app")) {
+    return "https://powerlinedevices.com";
+  }
+  return url.replace(/\/$/, "");
 }
 
 export function absoluteUrl(path: string) {
