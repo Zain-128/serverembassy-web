@@ -3,7 +3,7 @@ import crypto from "crypto";
 const DEFAULT_SECRET =
   process.env.SIGNED_URL_SECRET ||
   process.env.NEXT_PUBLIC_SIGNED_URL_SECRET ||
-  "powerline-enterprise-signed-url-secret-2026-key";
+  "serverembassy-enterprise-signed-url-secret-2026-key";
 
 const DEFAULT_EXPIRATION_SECONDS = 86400 * 7; // 7 days
 
