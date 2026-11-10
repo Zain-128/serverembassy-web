@@ -134,7 +134,7 @@ export default function Header() {
         {/* Top Announcement Bar */}
         <div className="bg-[#000000] text-center text-[11px] sm:text-[12px] tracking-wide text-white">
           <div className="container-se flex items-center justify-between py-1.5 gap-2 px-3 sm:px-4">
-            <div className="hidden sm:flex items-center gap-3 w-28">
+            <div className="hidden md:flex items-center gap-3 w-28">
               <a
                 href={STORE_CONTACT.social.facebook}
                 target="_blank"
@@ -156,18 +156,18 @@ export default function Header() {
                 <Instagram size={13} />
               </a>
             </div>
-            <div className="flex-1 text-center truncate text-[10px] sm:text-[12px]">
-              The market is changing daily. Stay on top of changes with our{" "}
+            <div className="flex-1 text-center truncate text-[11px] sm:text-[12px] px-1">
+              <span>The market is changing daily. </span>
               <Link
                 href="/shop"
-                className="font-bold text-white underline underline-offset-2 hover:opacity-90"
+                className="font-bold text-white underline underline-offset-2 hover:opacity-90 inline-block ml-1"
               >
-                market update
+                Market update →
               </Link>
             </div>
             {/* Theme Switcher */}
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              <span className="text-[11px] font-semibold text-white/80 hidden sm:inline select-none">
+              <span className="text-[11px] font-semibold text-white/80 hidden md:inline select-none">
                 {isLight ? "White Theme" : "Black Theme"}
               </span>
               <button
@@ -203,17 +203,17 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Service Tabs Bar */}
-        <div className="bg-[#0066ff] text-white">
-          <div className="container-se flex items-stretch justify-between px-1.5 sm:px-4">
-            <nav className="flex w-full items-stretch justify-between sm:w-auto sm:justify-start overflow-x-auto no-scrollbar" aria-label="Services">
+        {/* Service Tabs Bar (Desktop Only - Clean, Spacious & Elegant) */}
+        <div className="hidden lg:block bg-[#0066ff] text-white">
+          <div className="container-se flex items-stretch justify-between px-4">
+            <nav className="flex items-stretch justify-start overflow-x-auto no-scrollbar" aria-label="Services">
               {serviceTabs.map((tab) => {
                 const active = activeTab === tab.label;
                 return (
                   <Link
                     key={tab.label}
                     href={tab.href}
-                    className={`flex items-center px-2.5 sm:px-6 py-2 sm:py-2.5 text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-[0.14em] transition whitespace-nowrap ${
+                    className={`flex items-center px-4 xl:px-6 py-2.5 text-[11px] uppercase tracking-[0.14em] transition whitespace-nowrap ${
                       active
                         ? !isLight
                           ? "!bg-[#000000] !text-white font-extrabold shadow-sm"
@@ -227,7 +227,7 @@ export default function Header() {
               })}
             </nav>
 
-            <div className="hidden items-center gap-5 text-[11px] font-medium sm:flex">
+            <div className="flex items-center gap-5 text-[11px] font-medium shrink-0">
               <a
                 href={`tel:${phoneRaw}`}
                 className="text-white hover:underline flex items-center gap-1.5"
