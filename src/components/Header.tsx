@@ -3,28 +3,36 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowRight,
   ChevronDown,
+  Cpu,
   Facebook,
+  HardDrive,
   Heart,
   Instagram,
+  Layers,
   Mail,
   MapPin,
   Menu,
   Minus,
   Moon,
+  Network,
   Phone,
   Plus,
   Search,
+  Server,
+  ShieldCheck,
   ShoppingBag,
   ShoppingCart,
   Sun,
   Trash2,
   User,
+  Wrench,
   X,
+  Zap,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import { STORE_CONTACT } from "@/lib/constants/contact";
@@ -43,12 +51,86 @@ const serviceTabs = [
   { label: "BUY BACK", href: "/contact" },
 ];
 
-const mainNavItems = [
-  { label: "Servers", href: "/shop?q=servers", hasDropdown: true, catSlug: "servers" },
-  { label: "Storage", href: "/shop?q=storage", hasDropdown: true, catSlug: "storage" },
-  { label: "Networking", href: "/shop?q=networking", hasDropdown: true, catSlug: "networking" },
-  { label: "Components", href: "/shop?q=components", hasDropdown: true, catSlug: "components" },
-  { label: "Maintenance", href: "/contact", hasDropdown: true, catSlug: "maintenance" },
+type NavSubItem = {
+  name: string;
+  href: string;
+  desc?: string;
+  icon?: typeof Server;
+};
+
+type NavItem = {
+  label: string;
+  href: string;
+  hasDropdown: boolean;
+  catSlug: string;
+  subItems?: NavSubItem[];
+};
+
+const mainNavItems: NavItem[] = [
+  {
+    label: "Servers",
+    href: "/shop?q=servers",
+    hasDropdown: true,
+    catSlug: "servers",
+    subItems: [
+      { name: "Dell PowerEdge Servers", href: "/shop?q=poweredge", desc: "R640, R740, R750 1U/2U rack units", icon: Server },
+      { name: "HPE ProLiant Systems", href: "/shop?q=proliant", desc: "DL360, DL380 enterprise gen10 servers", icon: Server },
+      { name: "1U & 2U Rackmount Servers", href: "/shop?q=rack+server", desc: "High-density compute & barebones", icon: Server },
+      { name: "Tower & Blade Chassis", href: "/shop?q=chassis", desc: "Modular server enclosures & chassis", icon: Layers },
+    ],
+  },
+  {
+    label: "Storage",
+    href: "/shop?q=storage",
+    hasDropdown: true,
+    catSlug: "storage-devices",
+    subItems: [
+      { name: "Enterprise Hard Drives", href: "/shop?category=storage-devices", desc: "SAS & SATA 10K/15K RPM mission-critical", icon: HardDrive },
+      { name: "Solid State Drives (NVMe / SSD)", href: "/shop?category=solid-state-drives", desc: "PCIe U.2, U.3 & M.2 enterprise flash", icon: HardDrive },
+      { name: "Drive Caddies & Hot-Swap Sleds", href: "/shop?q=caddy", desc: "2.5\" SFF & 3.5\" LFF carrier trays", icon: Layers },
+      { name: "RAID & SAS/SATA Controllers", href: "/shop?q=controller", desc: "MegaRAID, PERC & Smart Array cards", icon: Cpu },
+      { name: "Storage Enclosures & Arrays", href: "/shop?q=storage+array", desc: "SAN/NAS expansion shelves & JBODs", icon: HardDrive },
+    ],
+  },
+  {
+    label: "Networking",
+    href: "/shop?q=networking",
+    hasDropdown: true,
+    catSlug: "network-switches",
+    subItems: [
+      { name: "Cisco Catalyst & Nexus Switches", href: "/shop?category=network-switches&q=cisco", desc: "Layer 2/3 enterprise core & access", icon: Network },
+      { name: "Arista High-Performance Switches", href: "/shop?q=arista", desc: "10G / 25G / 40G / 100G ultra-low latency", icon: Network },
+      { name: "Enterprise Core WAN Routers", href: "/shop?category=routers", desc: "Cisco ISR, ASR & Juniper MX routers", icon: Network },
+      { name: "Optical Transceivers & DACs", href: "/shop?category=transceiver", desc: "SFP+, SFP28, QSFP28 & twinax cables", icon: Zap },
+      { name: "Firewalls & Security Appliances", href: "/shop?category=firewalls", desc: "Next-gen enterprise threat prevention", icon: ShieldCheck },
+    ],
+  },
+  {
+    label: "Components",
+    href: "/shop?q=components",
+    hasDropdown: true,
+    catSlug: "components",
+    subItems: [
+      { name: "Server Memory (RAM)", href: "/shop?category=server-memory", desc: "DDR4 & DDR5 ECC Registered RDIMMs", icon: Cpu },
+      { name: "Intel Xeon & AMD EPYC Processors", href: "/shop?category=processors", desc: "Scalable high-core server processors", icon: Cpu },
+      { name: "Hot-Swap Power Supplies", href: "/shop?category=power-supplies", desc: "Titanium & Platinum redundant PSUs", icon: Zap },
+      { name: "Server Motherboards & Boards", href: "/shop?category=server-motherboards", desc: "Dual-socket enterprise mainboards", icon: Layers },
+      { name: "Network Interface Cards (NICs)", href: "/shop?category=network-accessories&q=nic", desc: "10G / 25G / 40G PCIe dual & quad NICs", icon: Network },
+    ],
+  },
+  {
+    label: "Maintenance",
+    href: "/contact",
+    hasDropdown: true,
+    catSlug: "maintenance",
+    subItems: [
+      { name: "Third-Party Hardware Support (TPM)", href: "/contact?subject=TPM+Support", desc: "Multi-vendor maintenance up to 70% off OEM", icon: ShieldCheck },
+      { name: "24/7/365 Mission-Critical SLA", href: "/contact?subject=24/7+SLA", desc: "4-hour on-site engineering response", icon: Wrench },
+      { name: "Spares On-Site (SOS) Programs", href: "/contact?subject=Spares+On-Site", desc: "Pre-staged spare parts kits at your facility", icon: Layers },
+      { name: "Data Center Asset Buyback", href: "/contact?subject=Buyback", desc: "Monetize decommissioned IT equipment", icon: Zap },
+      { name: "1-Year Comprehensive Warranty", href: "/policies/warranty", desc: "Advance hardware replacement coverage", icon: ShieldCheck },
+    ],
+  },
   { label: "Contact", href: "/contact", hasDropdown: false, catSlug: "" },
 ];
 
@@ -72,10 +154,23 @@ export default function Header() {
   const pathname = usePathname();
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [openMega, setOpenMega] = useState<string | null>(null);
+  const dropTimer = useRef<NodeJS.Timeout | null>(null);
   const [scrolled, setScrolled] = useState(false);
+
+  const handleDropEnter = (label: string) => {
+    if (dropTimer.current) clearTimeout(dropTimer.current);
+    setOpenMega(label);
+  };
+
+  const handleDropLeave = () => {
+    dropTimer.current = setTimeout(() => {
+      setOpenMega(null);
+    }, 180);
+  };
   const activeTab =
     pathname.startsWith("/shop") || pathname.startsWith("/product") || pathname === "/"
       ? "HARDWARE"
@@ -270,60 +365,118 @@ export default function Header() {
                     t.slug.toLowerCase() === item.catSlug ||
                     t.name.toLowerCase() === item.label.toLowerCase(),
                 );
-                const children = categoryMatch?.children ?? [];
-                const hasChildren = item.hasDropdown && children.length > 0;
+                const dynamicChildren = categoryMatch?.children ?? [];
+                const subItems =
+                  item.subItems && item.subItems.length > 0
+                    ? item.subItems
+                    : dynamicChildren.map((c) => ({
+                        name: c.name,
+                        href: `/shop/${c.slug}`,
+                        desc: undefined,
+                        icon: undefined,
+                      }));
+                const hasDropdown = item.hasDropdown && subItems.length > 0;
+                const isOpen = openMega === item.label;
 
                 return (
                   <div
                     key={item.label}
                     className="relative"
-                    onMouseEnter={() => setOpenMega(item.label)}
-                    onMouseLeave={() => setOpenMega(null)}
+                    onMouseEnter={() => hasDropdown && handleDropEnter(item.label)}
+                    onMouseLeave={() => hasDropdown && handleDropLeave()}
                   >
                     <Link
                       href={item.href}
-                      className={`inline-flex items-center gap-1 text-[14.5px] font-semibold transition ${
+                      className={`inline-flex items-center gap-1.5 py-2 text-[14.5px] font-semibold transition ${
                         !isLight
-                          ? "text-white/90 hover:text-[#0066ff]"
-                          : "text-[#0b1220] hover:text-[#0066ff]"
+                          ? isOpen ? "text-[#0066ff]" : "text-white/90 hover:text-[#0066ff]"
+                          : isOpen ? "text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
                       }`}
                     >
                       {item.label}
                       {item.hasDropdown ? (
                         <ChevronDown
-                          size={14}
-                          className={`stroke-[2.5] ${!isLight ? "text-white/70" : "text-[#0b1220]/70"}`}
+                          size={13}
+                          className={`stroke-[2.5] transition-transform duration-200 ${
+                            isOpen
+                              ? "rotate-180 text-[#0066ff]"
+                              : !isLight
+                                ? "text-white/60"
+                                : "text-[#0b1220]/60"
+                          }`}
                         />
                       ) : null}
                     </Link>
 
-                    {hasChildren && openMega === item.label ? (
+                    {hasDropdown && (
                       <div
-                        className={`absolute left-0 top-full z-50 min-w-[220px] rounded-xl p-3 shadow-xl ${
-                          !isLight
-                            ? "border border-white/15 bg-[#141414] text-white"
-                            : "border border-gray-100 bg-white text-gray-700"
+                        className={`absolute left-0 top-full z-50 pt-2 transition-all duration-200 ease-out origin-top ${
+                          item.label === "Maintenance" || item.label === "Contact" ? "right-0 left-auto" : "left-0"
+                        } ${
+                          isOpen
+                            ? "opacity-100 translate-y-0 scale-100 pointer-events-auto visible"
+                            : "opacity-0 -translate-y-2 scale-95 pointer-events-none invisible"
                         }`}
                       >
-                        <ul className="space-y-1 text-sm">
-                          {children.map((child) => (
-                            <li key={child.id}>
-                              <Link
-                                href={`/shop/${child.slug}`}
-                                className={`block rounded-lg px-3 py-2 ${
-                                  !isLight
-                                    ? "text-white hover:bg-white/10 hover:text-[#0066ff]"
-                                    : "text-[#0b1220] hover:bg-gray-50 hover:text-[#0066ff]"
-                                }`}
-                                onClick={() => setOpenMega(null)}
-                              >
-                                {child.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
+                        <div
+                          className={`w-72 sm:w-80 rounded-2xl p-2 shadow-2xl backdrop-blur-md ring-1 ${
+                            !isLight
+                              ? "border border-white/15 bg-[#121212]/95 text-white ring-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.7)]"
+                              : "border border-gray-100 bg-white/98 text-gray-800 ring-black/5 shadow-[0_16px_40px_rgba(0,0,0,0.12)]"
+                          }`}
+                        >
+                          <div className="space-y-0.5">
+                            {subItems.map((sub) => {
+                              const SubIcon = sub.icon;
+                              return (
+                                <Link
+                                  key={sub.name}
+                                  href={sub.href}
+                                  className={`group flex items-start gap-3 rounded-xl p-2.5 transition-all duration-150 ${
+                                    !isLight
+                                      ? "hover:bg-white/10 hover:text-white"
+                                      : "hover:bg-blue-50/70 hover:text-[#0066ff]"
+                                  }`}
+                                  onClick={() => setOpenMega(null)}
+                                >
+                                  {SubIcon && (
+                                    <div
+                                      className={`mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg transition-colors ${
+                                        !isLight
+                                          ? "bg-white/10 text-white group-hover:bg-[#0066ff] group-hover:text-white"
+                                          : "bg-blue-50 text-[#0066ff] group-hover:bg-[#0066ff] group-hover:text-white"
+                                      }`}
+                                    >
+                                      <SubIcon size={14} />
+                                    </div>
+                                  )}
+                                  <div className="min-w-0 flex-1">
+                                    <div
+                                      className={`text-xs font-bold leading-tight ${
+                                        !isLight
+                                          ? "text-white group-hover:text-[#60a5fa]"
+                                          : "text-gray-900 group-hover:text-[#0066ff]"
+                                      }`}
+                                    >
+                                      {sub.name}
+                                    </div>
+                                    {sub.desc && (
+                                      <div
+                                        className={`text-[11px] leading-tight mt-0.5 truncate ${
+                                          !isLight ? "text-gray-400" : "text-gray-500"
+                                        }`}
+                                      >
+                                        {sub.desc}
+                                      </div>
+                                    )}
+                                  </div>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
                       </div>
-                    ) : null}
+                    )}
                   </div>
                 );
               })}
@@ -700,13 +853,50 @@ export default function Header() {
                   {isLoggedIn ? "My Account" : "Login / Register"}
                 </Link>
               </div>
-              {mainNavItems.map((item) => (
-                <div key={item.label} className="border-b border-gray-100 py-2.5">
-                  <Link href={item.href} className="font-semibold text-[#0b1220]" onClick={() => setMenuOpen(false)}>
-                    {item.label}
-                  </Link>
-                </div>
-              ))}
+              {mainNavItems.map((item) => {
+                const isSubOpen = mobileSubmenuOpen === item.label;
+                const hasSubs = item.hasDropdown && item.subItems && item.subItems.length > 0;
+                return (
+                  <div key={item.label} className="border-b border-gray-100 py-2">
+                    <div className="flex items-center justify-between">
+                      <Link
+                        href={item.href}
+                        className="font-semibold text-[#0b1220] py-1 flex-1"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                      {hasSubs && (
+                        <button
+                          type="button"
+                          onClick={() => setMobileSubmenuOpen(isSubOpen ? null : item.label)}
+                          className="p-1.5 text-gray-500 hover:text-[#0066ff]"
+                          aria-label={`Toggle ${item.label} submenu`}
+                        >
+                          <ChevronDown
+                            size={16}
+                            className={`transition-transform duration-200 ${isSubOpen ? "rotate-180 text-[#0066ff]" : ""}`}
+                          />
+                        </button>
+                      )}
+                    </div>
+                    {hasSubs && isSubOpen && (
+                      <div className="mt-1 space-y-1 pl-3 border-l-2 border-blue-100 py-1">
+                        {item.subItems!.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            href={sub.href}
+                            onClick={() => setMenuOpen(false)}
+                            className="block py-1.5 text-xs font-medium text-gray-600 hover:text-[#0066ff]"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Mobile Contact Information */}
