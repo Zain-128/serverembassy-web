@@ -149,12 +149,14 @@ export default function ProductCard({ product }: { product: Product }) {
           <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted">
             {product.brand?.name ?? "Brand"} · {product.category?.name ?? "Hardware"}
           </p>
-          <Link
-            href={href}
-            className="line-clamp-2 min-h-[2.5rem] font-medium leading-snug text-navy transition-colors hover:text-brand"
-          >
-            {product.title}
-          </Link>
+          <h3 className="line-clamp-2 min-h-[2.5rem] font-medium leading-snug text-navy transition-colors hover:text-brand text-sm sm:text-base">
+            <Link
+              href={href}
+              className="hover:text-brand"
+            >
+              {product.title}
+            </Link>
+          </h3>
           {showRating ? (
             <Rating rating={product.rating} count={product.reviewCount} />
           ) : (

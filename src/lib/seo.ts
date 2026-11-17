@@ -42,11 +42,22 @@ export function productMetaDescription(product: Product): string {
 
 export function productJsonLd(product: Product) {
   const image = productImageUrl(product);
+  const conditionLower = (product.condition || "").toLowerCase();
+  const schemaCondition = conditionLower.includes("refurbished") || conditionLower.includes("renewed")
+    ? "https://schema.org/RefurbishedCondition"
+    : conditionLower.includes("new")
+      ? "https://schema.org/NewCondition"
+      : "https://schema.org/UsedCondition";
+
+  const nextYear = new Date();
+  nextYear.setFullYear(nextYear.getFullYear() + 1);
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
     sku: product.sku,
+    mpn: product.mpn || product.sku,
     description: productMetaDescription(product),
     ...(image ? { image: [image] } : {}),
     ...(product.brand?.name ? { brand: { "@type": "Brand", name: product.brand.name } } : {}),
@@ -55,12 +66,50 @@ export function productJsonLd(product: Product) {
       url: absoluteUrl(`/product/${product.slug}`),
       priceCurrency: "USD",
       price: product.price.toFixed(2),
+      priceValidUntil: nextYear.toISOString().split("T")[0],
       availability:
         product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-      itemCondition:
-        product.condition === "New"
-          ? "https://schema.org/NewCondition"
-          : "https://schema.org/UsedCondition",
+      itemCondition: schemaCondition,
+      seller: {
+        "@type": "Organization",
+        name: "Power Line Devices",
+        url: getSiteUrl(),
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "US",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 30,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: product.price >= 199 ? "0.00" : "15.00",
+          currency: "USD",
+        },
+        shippingDestination: {
+          "@type": "DefinedRegion",
+          addressCountry: "US",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 1,
+            maxValue: 2,
+            unitCode: "d",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 3,
+            maxValue: 5,
+            unitCode: "d",
+          },
+        },
+      },
     },
     ...(product.reviewCount > 0
       ? {
@@ -83,6 +132,40 @@ export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
       position: i + 1,
       name: item.name,
       item: absoluteUrl(item.path),
+    })),
+  };
+}
+
+export function websiteJsonLd() {
+  const siteUrl = getSiteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${siteUrl}/#website`,
+    url: siteUrl,
+    name: "Power Line Devices",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/shop?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+export function faqJsonLd(items: Array<{ question: string; answer: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
     })),
   };
 }

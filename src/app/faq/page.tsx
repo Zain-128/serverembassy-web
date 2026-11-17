@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { STORE_CONTACT } from "@/lib/constants/contact";
+import { breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: `Frequently Asked Questions | ${STORE_CONTACT.companyName}`,
@@ -36,8 +37,23 @@ const groups = [
 ];
 
 export default function FaqPage() {
+  const allFaqItems = groups.flatMap((g) => g.items.map(([q, a]) => ({ question: q, answer: a })));
+  const breadcrumbs = [
+    { name: "Home", path: "/" },
+    { name: "FAQ", path: "/faq" },
+  ];
+
   return (
-    <div className="container-se max-w-3xl py-12">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(allFaqItems)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(breadcrumbs)) }}
+      />
+      <div className="container-se max-w-3xl py-12">
       <h1 className="text-4xl font-extrabold tracking-tight text-navy sm:text-5xl">Frequently Asked Questions</h1>
       <p className="mt-3 text-base text-muted">
         Find quick answers to common questions about hardware purchasing, warranties, shipping, and payment terms.
@@ -117,5 +133,6 @@ export default function FaqPage() {
         </div>
       </div>
     </div>
-  );
+  </>
+);
 }

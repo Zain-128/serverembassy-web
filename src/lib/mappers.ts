@@ -4,6 +4,8 @@ import { STORE_CONTACT } from "./constants/contact";
 type ApiProduct = {
   id: string;
   sku: string;
+  mpn?: string;
+  gtin?: string;
   slug: string;
   title: string;
   brandId: string;
@@ -46,6 +48,8 @@ export function mapProduct(p: ApiProduct): Product {
   return {
     id: p.id,
     sku: p.sku,
+    mpn: p.mpn,
+    gtin: p.gtin,
     slug: p.slug,
     title: p.title,
     brandId: p.brandId,

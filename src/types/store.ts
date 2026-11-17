@@ -32,6 +32,8 @@ export type ProductImage = {
 export type Product = {
   id: string;
   sku: string;
+  mpn?: string;
+  gtin?: string;
   slug: string;
   title: string;
   brandId: string;
@@ -125,6 +127,8 @@ export type CustomerOrder = {
   items: Array<{
     productId: string;
     sku: string;
+  mpn?: string;
+  gtin?: string;
     title: string;
     qty: number;
     unitPrice: number;

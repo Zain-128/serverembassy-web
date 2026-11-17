@@ -83,16 +83,17 @@ function FeatureCard({
       </div>
 
       {/* Product Title */}
-      <Link
-        href={`/product/${product.slug}`}
+      <h3
         className={`mt-3.5 block font-sans text-[13px] sm:text-[14px] font-normal leading-[1.3] transition-colors duration-200 line-clamp-3 min-h-[3.9em] ${
           isLight
             ? "text-[#0b1220] hover:text-[#0066ff]"
             : "text-white hover:text-[#38bdf8]"
         }`}
       >
-        {product.title}
-      </Link>
+        <Link href={`/product/${product.slug}`}>
+          {product.title}
+        </Link>
+      </h3>
 
       {/* Price row */}
       <div className="mt-2.5 flex items-baseline gap-2.5">

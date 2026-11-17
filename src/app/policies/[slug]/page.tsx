@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { getCmsPageBySlug } from "@/lib/api/store";
 import { STORE_CONTACT } from "@/lib/constants/contact";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -208,8 +209,18 @@ export default async function PolicyPage({
       ? page.body
       : fallback?.body || page.body;
 
+  const breadcrumbs = [
+    { name: "Home", path: "/" },
+    { name: page.title, path: `/policies/${page.slug}` },
+  ];
+
   return (
-    <div className="container-se max-w-3xl py-12">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(breadcrumbs)) }}
+      />
+      <div className="container-se max-w-3xl py-12">
       <h1 className="text-4xl font-extrabold tracking-tight text-navy sm:text-5xl">{page.title}</h1>
       <PolicyBody body={effectiveBody} />
 
@@ -264,5 +275,6 @@ export default async function PolicyPage({
         </div>
       </div>
     </div>
-  );
+  </>
+);
 }

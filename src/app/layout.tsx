@@ -4,7 +4,7 @@ import Providers from "@/components/Providers";
 import SiteShell from "@/components/SiteShell";
 import { getStoreSettings } from "@/lib/api/store";
 import { STORE_CONTACT } from "@/lib/constants/contact";
-import { getSiteUrl } from "@/lib/seo";
+import { getSiteUrl, websiteJsonLd } from "@/lib/seo";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -72,6 +72,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://powerlinedevices.com" />
+        <link rel="dns-prefetch" href="https://powerlinedevices.com" />
+      </head>
       <body
         className={`${figtree.variable} ${sora.variable} ${figtree.className}`}
         suppressHydrationWarning
@@ -79,6 +83,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
         />
         <Providers>
           <SiteShell>{children}</SiteShell>
