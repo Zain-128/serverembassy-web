@@ -208,7 +208,7 @@ export default function InvitePage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-medium text-navy">
-                      {entry.fullName || "Server Embassy member"}
+                      {entry.fullName || "Power Line Devices member"}
                       {isTop && (
                         <span className="ml-2 rounded-full bg-brand px-2 py-0.5 text-[11px] font-bold text-white">
                           <Trophy size={10} className="mr-1 inline" />Top inviter

@@ -10,7 +10,7 @@ import { useGetProductsQuery } from "@/store/storeApi";
 
 const FIGMA_TABS = [
   { slug: "all", name: "FEATURE PRODUCTS" },
-  { slug: "server-hard-drives", name: "SERVER HARD DRIVES" },
+  { slug: "server-hard-drive", name: "SERVER HARD DRIVES" },
   { slug: "power-supplies", name: "POWER SUPPLIES" },
   { slug: "solid-state-drives", name: "SOLID STATE DRIVES" },
   { slug: "server-memory", name: "SERVER MEMORY" },

@@ -117,6 +117,74 @@ Once returned items are received and inspected, approved refunds will be process
 ## Requesting a Return
 To initiate a return or warranty inquiry, please contact customer support at (321) 788-5899 or email info@powerlinedevices.com with your order number and item details.`,
   },
+  "terms-of-service": {
+    title: "Terms of Service",
+    body: `## Agreement to Terms
+These Terms of Service ("Terms") govern your access to and use of the Power Line Devices website and your purchase of enterprise hardware products from us. By placing an order, requesting a quotation, or accessing this site, you agree to be bound by these Terms.
+
+## Products & Pricing Integrity
+We specialize in certified refurbished, used, and new enterprise IT hardware, including servers, storage systems, networking switches, and enterprise components. Every product listing displays its tested condition and 30-day replacement warranty. We make every effort to display accurate inventory and pricing, but reserve the right to correct typographical or clerical errors and cancel affected orders prior to fulfillment.
+
+## Retail Promotions & Wholesale Policy
+Free shipping, discounts and all other promotions apply solely to e-commerce and retail orders, not to bulk or wholesale orders, which are priced by quotation.
+
+## Orders & Payment Methods
+We accept payment by credit card and ACH via Stripe, as well as direct bank wire transfer for high-volume enterprise orders. An order is not confirmed until inventory is reserved and payment verification is complete. We reserve the right to decline or cancel orders suspected of unauthorized payment or reseller fraud.
+
+## Shipping & Delivery
+Orders are dispatched via FedEx, UPS, or certified freight carriers. Standard ground shipping is provided for continental US deliveries. Risk of loss passes upon confirmed delivery to the carrier.
+
+## Warranty & 30-Day RMA
+All certified hardware is bench-tested prior to shipment and backed by our 30-day hardware replacement warranty. Returns require an authorized Return Merchandise Authorization (RMA) number.
+
+## Limitation of Liability & Governing Law
+These Terms are governed by and construed in accordance with the laws of the State of Florida, without regard to conflict-of-law principles. Any legal proceedings arising from these Terms shall be held in the state or federal courts located in Orange County, Florida.
+
+## Contact Information
+For questions regarding these Terms, contact us at info@powerlinedevices.com or call (321) 788-5899. Power Line Devices, 1317 Edgewater Dr Suite #6089, Orlando, FL 32804.`,
+  },
+  terms: {
+    title: "Terms of Service",
+    body: `## Agreement to Terms
+These Terms of Service ("Terms") govern your access to and use of the Power Line Devices website and your purchase of enterprise hardware products from us. By placing an order, requesting a quotation, or accessing this site, you agree to be bound by these Terms.
+
+## Products & Pricing Integrity
+We specialize in certified refurbished, used, and new enterprise IT hardware, including servers, storage systems, networking switches, and enterprise components. Every product listing displays its tested condition and 30-day replacement warranty. We make every effort to display accurate inventory and pricing, but reserve the right to correct typographical or clerical errors and cancel affected orders prior to fulfillment.
+
+## Retail Promotions & Wholesale Policy
+Free shipping, discounts and all other promotions apply solely to e-commerce and retail orders, not to bulk or wholesale orders, which are priced by quotation.
+
+## Orders & Payment Methods
+We accept payment by credit card and ACH via Stripe, as well as direct bank wire transfer for high-volume enterprise orders. An order is not confirmed until inventory is reserved and payment verification is complete. We reserve the right to decline or cancel orders suspected of unauthorized payment or reseller fraud.
+
+## Shipping & Delivery
+Orders are dispatched via FedEx, UPS, or certified freight carriers. Standard ground shipping is provided for continental US deliveries. Risk of loss passes upon confirmed delivery to the carrier.
+
+## Warranty & 30-Day RMA
+All certified hardware is bench-tested prior to shipment and backed by our 30-day hardware replacement warranty. Returns require an authorized Return Merchandise Authorization (RMA) number.
+
+## Limitation of Liability & Governing Law
+These Terms are governed by and construed in accordance with the laws of the State of Florida, without regard to conflict-of-law principles. Any legal proceedings arising from these Terms shall be held in the state or federal courts located in Orange County, Florida.
+
+## Contact Information
+For questions regarding these Terms, contact us at info@powerlinedevices.com or call (321) 788-5899. Power Line Devices, 1317 Edgewater Dr Suite #6089, Orlando, FL 32804.`,
+  },
+  "privacy-policy": {
+    title: "Privacy Policy",
+    body: `## Privacy Commitment
+Power Line Devices respects your privacy. This policy outlines how we handle customer and order information. We do not sell, rent, or trade your personal information to third parties.
+
+## Information We Collect
+- Contact Information: Name, business email address, phone number, and company name provided during registration, checkout, or quote submission.
+- Order & Shipping Details: Delivery addresses, billing information, and ordered hardware specifications.
+- Payment Processing: Credit card details are handled securely by Stripe under strict PCI-DSS Level 1 compliance. Power Line Devices never stores raw payment card numbers.
+
+## Use of Information
+We use your information solely to process orders, fulfill shipments, issue tracking notifications, process RMA warranty requests, and respond to sales inquiries.
+
+## Contact Privacy Office
+If you have any questions regarding our privacy practices or wish to request data deletion, contact us at info@powerlinedevices.com or call (321) 788-5899.`,
+  },
 };
 
 export default async function PolicyPage({

@@ -44,7 +44,7 @@ export default function ValueProp() {
           viewport={VIEWPORT}
           transition={{ duration: 0.6, ease: EASE }}
         >
-          <p className="section-label">Why Server Embassy</p>
+          <p className="section-label">Why Power Line Devices</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight text-navy md:text-4xl">
             Built for teams that run on uptime
           </h2>

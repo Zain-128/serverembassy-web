@@ -48,7 +48,9 @@ const serviceTabs = [
   { label: "HARDWARE", href: "/shop" },
   { label: "COLOCATION", href: "/contact?subject=Colocation+Services" },
   { label: "FINANCING", href: "/contact?subject=Equipment+Financing" },
-  { label: "BUY BACK", href: "/contact?subject=ITAD+%26+Asset+Buyback" },
+  { label: "BUY BACK", href: "/contact?subject=Asset+Buyback" },
+  { label: "MAINTENANCE", href: "/contact?subject=Hardware+Maintenance" },
+  { label: "ITAD", href: "/contact?subject=ITAD+Services" },
 ];
 
 type NavSubItem = {
@@ -253,7 +255,7 @@ export default function Header() {
             <div className="flex-1 text-center truncate text-[11px] sm:text-[12px] px-1">
               <span>Bulk order or hard-to-find part? </span>
               <Link
-                href="/contact"
+                href="/contact?subject=Fast+Quote+Request"
                 className="font-bold text-white underline underline-offset-2 hover:opacity-90 inline-block ml-1"
               >
                 Get a fast quote →
