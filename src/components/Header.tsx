@@ -126,7 +126,7 @@ const mainNavItems: NavItem[] = [
     hasDropdown: true,
     catSlug: "maintenance",
     subItems: [
-      { name: "Third-Party Hardware Support (TPM)", href: "/contact?subject=TPM+Support", desc: "Multi-vendor maintenance up to 70% off OEM", icon: ShieldCheck },
+      { name: "Third-Party Hardware Support (TPM)", href: "/contact?subject=TPM+Support", desc: "Multi-vendor post-warranty hardware maintenance", icon: ShieldCheck },
       { name: "Custom Maintenance Quotes", href: "/contact?subject=Maintenance+Quote", desc: "Tailored enterprise SLAs & hardware spares", icon: Wrench },
       { name: "Data Center Asset Buyback", href: "/contact?subject=Buyback", desc: "Monetize decommissioned IT equipment", icon: Zap },
       { name: "30-Day Hardware Replacement Warranty", href: "/policies/returns", desc: "Certified hardware replacement & return coverage", icon: ShieldCheck },

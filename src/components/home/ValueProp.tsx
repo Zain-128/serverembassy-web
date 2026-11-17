@@ -31,7 +31,7 @@ const stats = [
   { value: "1–2", label: "Day dispatch" },
   { value: "30", label: "Day returns" },
   { value: "100%", label: "Tested batch" },
-  { value: "4.9★", label: "Buyer rating" },
+  { value: "500+", label: "B2B clients" },
 ];
 
 export default function ValueProp() {

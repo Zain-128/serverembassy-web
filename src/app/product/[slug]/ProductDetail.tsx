@@ -77,11 +77,11 @@ export default function ProductDetail({
           <h1 className="mt-2 text-3xl font-bold text-navy md:text-4xl">{product.title}</h1>
 
           <div className="mt-3 flex items-center gap-2 text-sm text-muted">
-            {(product.reviewCount ?? 0) > 0 ? (
+            {(product.reviewCount ?? 0) > 0 && (product.rating ?? 0) > 0 ? (
               <>
                 <Star size={15} className="fill-amber-400 text-amber-400" />
                 <span className="font-medium text-navy">
-                  {(product.rating ?? 0) > 0 ? product.rating : "5.0"}
+                  {product.rating.toFixed(1)}
                 </span>
                 <span>·</span>
                 <span>{product.reviewCount} reviews</span>
@@ -223,8 +223,7 @@ export default function ProductDetail({
           ) : null}
           {tab === "reviews" ? (
             <div className="mx-auto max-w-xl text-center py-6">
-              <Star size={28} className="mx-auto text-amber-400" />
-              <p className="mt-3 font-medium text-navy">No customer reviews yet</p>
+              <p className="font-medium text-navy">No customer reviews yet</p>
               <p className="mt-1 text-muted">
                 Be the first to review this SKU after purchase and help other teams shop with confidence.
               </p>
