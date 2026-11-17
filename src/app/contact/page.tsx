@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Clock, Facebook, Instagram, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { getStoreSettings } from "@/lib/api/store";
 import { STORE_CONTACT } from "@/lib/constants/contact";
@@ -139,7 +140,9 @@ export default async function ContactPage() {
               Fill out the details below and a team member will follow up with you.
             </p>
             <div className="mt-6">
-              <ContactForm />
+              <Suspense fallback={<div className="h-96 animate-pulse rounded-2xl bg-slate-100" />}>
+                <ContactForm />
+              </Suspense>
             </div>
           </div>
         </div>

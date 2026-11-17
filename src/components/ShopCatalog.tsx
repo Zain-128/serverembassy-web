@@ -9,7 +9,7 @@ import { ProductGridSkeleton } from "@/components/Skeleton";
 import { StateBox } from "@/components/ui/States";
 import { useGetBrandsQuery, useGetCategoryTreeQuery, useGetProductsQuery } from "@/store/storeApi";
 import Link from "next/link";
-import type { Category } from "@/types/store";
+import type { Category, ProductListResult } from "@/types/store";
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "latest";
 
@@ -42,10 +42,12 @@ export default function ShopCatalog({
   categorySlug,
   title,
   description,
+  initialData,
 }: {
   categorySlug?: string;
   title: string;
   description?: string;
+  initialData?: ProductListResult;
 }) {
   const params = useSearchParams();
   const router = useRouter();
@@ -81,8 +83,9 @@ export default function ShopCatalog({
     page,
     limit: 24,
   });
-  const items = productRes?.items ?? [];
-  const totalPages = productRes?.totalPages ?? 1;
+  const items = productRes?.items ?? (page === 1 && !q && brandSlug === "all" ? initialData?.items ?? [] : []);
+  const totalPages = productRes?.totalPages ?? initialData?.totalPages ?? 1;
+  const totalItems = productRes?.total ?? initialData?.total ?? items.length;
 
   const goToPage = (next: number) => {
     setPage(next);
@@ -322,7 +325,7 @@ export default function ShopCatalog({
             <p className="text-sm text-muted">
               {isFetching && items.length === 0
                 ? "Loading…"
-                : `${productRes?.total ?? items.length} ${items.length === 1 ? "product" : "products"}`}
+                : `${totalItems} ${totalItems === 1 ? "product" : "products"}`}
             </p>
             <div className="relative">
               <select

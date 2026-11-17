@@ -6,7 +6,6 @@ import Image from "next/image";
 import type { Category, Product } from "@/types/store";
 import AddToCartButton from "@/components/AddToCartButton";
 import { formatMoney } from "@/lib/format";
-import { FIGMA_MOCK_PRODUCTS } from "@/data/mockProducts";
 import { useGetProductsQuery } from "@/store/storeApi";
 
 const FIGMA_TABS = [
@@ -154,10 +153,7 @@ export default function FeatureProducts({
       );
       displayProducts = filtered.length > 0 ? filtered.slice(0, 4) : fallbackProducts.slice(0, 4);
     } else {
-      displayProducts =
-        fallbackProducts.length >= 4
-          ? fallbackProducts.slice(0, 4)
-          : FIGMA_MOCK_PRODUCTS.slice(0, 4);
+      displayProducts = fallbackProducts.slice(0, 4);
     }
   }
 

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import ShopCatalog from "@/components/ShopCatalog";
 import { ProductGridSkeleton } from "@/components/Skeleton";
-import { getCategoryBySlug } from "@/lib/api/store";
+import { getCategoryBySlug, getProducts } from "@/lib/api/store";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +41,8 @@ export default async function CategoryPage({
     notFound();
   }
 
+  const initialData = await getProducts({ category: cat.slug, limit: 24 }).catch(() => undefined);
+
   return (
     <Suspense
       fallback={
@@ -57,6 +59,7 @@ export default async function CategoryPage({
         categorySlug={cat.slug}
         title={cat.name}
         description={cat.description}
+        initialData={initialData}
       />
     </Suspense>
   );

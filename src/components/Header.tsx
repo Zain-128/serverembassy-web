@@ -46,9 +46,9 @@ import { formatMoney } from "@/lib/format";
 
 const serviceTabs = [
   { label: "HARDWARE", href: "/shop" },
-  { label: "COLOCATION", href: "/contact" },
-  { label: "FINANCING", href: "/contact" },
-  { label: "BUY BACK", href: "/contact" },
+  { label: "COLOCATION", href: "/contact?subject=Colocation+Services" },
+  { label: "FINANCING", href: "/contact?subject=Equipment+Financing" },
+  { label: "BUY BACK", href: "/contact?subject=ITAD+%26+Asset+Buyback" },
 ];
 
 type NavSubItem = {
@@ -125,10 +125,9 @@ const mainNavItems: NavItem[] = [
     catSlug: "maintenance",
     subItems: [
       { name: "Third-Party Hardware Support (TPM)", href: "/contact?subject=TPM+Support", desc: "Multi-vendor maintenance up to 70% off OEM", icon: ShieldCheck },
-      { name: "24/7/365 Mission-Critical SLA", href: "/contact?subject=24/7+SLA", desc: "4-hour on-site engineering response", icon: Wrench },
-      { name: "Spares On-Site (SOS) Programs", href: "/contact?subject=Spares+On-Site", desc: "Pre-staged spare parts kits at your facility", icon: Layers },
+      { name: "Custom Maintenance Quotes", href: "/contact?subject=Maintenance+Quote", desc: "Tailored enterprise SLAs & hardware spares", icon: Wrench },
       { name: "Data Center Asset Buyback", href: "/contact?subject=Buyback", desc: "Monetize decommissioned IT equipment", icon: Zap },
-      { name: "1-Year Comprehensive Warranty", href: "/policies/warranty", desc: "Advance hardware replacement coverage", icon: ShieldCheck },
+      { name: "30-Day Hardware Replacement Warranty", href: "/policies/returns", desc: "Certified hardware replacement & return coverage", icon: ShieldCheck },
     ],
   },
   { label: "Contact", href: "/contact", hasDropdown: false, catSlug: "" },
@@ -252,25 +251,25 @@ export default function Header() {
               </a>
             </div>
             <div className="flex-1 text-center truncate text-[11px] sm:text-[12px] px-1">
-              <span>The market is changing daily. </span>
+              <span>Bulk order or hard-to-find part? </span>
               <Link
-                href="/shop"
+                href="/contact"
                 className="font-bold text-white underline underline-offset-2 hover:opacity-90 inline-block ml-1"
               >
-                Market update →
+                Get a fast quote →
               </Link>
             </div>
             {/* Theme Switcher */}
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <span className="text-[11px] font-semibold text-white/80 hidden md:inline select-none">
-                {isLight ? "White Theme" : "Black Theme"}
+                {isLight ? "Light mode" : "Dark mode"}
               </span>
               <button
                 type="button"
                 role="switch"
                 aria-checked={!isLight}
                 onClick={toggleTheme}
-                title={`Click to switch to ${isLight ? "Black" : "White"} theme`}
+                title={`Click to switch to ${isLight ? "Dark" : "Light"} mode`}
                 className={`relative inline-flex h-5 w-11 shrink-0 cursor-pointer items-center rounded-full p-0.5 transition-colors duration-300 ease-in-out focus:outline-none ring-1 ${
                   isLight ? "bg-emerald-500 ring-emerald-400/60" : "bg-[#0066ff] ring-blue-400/60"
                 }`}

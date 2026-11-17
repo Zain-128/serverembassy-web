@@ -2,8 +2,7 @@ import crypto from "crypto";
 
 const DEFAULT_SECRET =
   process.env.SIGNED_URL_SECRET ||
-  process.env.NEXT_PUBLIC_SIGNED_URL_SECRET ||
-  "serverembassy-enterprise-signed-url-secret-2026-key";
+  (process.env.NODE_ENV !== "production" ? "local-dev-server-only-secret-key" : "");
 
 const DEFAULT_EXPIRATION_SECONDS = 86400 * 7; // 7 days
 
@@ -111,16 +110,6 @@ export function verifySignedUrl(
   } catch (err: any) {
     return { valid: false, expired: false, error: err.message || "Verification failed" };
   }
-}
-
-/**
- * Creates a signed asset/datasheet download link
- */
-export function createSecureDownloadUrl(partNumberOrPath: string, expiresInHours = 24): string {
-  return generateSignedUrl(`/api/secure-download`, {
-    expiresInSeconds: expiresInHours * 3600,
-    extraParams: { item: partNumberOrPath, scope: "specsheet" },
-  });
 }
 
 /**

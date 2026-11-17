@@ -5,7 +5,6 @@ import { Heart, Trash2, ShoppingBag } from "lucide-react";
 import { useWishlist } from "@/lib/wishlist";
 import { useGetProductsByIdsQuery, useGetProductsQuery } from "@/store/storeApi";
 import ProductCard from "@/components/ProductCard";
-import { FIGMA_MOCK_PRODUCTS } from "@/data/mockProducts";
 import type { Product } from "@/types/store";
 
 export default function WishlistPage() {
@@ -20,7 +19,7 @@ export default function WishlistPage() {
   });
 
   const catalogItems = catalogRes?.items ?? [];
-  const allAvailable = [...apiProducts, ...catalogItems, ...FIGMA_MOCK_PRODUCTS];
+  const allAvailable = [...apiProducts, ...catalogItems];
 
   // Map product IDs to product objects and deduplicate
   const wishlistedProducts: Product[] = wishlistIds

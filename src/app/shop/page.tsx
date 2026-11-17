@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import ShopCatalog from "@/components/ShopCatalog";
 import { ProductGridSkeleton } from "@/components/Skeleton";
+import { getProducts } from "@/lib/api/store";
 
 export const metadata: Metadata = {
   title: "Shop",
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/shop" },
 };
 
-export default function ShopPage() {
+export default async function ShopPage() {
+  const initialData = await getProducts({ limit: 24 }).catch(() => undefined);
+
   return (
     <Suspense
       fallback={
@@ -23,7 +26,11 @@ export default function ShopPage() {
         </div>
       }
     >
-      <ShopCatalog title="Shop" description="Browse enterprise IT hardware by SKU, brand, and category." />
+      <ShopCatalog
+        title="Shop"
+        description="Browse enterprise IT hardware by SKU, brand, and category."
+        initialData={initialData}
+      />
     </Suspense>
   );
 }

@@ -116,12 +116,21 @@ export function mapBanner(b: Record<string, unknown>): Banner {
 }
 
 export function mapSettings(s: Record<string, unknown>): StoreSettings {
+  const rawName = String(s.storeName || "");
+  const name = (!rawName || rawName === "Server Embassy") ? STORE_CONTACT.companyName : rawName;
+  const rawPhone = String(s.phone || "");
+  const phone = (!rawPhone || rawPhone.includes("727")) ? STORE_CONTACT.phone : rawPhone;
+  const rawEmail = String(s.supportEmail || s.email || "");
+  const email = (!rawEmail || rawEmail.includes("serverembassy.com")) ? STORE_CONTACT.email : rawEmail;
+  const rawAddress = String(s.address || "");
+  const address = (!rawAddress || rawAddress.includes("St. Petersburg")) ? STORE_CONTACT.address : rawAddress;
+
   return {
-    name: String(s.storeName || STORE_CONTACT.companyName),
+    name,
     tagline: String(s.tagline || STORE_CONTACT.tagline),
-    phone: String(s.phone || STORE_CONTACT.phone),
-    email: String(s.supportEmail || s.email || STORE_CONTACT.email),
-    address: String(s.address || STORE_CONTACT.address),
+    phone,
+    email,
+    address,
     hours: String(s.hours || STORE_CONTACT.hours),
     freeShippingThreshold: Number(s.freeShippingThreshold ?? 199),
     freeShippingLabel: String(

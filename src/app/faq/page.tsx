@@ -12,9 +12,10 @@ export const metadata: Metadata = {
 
 const groups = [
   {
-    title: "Shipping",
+    title: "Shipping & Promotions",
     items: [
       ["Do you offer free shipping?", "Yes — qualifying US orders over $199 unlock free ground shipping. Expedited and freight options are also available."],
+      ["Who is eligible for free shipping and promotional discounts?", "Free shipping, discounts and all other promotions apply solely to e-commerce and retail orders, not to bulk or wholesale orders, which are priced by quotation."],
       ["Do you ship internationally?", "Yes. Duties and taxes are paid by the customer unless quoted otherwise."],
     ],
   },

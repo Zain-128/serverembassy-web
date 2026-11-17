@@ -21,12 +21,12 @@ const CATEGORY_IMAGES: Record<string, string> = {
 };
 
 const FALLBACK_CATEGORIES: Category[] = [
-  { id: "cat-servers", name: "Rack Servers", slug: "servers", count: 18 } as unknown as Category,
-  { id: "cat-storage", name: "Storage & SAN", slug: "storage", count: 24 } as unknown as Category,
-  { id: "cat-networking", name: "Enterprise Switches", slug: "networking", count: 32 } as unknown as Category,
-  { id: "cat-processors", name: "Server Processors", slug: "processors", count: 45 } as unknown as Category,
-  { id: "cat-memory", name: "Server Memory", slug: "memory", count: 60 } as unknown as Category,
-  { id: "cat-power", name: "Power Supplies", slug: "power-supplies", count: 28 } as unknown as Category,
+  { id: "c-shd", name: "Server Hard Drives", slug: "server-hard-drive" } as unknown as Category,
+  { id: "c-switches", name: "Network Switches", slug: "network-switches" } as unknown as Category,
+  { id: "c-psu", name: "Power Supplies", slug: "power-supplies" } as unknown as Category,
+  { id: "c-mem", name: "Server Memory", slug: "server-memory" } as unknown as Category,
+  { id: "c-trans", name: "Transceivers", slug: "transceiver" } as unknown as Category,
+  { id: "c-fw", name: "Firewalls & Security", slug: "firewalls" } as unknown as Category,
 ];
 
 function CategoryTile({ category, theme = "dark" }: { category: Category; theme?: "dark" | "light" }) {
@@ -97,7 +97,7 @@ function CategoryTile({ category, theme = "dark" }: { category: Category; theme?
         {category.name}
       </p>
       <p className={`mt-1 text-xs ${isLight ? "text-slate-500" : "text-white/45"}`}>
-        {count} {count === 1 ? "Item" : "Items"}
+        {data?.total ? `${data.total} Items` : "Explore Catalog"}
       </p>
     </Link>
   );

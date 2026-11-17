@@ -1,6 +1,7 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useCreateContactMutation } from "@/store/storeApi";
 import { useToast } from "@/components/Toast";
 
@@ -8,12 +9,20 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function ContactForm() {
   const toast = useToast().toast;
+  const searchParams = useSearchParams();
+  const initialSubject = searchParams.get("subject") ?? "";
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState(initialSubject);
   const [message, setMessage] = useState("");
   const [emailError, setEmailError] = useState("");
   const [sendMessage, { isLoading }] = useCreateContactMutation();
+
+  useEffect(() => {
+    const s = searchParams.get("subject");
+    if (s) setSubject(s);
+  }, [searchParams]);
 
   function handleEmailChange(val: string) {
     setEmail(val);

@@ -16,8 +16,6 @@ import {
   useGetProductsQuery,
 } from "@/store/storeApi";
 
-import { FIGMA_MOCK_PRODUCTS } from "@/data/mockProducts";
-
 export default function WhiteHomePage() {
   const { data: brands = [] } = useGetBrandsQuery();
   const { data: homepageCats = [] } = useGetHomepageCategoriesQuery();
@@ -37,10 +35,9 @@ export default function WhiteHomePage() {
     limit: 12,
   });
 
-  const rawFeatured = featuredRes?.items?.length ? featuredRes.items : FIGMA_MOCK_PRODUCTS;
-  const rawTop = topRes?.items?.length ? topRes.items : FIGMA_MOCK_PRODUCTS;
-  const featured = rawFeatured;
-  const deals = dealsRes?.items?.length ? dealsRes.items : FIGMA_MOCK_PRODUCTS.slice(0, 6);
+  const rawTop = topRes?.items ?? [];
+  const featured = featuredRes?.items?.length ? featuredRes.items : rawTop.slice(0, 8);
+  const deals = dealsRes?.items?.length ? dealsRes.items : rawTop.slice(0, 6);
 
   return (
     <div className="bg-white text-[#0b1220]">
