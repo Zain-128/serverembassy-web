@@ -300,21 +300,21 @@ export default function Header() {
         </div>
 
         {/* Service Tabs Bar (Desktop Only - Clean, Spacious & Elegant) */}
-        <div className="hidden lg:block bg-[#0066ff] text-white">
-          <div className="container-se flex items-stretch justify-between px-4">
-            <nav className="flex items-stretch justify-start overflow-x-auto no-scrollbar" aria-label="Services">
+        <div className="hidden lg:block bg-[#0066ff] text-white select-none">
+          <div className="container-se flex items-center justify-between gap-4 px-3 sm:px-4">
+            <nav className="flex items-center justify-start shrink-0 overflow-hidden" aria-label="Services">
               {serviceTabs.map((tab) => {
                 const active = activeTab === tab.label;
                 return (
                   <Link
                     key={tab.label}
                     href={tab.href}
-                    className={`flex items-center px-4 xl:px-6 py-2.5 text-[11px] uppercase tracking-[0.14em] transition whitespace-nowrap ${
+                    className={`flex items-center px-3.5 xl:px-4.5 py-2.5 text-[11px] uppercase tracking-[0.1em] transition whitespace-nowrap ${
                       active
                         ? !isLight
                           ? "!bg-[#000000] !text-white font-extrabold shadow-sm"
                           : "!bg-white !text-[#0b1220] font-extrabold shadow-sm"
-                        : "font-bold text-white hover:bg-white/10"
+                        : "font-bold text-white/90 hover:text-white hover:bg-white/10"
                     }`}
                   >
                     {tab.label}
@@ -323,24 +323,29 @@ export default function Header() {
               })}
             </nav>
 
-            <div className="flex items-center gap-5 text-[11px] font-medium shrink-0">
+            <div className="flex items-center gap-3.5 xl:gap-5 text-[11px] font-medium shrink-0">
               <a
                 href={`tel:${phoneRaw}`}
-                className="text-white hover:underline flex items-center gap-1.5"
+                className="text-white/95 hover:text-white hover:underline flex items-center gap-1.5 whitespace-nowrap transition"
+                title={`Call ${phone}`}
               >
-                <Phone size={12} className="text-white/80" />
-                {phone}
+                <Phone size={11} className="text-white/80 shrink-0" />
+                <span>{phone}</span>
               </a>
               <a
                 href={`mailto:${email}`}
-                className="text-white hover:underline flex items-center gap-1.5"
+                className="text-white/95 hover:text-white hover:underline flex items-center gap-1.5 whitespace-nowrap transition"
+                title={`Email ${email}`}
               >
-                <Mail size={12} className="text-white/80" />
-                {email}
+                <Mail size={11} className="text-white/80 shrink-0" />
+                <span>{email}</span>
               </a>
-              <span className="text-white flex items-center gap-1.5">
-                <MapPin size={12} className="text-white/80" />
-                {address}
+              <span
+                className="hidden xl:flex items-center gap-1.5 text-white/90 whitespace-nowrap"
+                title={address}
+              >
+                <MapPin size={11} className="text-white/80 shrink-0" />
+                <span>Orlando, FL</span>
               </span>
             </div>
           </div>
