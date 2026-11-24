@@ -309,7 +309,7 @@ export default function Header() {
                   <Link
                     key={tab.label}
                     href={tab.href}
-                    className={`flex items-center px-3.5 xl:px-4.5 py-2.5 text-[11px] uppercase tracking-[0.1em] transition whitespace-nowrap ${
+                    className={`flex items-center px-3 xl:px-4.5 py-2.5 text-[11px] uppercase tracking-[0.08em] xl:tracking-[0.1em] transition whitespace-nowrap ${
                       active
                         ? !isLight
                           ? "!bg-[#000000] !text-white font-extrabold shadow-sm"
@@ -359,12 +359,12 @@ export default function Header() {
               : "border-b border-gray-100 bg-white text-[#0b1220]"
           }`}
         >
-          <div className="container-se flex items-center justify-between gap-3 sm:gap-6 py-2.5 sm:py-3.5 px-3 sm:px-4">
+          <div className="container-se flex items-center justify-between gap-2 lg:gap-3 xl:gap-6 py-2.5 sm:py-3.5 px-3 sm:px-4">
             <Link href="/" aria-label="Powerline Devices home" className="shrink-0">
               <Logo light={!isLight} />
             </Link>
 
-            <nav className="hidden items-center gap-6 xl:gap-8 lg:flex" aria-label="Primary">
+            <nav className="hidden items-center gap-3 xl:gap-7 2xl:gap-8 lg:flex shrink-0" aria-label="Primary">
               {mainNavItems.map((item) => {
                 const categoryMatch = tree.find(
                   (t) =>
@@ -393,7 +393,7 @@ export default function Header() {
                   >
                     <Link
                       href={item.href}
-                      className={`inline-flex items-center gap-1.5 py-2 text-[14.5px] font-semibold transition ${
+                      className={`inline-flex items-center gap-1 xl:gap-1.5 py-2 text-[13px] xl:text-[14.5px] font-semibold transition ${
                         !isLight
                           ? isOpen ? "text-[#0066ff]" : "text-white/90 hover:text-[#0066ff]"
                           : isOpen ? "text-[#0066ff]" : "text-[#0b1220] hover:text-[#0066ff]"
@@ -489,7 +489,7 @@ export default function Header() {
             </nav>
 
             {/* Action Icons Right */}
-            <div className="flex items-center gap-2.5 sm:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 xl:gap-3.5 shrink-0">
               <button
                 type="button"
                 className={`grid h-8 w-8 sm:h-9 sm:w-9 place-items-center transition ${

@@ -8,16 +8,19 @@ import { useGetProductsQuery } from "@/store/storeApi";
 import Image from "next/image";
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  servers: "/images/home/hero-left-tower.png",
+  "network-switches": "/images/categories/network-switches.webp",
+  "server-memory": "/images/categories/server-memory.webp",
+  "power-supplies": "/images/categories/power-supplies.webp",
+  "transceiver": "/images/categories/transceiver.webp",
+  "firewalls": "/images/categories/firewalls.webp",
+  "server-hard-drive": "/images/categories/server-hard-drive.webp",
+  "server-hard-drives": "/images/categories/server-hard-drive.webp",
+  "storage-devices": "/images/categories/server-hard-drive.webp",
+  "solid-state-drives": "/images/categories/server-hard-drive.webp",
+  "switches": "/images/categories/network-switches.webp",
+  "memory": "/images/categories/server-memory.webp",
+  "servers": "/images/home/hero-left-tower.png",
   "rack-servers": "/images/home/hero-left-tower.png",
-  storage: "/images/home/category-accessories.png",
-  networking: "/images/home/deal-powerline.png",
-  processors: "/images/home/feature-gpu-evga.png",
-  memory: "/images/home/category-accessories.png",
-  "power-supplies": "/images/home/category-chargers.png",
-  accessories: "/images/home/category-accessories.png",
-  "server-hard-drives": "/images/home/category-accessories.png",
-  "solid-state-drives": "/images/home/category-accessories.png",
 };
 
 const FALLBACK_CATEGORIES: Category[] = [
@@ -73,7 +76,7 @@ function CategoryTile({ category, theme = "dark" }: { category: Category; theme?
               alt={category.name}
               width={382}
               height={382}
-              className="h-full w-full object-contain p-1 transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
             />
           ) : product ? (
             <ProductVisual product={product} icon={icon} className="h-full" />

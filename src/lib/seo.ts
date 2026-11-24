@@ -4,14 +4,16 @@ import { getProducts } from "@/lib/api/store";
 export const PRODUCTS_PER_SITEMAP = 5000;
 
 export async function getProductSitemapChunks(): Promise<number> {
-  const { total } = await getProducts({ limit: 1 }).catch(() => ({
-    total: 0,
-    items: [],
-    page: 1,
-    limit: 1,
-    totalPages: 0,
-  }));
-  return Math.max(1, Math.ceil(total / PRODUCTS_PER_SITEMAP));
+  try {
+    const res = await Promise.race([
+      getProducts({ limit: 1 }),
+      new Promise<{ total: number }>((resolve) => setTimeout(() => resolve({ total: 0 }), 1000)),
+    ]);
+    const total = (res as { total?: number })?.total ?? 0;
+    return Math.max(1, Math.ceil(total / PRODUCTS_PER_SITEMAP));
+  } catch {
+    return 1;
+  }
 }
 
 export function getSiteUrl() {
@@ -81,13 +83,13 @@ export function productJsonLd(product: Product) {
         returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
         merchantReturnDays: 30,
         returnMethod: "https://schema.org/ReturnByMail",
-        returnFees: "https://schema.org/FreeReturn",
+        returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
       },
       shippingDetails: {
         "@type": "OfferShippingDetails",
         shippingRate: {
           "@type": "MonetaryAmount",
-          value: product.price >= 199 ? "0.00" : "15.00",
+          value: product.price >= 199 ? "0.00" : "14.99",
           currency: "USD",
         },
         shippingDestination: {

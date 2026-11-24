@@ -40,7 +40,10 @@ function FeatureCard({
     product.images?.[0]?.url ||
     FEATURE_CARD_IMAGES[index % FEATURE_CARD_IMAGES.length];
 
-  const comparePrice = product.compareAtPrice ?? (product.price ? product.price * 1.25 : 139.0);
+  const comparePrice =
+    product.compareAtPrice && product.compareAtPrice > product.price
+      ? product.compareAtPrice
+      : null;
   const salePrice = product.price ?? 109.0;
   const inStock = product.stock > 0;
 

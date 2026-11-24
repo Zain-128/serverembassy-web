@@ -95,7 +95,7 @@ export default function ProductDetail({
 
           <div className="mt-5 flex items-end gap-3">
             <p className="font-display text-4xl font-bold text-navy">{formatMoney(product.price)}</p>
-            {product.compareAtPrice ? (
+            {product.compareAtPrice && product.compareAtPrice > product.price ? (
               <p className="pb-1 text-muted line-through">{formatMoney(product.compareAtPrice)}</p>
             ) : null}
           </div>

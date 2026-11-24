@@ -109,6 +109,9 @@ We offer a 30-day return window from the date of confirmed delivery. Before retu
 - All original power cables, brackets, transceivers, and packaging materials must be included with the return.
 - If you receive a defective or incorrect item, contact our team immediately and we will provide a replacement or full refund.
 
+## Return Shipping Fees
+Customers are responsible for return shipping costs for standard discretionary returns or customer-initiated exchanges. For verified defective hardware or items shipped in error, Power Line Devices covers return shipping and provides a prepaid return label.
+
 ## Warranty Coverage
 Certified refurbished and used hardware items include a 30-day hardware replacement warranty. If a component experiences a hardware failure under normal operating conditions within 30 days of delivery, our support team will replace the unit or issue a refund.
 

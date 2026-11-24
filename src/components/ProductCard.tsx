@@ -165,7 +165,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <div className="mt-auto flex items-center justify-between gap-3 pt-2.5">
             <div className="flex items-baseline gap-2">
               <p className="font-display text-lg text-navy">{formatMoney(product.price)}</p>
-              {product.compareAtPrice ? (
+              {product.compareAtPrice && product.compareAtPrice > product.price ? (
                 <p className="text-sm text-muted line-through">
                   {formatMoney(product.compareAtPrice)}
                 </p>
