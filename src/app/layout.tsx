@@ -91,6 +91,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Providers>
           <SiteShell>{children}</SiteShell>
         </Providers>
+
+        {/* Live AI Hardware & RFQ Concierge Widget */}
+        <script
+          src="https://agent-studio-blush.vercel.app/widget.js"
+          data-agent-id="agent-powerline-concierge"
+          data-business-id="biz-powerline"
+          data-host="https://agent-studio-blush.vercel.app"
+          data-color="#0066ff"
+          data-position="bottom-right"
+          defer
+        />
       </body>
     </html>
   );
