@@ -1,41 +1,42 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl, getProductSitemapChunks, PRODUCTS_PER_SITEMAP } from "@/lib/seo";
-import { getCategoryTree, getProducts } from "@/lib/api/store";
+import { absoluteUrl } from "@/lib/seo";
 import { flattenCategories } from "@/lib/nav";
+import {
+  getProductSitemapCount,
+  getPublishedProductTotal,
+  getSitemapCategories,
+  getSitemapProducts,
+  productSitemapUrl,
+} from "@/lib/sitemap";
 
-// Rebuild at most once a day. If a rebuild throws, Next.js keeps serving the
-// previous good version instead of an empty or 404 sitemap.
-export const revalidate = 86400;
+// Served from cache and rebuilt in the background at most every 6 hours
+// (must be a literal; keep equal to SITEMAP_REVALIDATE in src/lib/sitemap.ts).
+// If a rebuild throws, Next.js keeps serving the last good version.
+export const revalidate = 21600;
 
-const API_PAGE_SIZE = 100; // API caps limit at 100
-const CONCURRENCY = 5; // parallel API calls per sitemap (was 50 at once)
+// Building a product sitemap through the fallback path (50 API calls of ~2 s,
+// 5 at a time) takes ~20 s; give the serverless function room on Vercel.
+export const maxDuration = 60;
 
-async function fetchPage(page: number) {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      return await getProducts({ page, limit: API_PAGE_SIZE });
-    } catch (err) {
-      if (attempt === 2) throw err;
-      await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
-    }
-  }
-  throw new Error("unreachable");
-}
-
+// /sitemap/0.xml = static pages + categories; /sitemap/1..N.xml = products.
+// Next.js calls this both at build time and on every (re)generation to decide
+// which ids exist, so it must never shrink because of a slow API: the count
+// call throws on failure instead of returning a smaller number.
 export async function generateSitemaps() {
-  const productSitemaps = await getProductSitemapChunks();
+  const productSitemaps = await getProductSitemapCount();
   return Array.from({ length: productSitemaps + 1 }, (_, i) => ({ id: i }));
 }
 
 export default async function sitemap({
   id,
 }: {
-  id: number | Promise<number>;
+  id: number | string | Promise<number | string>;
 }): Promise<MetadataRoute.Sitemap> {
   const resolvedId = Number(await id);
+  if (!Number.isInteger(resolvedId) || resolvedId < 0) throw new Error(`[sitemap] bad id ${resolvedId}`);
+
   if (resolvedId === 0) {
-    const tree = await getCategoryTree().catch(() => []);
-    const categories = flattenCategories(tree);
+    const categories = flattenCategories(await getSitemapCategories());
     const staticEntries: { path: string; priority: number }[] = [
       { path: "/", priority: 1 },
       { path: "/shop", priority: 0.9 },
@@ -61,37 +62,21 @@ export default async function sitemap({
         priority,
       })),
       ...categories.map((c) => ({
-        url: absoluteUrl(`/shop/${c.slug}`),
+        url: absoluteUrl(`/shop/${encodeURIComponent(c.slug)}`),
         changeFrequency: "daily" as const,
         priority: 0.7,
       })),
     ];
   }
 
-  // id 1..N map to contiguous blocks of PRODUCTS_PER_SITEMAP products each,
-  // fetched as a batch of API_PAGE_SIZE-sized pages (PRODUCTS_PER_SITEMAP is a multiple of it).
-  const chunkIndex = resolvedId - 1;
-  const startPage = (chunkIndex * PRODUCTS_PER_SITEMAP) / API_PAGE_SIZE + 1;
-  const pagesToFetch = PRODUCTS_PER_SITEMAP / API_PAGE_SIZE;
-
-  const pages: Awaited<ReturnType<typeof getProducts>>[] = [];
-  for (let i = 0; i < pagesToFetch; i += CONCURRENCY) {
-    const batch = await Promise.all(
-      Array.from({ length: Math.min(CONCURRENCY, pagesToFetch - i) }, (_, j) =>
-        fetchPage(startPage + i + j),
-      ),
-    );
-    pages.push(...batch);
-    // Past the last product: stop early instead of requesting empty pages.
-    if (batch.some((p) => p.items.length < API_PAGE_SIZE)) break;
-  }
-
-  return pages
-    .flatMap((p) => p.items)
-    .filter((p) => p.published)
-    .map((p) => ({
-      url: absoluteUrl(`/product/${p.slug}`),
-      changeFrequency: "weekly" as const,
-      priority: 0.5,
-    }));
+  const total = await getPublishedProductTotal();
+  const products = await getSitemapProducts(resolvedId - 1, total);
+  return products.map((p) => ({
+    url: productSitemapUrl(p.slug),
+    ...(p.updatedAt && !Number.isNaN(Date.parse(p.updatedAt))
+      ? { lastModified: new Date(p.updatedAt).toISOString() }
+      : {}),
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
 }
