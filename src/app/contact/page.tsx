@@ -55,20 +55,37 @@ export default async function ContactPage() {
                 </div>
               </div>
 
-              {/* Email */}
+              {/* Orders & General Inquiries */}
               <div className="flex items-start gap-4 rounded-2xl bg-white p-4 border border-line shadow-xs transition hover:border-[#0066ff]/40">
                 <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-50 text-[#0066ff]">
                   <Mail size={20} />
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted">Email Inquiries</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted">Orders & Support</p>
                   <a
-                    href={`mailto:${email}`}
+                    href="mailto:info@powerlinedevices.com"
                     className="mt-0.5 text-base font-bold text-navy hover:text-[#0066ff] transition break-all"
                   >
-                    {email}
+                    info@powerlinedevices.com
                   </a>
-                  <p className="text-xs text-muted">Quotes & inquiries answered promptly</p>
+                  <p className="text-xs text-muted">Order tracking, receipts & general inquiries</p>
+                </div>
+              </div>
+
+              {/* Bulk RFQ & Quotation Inquiries */}
+              <div className="flex items-start gap-4 rounded-2xl bg-white p-4 border border-line shadow-xs transition hover:border-[#0066ff]/40">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-50 text-[#0066ff]">
+                  <Mail size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted">Bulk Quotes & RFQ</p>
+                  <a
+                    href="mailto:RFQ@powerlinedevices.com"
+                    className="mt-0.5 text-base font-bold text-navy hover:text-[#0066ff] transition break-all"
+                  >
+                    RFQ@powerlinedevices.com
+                  </a>
+                  <p className="text-xs text-muted">Enterprise volume pricing & procurement bids</p>
                 </div>
               </div>
 

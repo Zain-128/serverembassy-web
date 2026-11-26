@@ -4,6 +4,8 @@ export const STORE_CONTACT = {
   phone: "(321) 788-5899",
   phoneRaw: "+13217885899",
   email: "info@powerlinedevices.com",
+  rfqEmail: "RFQ@powerlinedevices.com",
+  ordersEmail: "info@powerlinedevices.com",
   address: "1317 Edgewater Dr Suite #6089, Orlando, FL 32804",
   hours: "Mon – Fri: 9:00 AM – 6:00 PM EST",
   social: {
