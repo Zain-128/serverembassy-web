@@ -63,6 +63,7 @@ const rawBaseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
     if (token) headers.set("Authorization", `Bearer ${token}`);
+    headers.set("x-store-origin", "powerline");
     return headers;
   },
 });
