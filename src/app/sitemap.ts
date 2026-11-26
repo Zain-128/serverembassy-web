@@ -10,7 +10,7 @@ import {
 } from "@/lib/sitemap";
 
 // Served from cache and rebuilt in the background at most every 6 hours
-// (must be a literal; keep equal to SITEMAP_REVALIDATE in src/lib/sitemap.ts).
+// (must be a literal number; keep equal to the one in src/app/sitemap-index.xml/route.ts).
 // If a rebuild throws, Next.js keeps serving the last good version.
 export const revalidate = 21600;
 
@@ -19,10 +19,17 @@ export const revalidate = 21600;
 export const maxDuration = 60;
 
 // /sitemap/0.xml = static pages + categories; /sitemap/1..N.xml = products.
-// Next.js calls this both at build time and on every (re)generation to decide
-// which ids exist, so it must never shrink because of a slow API: the count
-// call throws on failure instead of returning a smaller number.
+// Next.js calls this at build time (to pre-build ids) and again on every
+// (re)generation to decide which ids exist (unknown id -> 404), so it must
+// never shrink because of a slow API: the count call throws instead.
+//
+// At build time we return no ids, so nothing is pre-built and a deploy never
+// depends on the product API (pre-building 15 sitemaps = hundreds of API calls,
+// and one failed call fails the whole Vercel build). Each sitemap is built on
+// its first request instead, then cached and refreshed in the background
+// under the same rules.
 export async function generateSitemaps() {
+  if (process.env.NEXT_PHASE === "phase-production-build") return [];
   const productSitemaps = await getProductSitemapCount();
   return Array.from({ length: productSitemaps + 1 }, (_, i) => ({ id: i }));
 }

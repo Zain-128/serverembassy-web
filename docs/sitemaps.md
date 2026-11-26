@@ -13,9 +13,9 @@
 
 All data comes from `src/lib/sitemap.ts`:
 
-- **Cached (ISR).** The pages are pre-built and then rebuilt in the background at most every 6 hours (`revalidate = 21600`). Googlebot is served from cache and does not hit the API.
-- **Never cache a bad result.** Every API failure, timeout (20 s, 1 retry), "0 products" or badly short product list throws. During a background rebuild, a throw keeps the last good sitemap being served. At build time, a throw fails the build. That's deliberate: deploying with the API down would otherwise publish empty sitemaps.
-- **Don't use `apiGet()` from sitemap code.** It sets `revalidate: 0`, which turns the routes back into "render on every request".
+- **Cached (ISR).** Each sitemap is built on its first request after a deploy (nothing is pre-built, so a deploy never depends on the product API), then served from cache and rebuilt in the background at most every 6 hours (`revalidate = 21600`). Googlebot is served from cache and does not hit the API. The index is built at deploy time (one count call).
+- **Never cache a bad result.** Every API failure, timeout (20 s hard deadline, 1 retry), "0 products" or badly short product list throws. During a background rebuild, a throw keeps the last good sitemap being served. On a first request, a throw returns HTTP 500, which isn't cached, so the next request tries again.
+- **No `fetch()` in sitemap code.** `apiGet()` sets `revalidate: 0`, which turns the routes back into "render on every request". Next's fetch data cache adds a second cache layer that got stuck behind a hung API request. `src/lib/sitemap.ts` uses plain `node:http(s)` with a hard timeout.
 - **Data source.** `GET /api/store/products/sitemap?page=&limit=5000` returns slug + updatedAt only, one call per sitemap (serverembassy-api). If the API doesn't have that endpoint (404), it falls back to `/products?sort=sku` in pages of 100, 5 at a time. The default `/products` sort returns HTTP 500 past offset 26,500, so the fallback must not use it.
 - **URLs.** `NEXT_PUBLIC_SITE_URL` must be `https://www.powerlinedevices.com` (it also drives canonical tags). Slugs are percent-encoded, so `#`, `&`, `<` and spaces produce valid URLs and valid XML.
 

@@ -1,4 +1,6 @@
 import "server-only";
+import http from "node:http";
+import https from "node:https";
 import { storeApi } from "@/lib/api/config";
 import { mapCategory } from "@/lib/mappers";
 import { absoluteUrl } from "@/lib/seo";
@@ -7,19 +9,25 @@ import type { Category } from "@/types/store";
 /**
  * Data access for the XML sitemaps (/sitemap-index.xml, /sitemap/[id].xml).
  *
- * Rules (see scripts/check-sitemaps.mjs):
- * - Everything here is cached for SITEMAP_REVALIDATE seconds, so Googlebot
- *   is served from cache instead of hitting the API on every request.
- *   Do NOT call the shared apiGet() helper from sitemap code: it uses
- *   `revalidate: 0`, which makes the whole route dynamic and disables caching.
+ * Rules (see scripts/check-sitemaps.mjs and docs/sitemaps.md):
+ * - Caching happens at the route level only (`export const revalidate` in the
+ *   sitemap routes): the generated XML is cached and rebuilt in the background.
+ *   Googlebot is served from that cache and never hits the API.
+ * - API calls here deliberately use node:http(s), NOT fetch():
+ *   - the shared apiGet() helper uses `revalidate: 0`, which turns the routes
+ *     dynamic (rendered on every request);
+ *   - Next's fetch data cache would add a second cache layer, and a request
+ *     to a hung API inside its background refresh blocked every later refresh
+ *     until the server restarted (reproduced locally). A plain request with
+ *     a hard timeout can't hang.
  * - Nothing here ever returns "0 products" on failure. Every failure throws.
  *   During ISR revalidation a throw keeps the last good sitemap being
  *   served. A silently empty result would be cached and served for hours.
  */
 
-// Keep in sync with `export const revalidate` in src/app/sitemap.ts and
-// src/app/sitemap-index.xml/route.ts (route segment config must be a literal there).
-export const SITEMAP_REVALIDATE = 21600; // 6 hours
+// The sitemap routes are cached for 6 hours: `export const revalidate = 21600`
+// in src/app/sitemap.ts and src/app/sitemap-index.xml/route.ts (route segment
+// config must be a literal, so it is repeated there).
 
 // Google's limit is 50,000 URLs per file. 5,000 keeps each file small and fast.
 export const PRODUCTS_PER_SITEMAP = 5000;
@@ -37,19 +45,39 @@ class SitemapDataError extends Error {
 
 class NotFoundError extends SitemapDataError {}
 
+function getJson(url: string): Promise<{ status: number; body: unknown }> {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith("https:") ? https : http;
+    const req = client.get(url, { headers: { Accept: "application/json" } }, (res) => {
+      const chunks: Buffer[] = [];
+      res.on("data", (c: Buffer) => chunks.push(c));
+      res.on("end", () => {
+        const text = Buffer.concat(chunks).toString("utf8");
+        try {
+          resolve({ status: res.statusCode ?? 0, body: text ? JSON.parse(text) : null });
+        } catch {
+          resolve({ status: res.statusCode ?? 0, body: null });
+        }
+      });
+      res.on("error", reject);
+    });
+    // Hard deadline for the whole request (connect + response), not just idle time.
+    const timer = setTimeout(() => req.destroy(new Error(`timed out after ${FETCH_TIMEOUT_MS}ms`)), FETCH_TIMEOUT_MS);
+    req.on("close", () => clearTimeout(timer));
+    req.on("error", reject);
+  });
+}
+
 async function sitemapFetch<T>(path: string): Promise<T> {
   const url = storeApi(path);
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const res = await fetch(url, {
-        headers: { Accept: "application/json" },
-        next: { revalidate: SITEMAP_REVALIDATE },
-        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-      });
+      const res = await getJson(url);
       if (res.status === 404) throw new NotFoundError(`404 from ${path}`);
-      if (!res.ok) throw new SitemapDataError(`HTTP ${res.status} from ${path}`);
-      return (await res.json()) as T;
+      if (res.status < 200 || res.status >= 300) throw new SitemapDataError(`HTTP ${res.status} from ${path}`);
+      if (res.body == null) throw new SitemapDataError(`invalid JSON from ${path}`);
+      return res.body as T;
     } catch (err) {
       if (err instanceof NotFoundError) throw err;
       lastError = err;
