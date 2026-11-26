@@ -3,9 +3,24 @@ import { absoluteUrl, getProductSitemapChunks, PRODUCTS_PER_SITEMAP } from "@/li
 import { getCategoryTree, getProducts } from "@/lib/api/store";
 import { flattenCategories } from "@/lib/nav";
 
-export const revalidate = 3600;
+// Rebuild at most once a day. If a rebuild throws, Next.js keeps serving the
+// previous good version instead of an empty or 404 sitemap.
+export const revalidate = 86400;
 
-const API_PAGE_SIZE = 100;
+const API_PAGE_SIZE = 100; // API caps limit at 100
+const CONCURRENCY = 5; // parallel API calls per sitemap (was 50 at once)
+
+async function fetchPage(page: number) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      return await getProducts({ page, limit: API_PAGE_SIZE });
+    } catch (err) {
+      if (attempt === 2) throw err;
+      await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
+    }
+  }
+  throw new Error("unreachable");
+}
 
 export async function generateSitemaps() {
   const productSitemaps = await getProductSitemapChunks();
@@ -59,11 +74,17 @@ export default async function sitemap({
   const startPage = (chunkIndex * PRODUCTS_PER_SITEMAP) / API_PAGE_SIZE + 1;
   const pagesToFetch = PRODUCTS_PER_SITEMAP / API_PAGE_SIZE;
 
-  const pages = await Promise.all(
-    Array.from({ length: pagesToFetch }, (_, i) =>
-      getProducts({ page: startPage + i, limit: API_PAGE_SIZE }).catch(() => ({ items: [] })),
-    ),
-  );
+  const pages: Awaited<ReturnType<typeof getProducts>>[] = [];
+  for (let i = 0; i < pagesToFetch; i += CONCURRENCY) {
+    const batch = await Promise.all(
+      Array.from({ length: Math.min(CONCURRENCY, pagesToFetch - i) }, (_, j) =>
+        fetchPage(startPage + i + j),
+      ),
+    );
+    pages.push(...batch);
+    // Past the last product: stop early instead of requesting empty pages.
+    if (batch.some((p) => p.items.length < API_PAGE_SIZE)) break;
+  }
 
   return pages
     .flatMap((p) => p.items)

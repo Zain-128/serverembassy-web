@@ -3,17 +3,42 @@ import { getProducts } from "@/lib/api/store";
 
 export const PRODUCTS_PER_SITEMAP = 5000;
 
-export async function getProductSitemapChunks(): Promise<number> {
+// Last successfully computed chunk count, kept per server instance so a slow or
+// failed API call never shrinks the sitemap index (which made /sitemap/N.xml 404).
+let lastGoodChunkCount: number | null = null;
+
+// Used only if the API has never answered on this server instance.
+// Set PRODUCT_SITEMAP_FALLBACK_CHUNKS in env to the real value (ceil(total / 5000)).
+const FALLBACK_CHUNKS = Math.max(1, Number(process.env.PRODUCT_SITEMAP_FALLBACK_CHUNKS) || 5);
+
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    const res = await Promise.race([
-      getProducts({ limit: 1 }),
-      new Promise<{ total: number }>((resolve) => setTimeout(() => resolve({ total: 0 }), 1000)),
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms);
+      }),
     ]);
-    const total = (res as { total?: number })?.total ?? 0;
-    return Math.max(1, Math.ceil(total / PRODUCTS_PER_SITEMAP));
-  } catch {
-    return 1;
+  } finally {
+    if (timer) clearTimeout(timer);
   }
+}
+
+export async function getProductSitemapChunks(): Promise<number> {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await withTimeout(getProducts({ limit: 1 }), 10_000);
+      const total = res?.total ?? 0;
+      if (total > 0) {
+        lastGoodChunkCount = Math.ceil(total / PRODUCTS_PER_SITEMAP);
+        return lastGoodChunkCount;
+      }
+    } catch {
+      // retry once, then fall back below
+    }
+  }
+  return lastGoodChunkCount ?? FALLBACK_CHUNKS;
 }
 
 export function getSiteUrl() {
