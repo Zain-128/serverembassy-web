@@ -1,17 +1,10 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl, getProductSitemapChunks } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/seo";
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
-  let productSitemaps = 1;
-  try {
-    productSitemaps = await getProductSitemapChunks();
-  } catch {
-    productSitemaps = 1;
-  }
-  const sitemaps = Array.from({ length: productSitemaps + 1 }, (_, id) =>
-    absoluteUrl(`/sitemap/${id}.xml`),
-  );
-
+// Static: lists only the sitemap index, which in turn lists exactly the
+// sitemaps that exist. No API call here, so robots.txt can never list
+// sitemaps that 404.
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
@@ -20,6 +13,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         disallow: ["/account", "/checkout", "/cart", "/login"],
       },
     ],
-    sitemap: sitemaps,
+    sitemap: absoluteUrl("/sitemap-index.xml"),
   };
 }
